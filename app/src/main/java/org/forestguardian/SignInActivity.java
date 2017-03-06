@@ -99,7 +99,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         mProgressView = findViewById(R.id.login_progress);
 
         //Check for HockeyApp updates
-        //checkForUpdates();
+        checkForUpdates();
     }
 
     private void populateAutoComplete() {
@@ -374,7 +374,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     public void onResume() {
         super.onResume();
-        //checkForCrashes();
+        checkForCrashes();
     }
 
     @Override
@@ -391,7 +391,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //unregisterManagers();
+        unregisterManagers();
     }
 
     private void checkForCrashes() {

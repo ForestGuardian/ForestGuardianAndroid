@@ -20,6 +20,10 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -27,7 +31,7 @@ dependencies {
     })
 
     compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'net.hockeyapp.android:HockeySDK:4.0.0'
+    compile 'net.hockeyapp.android:HockeySDK:4.1.2'
     compile 'com.android.support:design:25.2.0'
     testCompile 'junit:junit:4.12'
 }
