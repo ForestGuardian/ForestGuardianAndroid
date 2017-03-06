@@ -3,6 +3,7 @@
 
     <!-- WebView Strings -->
     <string name="web_view_map_1_url">http://forestdev6339.cloudapp.net/Leaflet/forestmap.html</string>
+    <string name="web_view_map_2_url">http://forestdev6339.cloudapp.net/Leaflet/maptest.html</string>
     <string name="title_activity_sign_in">Sign in</string>
 
     <!-- Strings related to login -->
