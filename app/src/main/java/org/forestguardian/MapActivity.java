@@ -31,6 +31,7 @@ public class MapActivity extends AppCompatActivity
     private WebView mapWebView;
     private boolean inDefaultMap;
     private LocationManager locationManager;
+    private WebMapInterface mapInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class MapActivity extends AppCompatActivity
                     MapActivity.this.inDefaultMap = true;
                     MapActivity.this.mapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
                 }
+                //MapActivity.this.mapWebView.loadUrl("javascript:testEcho('Hello world from Android!!')");
+                //MapActivity.this.mapWebView.loadUrl("javascript:setUserCurrentLocation(23.634501, -102.552784)");
             }
         });
 
@@ -136,6 +139,9 @@ public class MapActivity extends AppCompatActivity
         webSettings.setJavaScriptEnabled(true);
         //Set map flag
         this.inDefaultMap = true;
+        //Setup the javascript interface
+        this.mapInterface = new WebMapInterface(this);
+        this.mapWebView.addJavascriptInterface(this.mapInterface, "mobile");
     }
 
     private void initLocation() {
@@ -154,11 +160,8 @@ public class MapActivity extends AppCompatActivity
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    MapActivity.this.mapWebView.evaluateJavascript("setUserCurrentLocation(" + location.getLatitude() + ", " + location.getLongitude() + ");", null);
-                } else {
-                    MapActivity.this.mapWebView.loadUrl("javascript:setUserCurrentLocation(" + location.getLatitude() + ", " + location.getLongitude() + ");");
-                }*/
+                MapActivity.this.mapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")");
+
             }
 
             @Override
