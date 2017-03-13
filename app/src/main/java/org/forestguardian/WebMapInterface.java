@@ -22,4 +22,9 @@ public class WebMapInterface {
     public void getMODISData(String data) {
         Toast.makeText(this.mContext, data, Toast.LENGTH_LONG).show();
     }
+
+    @JavascriptInterface
+    public void notifyCurrentLocation() {
+        ((MapActivity)mContext).setIsCurrentLocation(true);
+    }
 }

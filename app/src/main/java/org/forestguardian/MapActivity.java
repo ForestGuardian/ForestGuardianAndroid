@@ -5,10 +5,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,17 +19,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Toast;
-
-import java.util.Map;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private WebView mapWebView;
-    private boolean inDefaultMap;
-    private LocationManager locationManager;
-    private WebMapInterface mapInterface;
+    private WebView mMapWebView;
+    private boolean mInDefaultMap;
+    private boolean mIsCurrentLocation;
+    private Location mCurrentLocation;
+    private LocationManager mLocationManager;
+    private WebMapInterface mMapInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +41,23 @@ public class MapActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (MapActivity.this.inDefaultMap) {
-                    MapActivity.this.inDefaultMap = false;
-                    MapActivity.this.mapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
+                if (MapActivity.this.mInDefaultMap) {
+                    MapActivity.this.mInDefaultMap = false;
+                    MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
                 } else {
-                    MapActivity.this.inDefaultMap = true;
-                    MapActivity.this.mapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
+                    MapActivity.this.mInDefaultMap = true;
+                    MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
                 }
-                //MapActivity.this.mapWebView.loadUrl("javascript:testEcho('Hello world from Android!!')");
-                //MapActivity.this.mapWebView.loadUrl("javascript:setUserCurrentLocation(23.634501, -102.552784)");
+            }
+        });
+
+        FloatingActionButton currentLocationBtn = (FloatingActionButton) findViewById(R.id.current_location);
+        currentLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MapActivity.this.mCurrentLocation != null) {
+                    MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
+                }
             }
         });
 
@@ -69,6 +74,9 @@ public class MapActivity extends AppCompatActivity
         initWebMap();
         //Init the GPS location
         initLocation();
+        //Variable default values
+        this.mCurrentLocation = null;
+        this.mIsCurrentLocation = false;
     }
 
     @Override
@@ -130,22 +138,22 @@ public class MapActivity extends AppCompatActivity
 
     private void initWebMap() {
         //Init the web map
-        this.mapWebView = (WebView) findViewById(R.id.map_web_view);
+        this.mMapWebView = (WebView) findViewById(R.id.map_web_view);
         //Load the default map
-        this.mapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
+        this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
         //Getting the webview settings
-        WebSettings webSettings = this.mapWebView.getSettings();
+        WebSettings webSettings = this.mMapWebView.getSettings();
         //Enable javascript
         webSettings.setJavaScriptEnabled(true);
         //Set map flag
-        this.inDefaultMap = true;
+        this.mInDefaultMap = true;
         //Setup the javascript interface
-        this.mapInterface = new WebMapInterface(this);
-        this.mapWebView.addJavascriptInterface(this.mapInterface, "mobile");
+        this.mMapInterface = new WebMapInterface(this);
+        this.mMapWebView.addJavascriptInterface(this.mMapInterface, "mobile");
     }
 
     private void initLocation() {
-        this.locationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
+        this.mLocationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -160,7 +168,10 @@ public class MapActivity extends AppCompatActivity
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                MapActivity.this.mapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")");
+                MapActivity.this.mCurrentLocation = location;
+                if (!MapActivity.this.mIsCurrentLocation) {
+                    MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")");
+                }
 
             }
 
@@ -180,7 +191,15 @@ public class MapActivity extends AppCompatActivity
             }
         };
 
-        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-        this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+        this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+        this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+    }
+
+    public boolean isIsCurrentLocation() {
+        return mIsCurrentLocation;
+    }
+
+    public void setIsCurrentLocation(boolean mIsCurrentLocation) {
+        this.mIsCurrentLocation = mIsCurrentLocation;
     }
 }

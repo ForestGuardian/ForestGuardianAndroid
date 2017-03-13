@@ -8,12 +8,6 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <WebView
-        android:id="@+id/map_web_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="64dp"></WebView>
-
     <include
         layout="@layout/app_bar_map"
         android:layout_width="match_parent"
