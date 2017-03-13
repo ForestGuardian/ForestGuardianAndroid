@@ -1,12 +1,15 @@
-package org.forestguardian;
+package org.forestguardian.DataAccess;
 
 import android.content.Context;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import org.forestguardian.MapActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
- * Created by luisalonsomurillorojas on 6/3/17.
+ * Created by luisalonsomurillorojas on 12/3/17.
  */
 
 public class WebMapInterface {
@@ -20,7 +23,15 @@ public class WebMapInterface {
 
     @JavascriptInterface
     public void getMODISData(String data) {
-        Toast.makeText(this.mContext, data, Toast.LENGTH_LONG).show();
+        //Parse the JSON data
+        JSONObject jsonMODIS = null;
+        try {
+            jsonMODIS = new JSONObject(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ((MapActivity)mContext).processWildfireData(jsonMODIS);
     }
 
     @JavascriptInterface

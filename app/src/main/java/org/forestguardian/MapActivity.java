@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,9 +21,16 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import org.forestguardian.DataAccess.IWeather;
+import org.forestguardian.DataAccess.OpenWeatherWrapper;
+import org.forestguardian.DataAccess.WebMapInterface;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static String TAG = "MapActivity";
     private WebView mMapWebView;
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
@@ -193,6 +201,30 @@ public class MapActivity extends AppCompatActivity
 
         this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+    }
+
+    public void processWildfireData(JSONObject modisData) {
+        Log.i(TAG, "MODIS: " + modisData.toString());
+        Location wildfireCoordinates = new Location("");
+        try {
+            wildfireCoordinates.setLatitude(modisData.getDouble(getResources().getString(R.string.open_weather_api_latitude)));
+            wildfireCoordinates.setLongitude(modisData.getDouble(getResources().getString(R.string.open_weather_api_longitude)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Get the weather info
+        OpenWeatherWrapper openWeatherWrapper = new OpenWeatherWrapper(this);
+        openWeatherWrapper.requestCurrentForecastWeather(wildfireCoordinates, new IWeather() {
+            @Override
+            public void onForecastRequest(OpenWeatherWrapper openWeatherWrapper) {
+                Log.i(TAG, "Temperature: " + openWeatherWrapper.getTemperature()
+                        + ", humidity: " + openWeatherWrapper.getHumidity()
+                        + ", pressure: " + openWeatherWrapper.getPressure()
+                        + ", wind speed: " + openWeatherWrapper.getWind().getSpeed()
+                        + ", wind degree: " + openWeatherWrapper.getWind().getDeg());
+            }
+        });//TODO: This should be the coordinates of the wildfire point
     }
 
     public boolean isIsCurrentLocation() {
