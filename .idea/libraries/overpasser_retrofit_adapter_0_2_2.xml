@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="overpasser-retrofit-adapter-0.2.2">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/b90a919fb98e0dd018df2d7ebc9f5ad02379b5ef/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/b90a919fb98e0dd018df2d7ebc9f5ad02379b5ef/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/hu.supercluster/overpasser-retrofit-adapter/0.2.2/e579da041b13debac7940b9a7593c040e621f484/overpasser-retrofit-adapter-0.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

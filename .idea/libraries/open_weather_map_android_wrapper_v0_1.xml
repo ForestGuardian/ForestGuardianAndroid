@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="open-weather-map-android-wrapper-v0.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.android/build-cache/ff63f496c4245e3f09b881ed3995eb6fbb61784d/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/ff63f496c4245e3f09b881ed3995eb6fbb61784d/output/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
