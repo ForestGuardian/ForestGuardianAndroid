@@ -2,9 +2,8 @@ package org.forestguardian.DataAccess;
 
 import android.content.Context;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
-import org.forestguardian.MapActivity;
+import org.forestguardian.View.MapActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 

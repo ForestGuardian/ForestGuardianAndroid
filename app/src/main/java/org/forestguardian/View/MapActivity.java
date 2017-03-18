@@ -1,4 +1,4 @@
-package org.forestguardian;
+package org.forestguardian.View;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -24,6 +24,7 @@ import android.webkit.WebView;
 import org.forestguardian.DataAccess.IWeather;
 import org.forestguardian.DataAccess.OpenWeatherWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
+import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 

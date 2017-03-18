@@ -35,5 +35,7 @@ dependencies {
     compile 'net.hockeyapp.android:HockeySDK:4.1.2'
     compile 'com.android.support:design:25.2.0'
     compile 'com.github.zurche:open-weather-map-android-wrapper:v0.1'
+    compile 'hu.supercluster:overpasser:0.2.2'
+    compile 'hu.supercluster:overpasser-retrofit-adapter:0.2.2'
     testCompile 'junit:junit:4.12'
 }
