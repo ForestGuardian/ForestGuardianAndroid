@@ -1,29 +1,13 @@
 package org.forestguardian.DataAccess.Local;
 
-import io.realm.RealmObject;
+import com.google.gson.annotations.Expose;
 
 /**
- * Created by emma on 17/03/17.
+ * Created by emma on 26/03/17.
  */
 
-public class Session extends RealmObject {
+public class Session {
 
-    private String email;
-    private String token;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String pEmail) {
-        email = pEmail;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(final String pToken) {
-        token = pToken;
-    }
+    @Expose
+    public User user;
 }
