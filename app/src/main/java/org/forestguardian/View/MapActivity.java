@@ -21,12 +21,16 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import org.forestguardian.DataAccess.IOverpassAPI;
 import org.forestguardian.DataAccess.IWeather;
 import org.forestguardian.DataAccess.OpenWeatherWrapper;
+import org.forestguardian.DataAccess.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
 import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -225,7 +229,27 @@ public class MapActivity extends AppCompatActivity
                         + ", wind speed: " + openWeatherWrapper.getWind().getSpeed()
                         + ", wind degree: " + openWeatherWrapper.getWind().getDeg());
             }
-        });//TODO: This should be the coordinates of the wildfire point
+        });
+
+        //Get the nearest fire stations
+        OverpassWrapper overpassWrapper = new OverpassWrapper();
+        overpassWrapper.setOSMPoint(wildfireCoordinates);
+        overpassWrapper.getOSMDataForFireStations(100000, new IOverpassAPI() {
+            @Override
+            public void overpassCallback(OverpassQueryResult result) {
+                if (result != null) {
+                    Log.i(TAG, "Result: " + result.elements.size());
+                    for (int index = 0; index < result.elements.size(); index++) {
+                        Log.i(TAG, "Name: " + result.elements.get(index).tags.name);
+                        Log.i(TAG, "City: " + result.elements.get(index).tags.addressCity);
+                        Log.i(TAG, "Street: " + result.elements.get(index).tags.addressStreet);
+                        Log.i(TAG, "Operator: " + result.elements.get(index).tags.operator);
+                    }
+                } else {
+                    Log.e(TAG, "Nothing have been found!!");
+                }
+            }
+        });
     }
 
     public boolean isIsCurrentLocation() {
