@@ -19,6 +19,8 @@ public class User extends RealmObject {
 
     private String token;
 
+    private String name;
+
     public String getEmail() {
         return email;
     }
@@ -49,5 +51,13 @@ public class User extends RealmObject {
 
     public void setPasswordConfirmation(final String pPassword_confirmation) {
         password_confirmation = pPassword_confirmation;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String pName) {
+        name = pName;
     }
 }
