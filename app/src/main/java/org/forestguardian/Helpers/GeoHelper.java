@@ -27,4 +27,9 @@ public class GeoHelper implements IContants{
 
         return newLocation;
     }
+
+    public static double calculateDistanceBetweenTwoPoints(Location pointA, Location pointB) {
+        double distance = Math.sqrt(Math.pow(pointB.getLatitude() - pointA.getLatitude(), 2) + Math.pow(pointB.getLongitude() - pointA.getLongitude(), 2));
+        return distance;
+    }
 }

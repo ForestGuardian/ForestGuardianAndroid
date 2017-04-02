@@ -26,6 +26,7 @@ import org.forestguardian.DataAccess.IWeather;
 import org.forestguardian.DataAccess.OpenWeatherWrapper;
 import org.forestguardian.DataAccess.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
+import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -238,13 +239,34 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void overpassCallback(OverpassQueryResult result) {
                 if (result != null) {
+                    OverpassQueryResult.Element nearestFireStation = null;
+                    double tmpDistance = 0;
+
                     Log.i(TAG, "Result: " + result.elements.size());
                     for (int index = 0; index < result.elements.size(); index++) {
-                        Log.i(TAG, "Name: " + result.elements.get(index).tags.name);
-                        Log.i(TAG, "City: " + result.elements.get(index).tags.addressCity);
-                        Log.i(TAG, "Street: " + result.elements.get(index).tags.addressStreet);
-                        Log.i(TAG, "Operator: " + result.elements.get(index).tags.operator);
+                        //Initiate the coordinates of the fire stations
+                        Location fireStationCoordinates = new Location("");
+                        fireStationCoordinates.setLatitude(result.elements.get(index).lat);
+                        fireStationCoordinates.setLongitude(result.elements.get(index).lon);
+
+                        //Set initial conditions
+                        if (nearestFireStation == null) {
+                            nearestFireStation = result.elements.get(index);
+                            tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
+                        }
+
+                        //Verify the distance between the wildfire and the fire stations
+                        double currentStationDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
+                        if (currentStationDistance < tmpDistance) {
+                            nearestFireStation = result.elements.get(index);
+                            tmpDistance = currentStationDistance;
+                        }
                     }
+                    //Print the nearest fire station information
+                    Log.i(TAG, "Name: " + nearestFireStation.tags.name);
+                    Log.i(TAG, "City: " + nearestFireStation.tags.addressCity);
+                    Log.i(TAG, "Street: " + nearestFireStation.tags.addressStreet);
+                    Log.i(TAG, "Operator: " + nearestFireStation.tags.operator);
                 } else {
                     Log.e(TAG, "Nothing have been found!!");
                 }

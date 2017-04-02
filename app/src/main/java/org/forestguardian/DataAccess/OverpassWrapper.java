@@ -86,7 +86,6 @@ public class OverpassWrapper implements IContants {
     public void getOSMDataForFireStations(int distance, IOverpassAPI iOverpassAPI) {
         ArrayList<Double> area = this.getOSMArea(distance);
         String query = OVERPASS_REQUEST_FORMAT_AND_TIMEOUT + this.getOverpassAPIQueryForNodes(area, OSM_FIRESTATION_AMENITY);
-        Log.i(TAG, "Query: " + query);
         new Thread() {
             public void run() {
                 try {
