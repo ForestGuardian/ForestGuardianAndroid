@@ -97,11 +97,17 @@ public class ForestGuardianServiceTest {
                     Assert.assertTrue( pSessionDataResult.response().isSuccessful() );
 
                     Headers authHeaders = pSessionDataResult.response().headers();
+                    String accessToken = authHeaders.get("Access-Token");
+
                     User authenticatedUser = pSessionDataResult.response().body().getUser();
-                    authenticatedUser.setToken( authHeaders.get("Access-Token") );
+                    authenticatedUser.setToken( accessToken );
 
                     Log.e("Current User", authenticatedUser.getEmail());
                     assertEquals(authenticatedUser.getEmail(), user.getEmail());
+
+                    //Uncomment addApiAuthorizationHeader() when this feature is enabled from backend.
+                    //addApiAuthorizationHeader();
+                    addAuthenticationHeaders( authenticatedUser.getEmail(), accessToken );
 
                     synchronized (syncObject){
                         syncObject.notify();
