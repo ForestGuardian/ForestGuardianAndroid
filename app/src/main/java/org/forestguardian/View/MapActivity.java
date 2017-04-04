@@ -21,12 +21,17 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import org.forestguardian.DataAccess.IOverpassAPI;
 import org.forestguardian.DataAccess.IWeather;
 import org.forestguardian.DataAccess.OpenWeatherWrapper;
+import org.forestguardian.DataAccess.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
+import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -225,7 +230,64 @@ public class MapActivity extends AppCompatActivity
                         + ", wind speed: " + openWeatherWrapper.getWind().getSpeed()
                         + ", wind degree: " + openWeatherWrapper.getWind().getDeg());
             }
-        });//TODO: This should be the coordinates of the wildfire point
+        });
+
+        //Get the nearest fire stations
+        OverpassWrapper overpassWrapper = new OverpassWrapper();
+        overpassWrapper.setOSMPoint(wildfireCoordinates);
+        overpassWrapper.getOSMDataForFireStations(100000, new IOverpassAPI() {
+            @Override
+            public void overpassCallback(OverpassQueryResult result) {
+                if (result != null) {
+                    OverpassQueryResult.Element nearestFireStation = null;
+                    double tmpDistance = 0;
+
+                    Log.i(TAG, "Result: " + result.elements.size());
+                    for (int index = 0; index < result.elements.size(); index++) {
+                        //Initiate the coordinates of the fire stations
+                        Location fireStationCoordinates = new Location("");
+                        fireStationCoordinates.setLatitude(result.elements.get(index).lat);
+                        fireStationCoordinates.setLongitude(result.elements.get(index).lon);
+
+                        //Set initial conditions
+                        if (nearestFireStation == null) {
+                            nearestFireStation = result.elements.get(index);
+                            tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
+                        }
+
+                        //Verify the distance between the wildfire and the fire stations
+                        double currentStationDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
+                        if (currentStationDistance < tmpDistance) {
+                            nearestFireStation = result.elements.get(index);
+                            tmpDistance = currentStationDistance;
+                        }
+                    }
+                    //Print the nearest fire station information
+                    if (nearestFireStation != null) {
+                        Log.i(TAG, "Name: " + nearestFireStation.tags.name);
+                        Log.i(TAG, "City: " + nearestFireStation.tags.addressCity);
+                        Log.i(TAG, "Street: " + nearestFireStation.tags.addressStreet);
+                        Log.i(TAG, "Operator: " + nearestFireStation.tags.operator);
+                    }
+                } else {
+                    Log.e(TAG, "Error getting the wildfires data!!");
+                }
+            }
+        });
+
+        //Get the nearest rivers
+        overpassWrapper.getOSMDataForRivers(1000, new IOverpassAPI() {
+            @Override
+            public void overpassCallback(OverpassQueryResult result) {
+                if (result != null) {
+                    for (int index = 0; index < result.elements.size(); index++) {
+                        Log.i(TAG, "River: " + result.elements.get(index).tags.name);
+                    }
+                } else {
+                    Log.e(TAG, "Error getting the rivers data!!");
+                }
+            }
+        });
     }
 
     public boolean isIsCurrentLocation() {
