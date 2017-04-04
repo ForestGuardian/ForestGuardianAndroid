@@ -76,6 +76,20 @@ public class OverpassWrapper implements IContants {
         return query;
     }
 
+    private String getOverpassAPIQueryForWays(ArrayList<Double> OSMArea, String waterWay) {
+        String query = new OverpassQuery()
+                .filterQuery()
+                .way()
+                .tag("waterway", waterWay)
+                .boundingBox(
+                        OSMArea.get(2), OSMArea.get(1),
+                        OSMArea.get(0), OSMArea.get(3))
+                .end()
+                .output(100)
+                .build();
+        return query;
+    }
+
     /* Public methods */
 
     /**
@@ -86,6 +100,23 @@ public class OverpassWrapper implements IContants {
     public void getOSMDataForFireStations(int distance, IOverpassAPI iOverpassAPI) {
         ArrayList<Double> area = this.getOSMArea(distance);
         String query = OVERPASS_REQUEST_FORMAT_AND_TIMEOUT + this.getOverpassAPIQueryForNodes(area, OSM_FIRESTATION_AMENITY);
+        new Thread() {
+            public void run() {
+                try {
+                    OverpassQueryResult result = OverpassServiceProvider.get().interpreter(query).execute().body();
+                    if (iOverpassAPI != null) {
+                        iOverpassAPI.overpassCallback(result);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    public void getOSMDataForRivers(int distance, IOverpassAPI iOverpassAPI) {
+        ArrayList<Double> area = this.getOSMArea(distance);
+        String query = OVERPASS_REQUEST_FORMAT_AND_TIMEOUT + this.getOverpassAPIQueryForWays(area, OSM_RIVERS_WATERWAY);
         new Thread() {
             public void run() {
                 try {

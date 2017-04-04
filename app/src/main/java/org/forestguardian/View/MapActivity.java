@@ -263,12 +263,28 @@ public class MapActivity extends AppCompatActivity
                         }
                     }
                     //Print the nearest fire station information
-                    Log.i(TAG, "Name: " + nearestFireStation.tags.name);
-                    Log.i(TAG, "City: " + nearestFireStation.tags.addressCity);
-                    Log.i(TAG, "Street: " + nearestFireStation.tags.addressStreet);
-                    Log.i(TAG, "Operator: " + nearestFireStation.tags.operator);
+                    if (nearestFireStation != null) {
+                        Log.i(TAG, "Name: " + nearestFireStation.tags.name);
+                        Log.i(TAG, "City: " + nearestFireStation.tags.addressCity);
+                        Log.i(TAG, "Street: " + nearestFireStation.tags.addressStreet);
+                        Log.i(TAG, "Operator: " + nearestFireStation.tags.operator);
+                    }
                 } else {
-                    Log.e(TAG, "Nothing have been found!!");
+                    Log.e(TAG, "Error getting the wildfires data!!");
+                }
+            }
+        });
+
+        //Get the nearest rivers
+        overpassWrapper.getOSMDataForRivers(1000, new IOverpassAPI() {
+            @Override
+            public void overpassCallback(OverpassQueryResult result) {
+                if (result != null) {
+                    for (int index = 0; index < result.elements.size(); index++) {
+                        Log.i(TAG, "River: " + result.elements.get(index).tags.name);
+                    }
+                } else {
+                    Log.e(TAG, "Error getting the rivers data!!");
                 }
             }
         });
