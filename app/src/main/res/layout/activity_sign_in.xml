@@ -15,10 +15,13 @@
         android:layout_width="0dp"
         android:layout_height="84dp"
         android:layout_marginBottom="26dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_weight="0.06"
         android:backgroundTint="@android:color/white"
+        android:drawableLeft="@mipmap/security"
         android:hint="@string/prompt_password"
         android:imeActionId="@+id/login"
         android:imeActionLabel="@string/action_sign_in_short"
@@ -39,10 +42,13 @@
         android:layout_width="0dp"
         android:layout_height="72dp"
         android:layout_marginBottom="30dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_weight="0.11"
         android:backgroundTint="@android:color/white"
+        android:drawableLeft="@mipmap/username"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:maxLines="1"
@@ -65,7 +71,8 @@
         android:textAlignment="textEnd"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="24dp"/>
 
     <ProgressBar
         android:id="@+id/login_progress"
@@ -86,7 +93,7 @@
     <Button
         android:id="@+id/email_sign_in_button"
         style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="75dp"
         android:layout_marginBottom="50dp"
         android:layout_marginLeft="30dp"
@@ -98,7 +105,9 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"/>
 
     <ImageView
         android:id="@+id/imageView2"
@@ -112,6 +121,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher"/>
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
 
 </android.support.constraint.ConstraintLayout>
