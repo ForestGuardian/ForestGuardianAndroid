@@ -51,6 +51,8 @@ public class SignUpActivity  extends AppCompatActivity {
             String pass = mPassword.getText().toString();
             String confirmation = mPasswordConfirmation.getText().toString();
 
+            /* Check Local validations */
+
             if (TextUtils.isEmpty(email)  || TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
                 String error = "Please fill all fields.";
                 Log.d(getLocalClassName(),error);
@@ -65,7 +67,6 @@ public class SignUpActivity  extends AppCompatActivity {
                 return;
             }
 
-            // Check is password is present.
             if (!UserValidations.isPasswordValid(pass)) {
                 String error = "Password should have at least 8 characters.";
                 Log.d(getLocalClassName(),error);
@@ -73,7 +74,6 @@ public class SignUpActivity  extends AppCompatActivity {
                 return;
             }
 
-            // Check if password and confirmation are equals.
             if (!pass.equals(confirmation)) {
                 String error = "Password and confirmation should be equal.";
                 Log.d(getLocalClassName(),error);
@@ -94,38 +94,37 @@ public class SignUpActivity  extends AppCompatActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(pSessionDataResult -> {
 
+                        /* Check web service response validations. */
+
                         if ( pSessionDataResult.isError() ){
-                            /* TODO: Handle authentication error case. Review also pSessionDataResult.response().isSuccessful() case
-                            * Check for error messages are ready for user viewing.
-                            * */
+                            /* TODO: Handle authentication error case. */
                             Log.e( getLocalClassName(), pSessionDataResult.error().getMessage() );
                             Toast.makeText(this, "Problems with online service..." , Toast.LENGTH_LONG ).show();
                             return;
                         }
 
                         if ( !pSessionDataResult.response().isSuccessful() ){
+                            /* Check for error messages are ready for user viewing. */
                             Log.e( getLocalClassName(), "Problem processing request." );
                             Toast.makeText(this, "Problem processing request.", Toast.LENGTH_LONG ).show();
                             return;
                         }
 
+                        // Save authentication headers for future requests.
                         Headers authHeaders = pSessionDataResult.response().headers();
                         String accessToken = authHeaders.get("Access-Token");
-
                         User authenticatedUser = pSessionDataResult.response().body().getUser();
                         authenticatedUser.setToken(accessToken);
-
-                        Log.e("Current User", authenticatedUser.getEmail());
-                        assertEquals(authenticatedUser.getEmail(), user.getEmail());
-
-                        //Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
-                        //ForestGuardianService.global().addApiAuthorizationHeader();
-
-                        //Add token to authenticate future requests.
                         ForestGuardianService.global().addAuthenticationHeaders(authenticatedUser.getEmail(), accessToken);
+
+                        // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
+                        // ForestGuardianService.global().addApiAuthorizationHeader();
+
+                        Log.e("Authenticated User:", authenticatedUser.getEmail());
 
                         Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
 
+                        // Load MapActivity.
                         Intent intent = new Intent(getApplicationContext(),MapActivity.class);
                         startActivity(intent);
                         finish();
