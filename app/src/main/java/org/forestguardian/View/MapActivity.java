@@ -31,6 +31,8 @@ import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 
 public class MapActivity extends AppCompatActivity
@@ -70,7 +72,12 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (MapActivity.this.mCurrentLocation != null) {
-                    MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
+                    MapActivity.this.mMapWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
+                        }
+                    });
                 }
             }
         });
@@ -184,9 +191,13 @@ public class MapActivity extends AppCompatActivity
             public void onLocationChanged(Location location) {
                 MapActivity.this.mCurrentLocation = location;
                 if (!MapActivity.this.mIsCurrentLocation) {
-                    MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")");
+                    MapActivity.this.mMapWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")");
+                        }
+                    });
                 }
-
             }
 
             @Override
