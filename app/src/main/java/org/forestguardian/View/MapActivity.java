@@ -226,6 +226,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void run() {
                 MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
+                MapActivity.this.mMapWebView.loadUrl("javascript:removeFireStationMark()");
             }
         });
 
@@ -295,6 +296,7 @@ public class MapActivity extends AppCompatActivity
                             @Override
                             public void run() {
                                 MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(wildfireCoordinates.getLatitude()) + ", " + String.valueOf(wildfireCoordinates.getLongitude()) + ", " + String.valueOf(tmpNearestFireStation.lat) + ", " + String.valueOf(tmpNearestFireStation.lon) +")");
+                                MapActivity.this.mMapWebView.loadUrl("javascript:addFireStationMark(" + String.valueOf(tmpNearestFireStation.lat) + ", " + String.valueOf(tmpNearestFireStation.lon) + ")");
                             }
                         });
                     }
