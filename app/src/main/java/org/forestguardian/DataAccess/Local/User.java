@@ -11,6 +11,8 @@ import io.realm.RealmObject;
 public class User extends RealmObject {
 
     @Expose
+    private String username;
+    @Expose
     private String email;
     @Expose
     private String password;
@@ -59,5 +61,13 @@ public class User extends RealmObject {
 
     public void setName(final String pName) {
         name = pName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(final String pUsername) {
+        username = pUsername;
     }
 }

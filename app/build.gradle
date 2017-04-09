@@ -72,4 +72,8 @@ dependencies {
     // Optional -- UI testing with UI Automator
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    //Butter knife
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }

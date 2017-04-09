@@ -10,6 +10,7 @@ import junit.framework.Assert;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
+import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -35,37 +36,6 @@ import static org.forestguardian.DataAccess.WebServer.ForestGuardianAPI.TEST_END
 @RunWith(AndroidJUnit4.class)
 public class ForestGuardianServiceTest {
 
-    private OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder();
-
-    public void addApiAuthorizationHeader(){
-
-        httpBuilder.addInterceptor(chain -> {
-            Request original = chain.request();
-
-            // Request customization: add request headers
-            Request.Builder requestBuilder = original.newBuilder()
-                    .addHeader("Authorization", "auth-value");
-
-            Request request = requestBuilder.build();
-            return chain.proceed(request);
-        });
-    }
-
-    public void addAuthenticationHeaders( String email, String token ){
-
-        httpBuilder.addInterceptor(chain -> {
-            Request original = chain.request();
-
-            // Request customization: add request headers
-            Request.Builder requestBuilder = original.newBuilder()
-                    .addHeader("X-User-Email", email)
-                    .addHeader("X-User-Token", token);
-
-            Request request = requestBuilder.build();
-            return chain.proceed(request);
-        });
-    }
-
     @Test
     public void signIn() throws InterruptedException {
 
@@ -74,17 +44,7 @@ public class ForestGuardianServiceTest {
         user.setPassword("pojapoja");
         user.setPasswordConfirmation("pojapoja");
 
-        OkHttpClient client = httpBuilder.build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(TEST_ENDPOINT)
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(client)
-                .build();
-
-        ForestGuardianAPI service = retrofit.create(ForestGuardianAPI.class);
-        Observable<Result<SessionData>> sessionService = service.signIn(user);
+        Observable<Result<SessionData>> sessionService = ForestGuardianService.global().service().signIn(user);
 
         //Wait for sync.
         final Object syncObject = new Object();
@@ -107,7 +67,8 @@ public class ForestGuardianServiceTest {
 
                     //Uncomment addApiAuthorizationHeader() when this feature is enabled from backend.
                     //addApiAuthorizationHeader();
-                    addAuthenticationHeaders( authenticatedUser.getEmail(), accessToken );
+
+                    ForestGuardianService.global().addAuthenticationHeaders( authenticatedUser.getEmail(), accessToken );
 
                     synchronized (syncObject){
                         syncObject.notify();

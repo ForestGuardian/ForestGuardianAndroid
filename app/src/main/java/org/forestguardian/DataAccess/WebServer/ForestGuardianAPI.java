@@ -28,4 +28,7 @@ public interface ForestGuardianAPI {
     @POST("api/v1/users/sign_in.json")
     Observable<Result<SessionData>> signIn(@Body User pUser);
 
+    @POST("api/v1/users.json")
+    Observable<Result<SessionData>> signUp(@Body User pUser);
+
 }

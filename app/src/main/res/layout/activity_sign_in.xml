@@ -61,18 +61,17 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="0dp"
+        android:id="@+id/link_to_signup"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_weight="1"
         android:text="@string/action_sign_up"
         android:textAlignment="textEnd"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="24dp"/>
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <ProgressBar
         android:id="@+id/login_progress"
