@@ -210,6 +210,15 @@ public class MapActivity extends AppCompatActivity
     }
 
     public void processWildfireData(JSONObject modisData) {
+        //Reset route
+        this.mMapWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
+            }
+        });
+
+        //Create the wildfire coordinate
         Log.i(TAG, "MODIS: " + modisData.toString());
         Location wildfireCoordinates = new Location("");
         try {
@@ -268,6 +277,15 @@ public class MapActivity extends AppCompatActivity
                         Log.i(TAG, "City: " + nearestFireStation.tags.addressCity);
                         Log.i(TAG, "Street: " + nearestFireStation.tags.addressStreet);
                         Log.i(TAG, "Operator: " + nearestFireStation.tags.operator);
+
+                        //Create the route from the wildfire to the fire station
+                        final OverpassQueryResult.Element tmpNearestFireStation = nearestFireStation;
+                        MapActivity.this.mMapWebView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(wildfireCoordinates.getLatitude()) + ", " + String.valueOf(wildfireCoordinates.getLongitude()) + ", " + String.valueOf(tmpNearestFireStation.lat) + ", " + String.valueOf(tmpNearestFireStation.lon) +")");
+                            }
+                        });
                     }
                 } else {
                     Log.e(TAG, "Error getting the wildfires data!!");
