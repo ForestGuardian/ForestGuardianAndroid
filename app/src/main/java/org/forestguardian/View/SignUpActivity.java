@@ -2,6 +2,7 @@ package org.forestguardian.View;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,9 +52,33 @@ public class SignUpActivity  extends AppCompatActivity {
             String pass = mPassword.getText().toString();
             String confirmation = mPasswordConfirmation.getText().toString();
 
-            // Check validation
-            if (!UserValidations.validatePassword(pass, confirmation)) {
-                /* Show error */
+            if (TextUtils.isEmpty(email)  || TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
+                String error = "Please fill all fields.";
+                Log.d(getLocalClassName(),error);
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (!UserValidations.isEmailValid(email)) {
+                String error = "Email is invalid.";
+                Log.d(getLocalClassName(),error);
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // Check is password is present.
+            if (!UserValidations.isPasswordValid(pass)) {
+                String error = "Password should have at least 8 characters.";
+                Log.d(getLocalClassName(),error);
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // Check if password and confirmation are equals.
+            if (!pass.equals(confirmation)) {
+                String error = "Password and confirmation should be equal.";
+                Log.d(getLocalClassName(),error);
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -76,6 +101,12 @@ public class SignUpActivity  extends AppCompatActivity {
                             * */
                             Log.e( getLocalClassName(), pSessionDataResult.error().getMessage() );
                             Toast.makeText(this, "Problems with online service..." , Toast.LENGTH_LONG ).show();
+                            return;
+                        }
+
+                        if ( !pSessionDataResult.response().isSuccessful() ){
+                            Log.e( getLocalClassName(), "Problem processing request." );
+                            Toast.makeText(this, "Problem processing request.", Toast.LENGTH_LONG ).show();
                             return;
                         }
 

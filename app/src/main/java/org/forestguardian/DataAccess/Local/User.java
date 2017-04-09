@@ -10,13 +10,12 @@ import io.realm.RealmObject;
 
 public class User extends RealmObject {
 
-    @Expose
     private String username;
     @Expose
     private String email;
     @Expose
     private String password;
-    @Expose
+
     private String password_confirmation;
 
     private String token;
