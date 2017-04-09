@@ -8,7 +8,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static org.forestguardian.DataAccess.WebServer.ForestGuardianAPI.TEST_ENDPOINT;
+import static org.forestguardian.DataAccess.WebServer.ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT;
 
 /**
  * Created by emma on 08/04/17.
@@ -33,7 +33,7 @@ public class ForestGuardianService {
         mClient = httpBuilder.build();
 
         mRetrofit = new retrofit2.Retrofit.Builder()
-                .baseUrl(TEST_ENDPOINT)
+                .baseUrl(FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(mClient)
