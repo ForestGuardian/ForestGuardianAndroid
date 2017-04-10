@@ -33,7 +33,7 @@
         <activity
             android:name=".View.SignUpActivity"
             android:label="@string/title_signup_activity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             android:screenOrientation="portrait" ></activity>
         <activity
             android:name=".View.MapActivity"

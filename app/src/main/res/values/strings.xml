@@ -37,5 +37,5 @@
     <string name="pass_confirmation">Confirmar contraseña</string>
     <string name="splash_loading_screen_msg">Apagando incendios...</string>
     <string name="title_signin_activity">Iniciar Sessión</string>
-    <string name="title_signup_activity">Registrarse</string>
+    <string name="title_signup_activity">REGISTRARSE</string>
 </resources>
