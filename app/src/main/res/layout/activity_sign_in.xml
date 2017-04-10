@@ -48,7 +48,7 @@
         android:layout_marginStart="8dp"
         android:layout_weight="0.11"
         android:backgroundTint="@android:color/white"
-        android:drawableLeft="@mipmap/username"
+        android:drawableLeft="@mipmap/emaill"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:maxLines="1"

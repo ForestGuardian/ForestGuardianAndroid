@@ -12,7 +12,7 @@
     <string name="title_activity_sign_in">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Usuario</string>
+    <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">INICIAR SESIÓN</string>
     <string name="action_sign_in_short">INICIAR SESIÓN</string>
