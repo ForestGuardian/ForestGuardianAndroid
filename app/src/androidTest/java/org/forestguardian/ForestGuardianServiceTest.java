@@ -8,18 +8,18 @@ import junit.framework.Assert;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import okhttp3.Headers;
 import retrofit2.adapter.rxjava2.Result;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-
+import static junit.framework.Assert.*;
 /**
  * Created by emma on 26/03/17.
  */
@@ -59,7 +59,7 @@ public class ForestGuardianServiceTest {
                     //Uncomment addApiAuthorizationHeader() when this feature is enabled from backend.
                     //addApiAuthorizationHeader();
 
-                    ForestGuardianService.global().addAuthenticationHeaders( authenticatedUser.getEmail(), accessToken );
+                    ForestGuardianService.global().addAuthenticationHeaders( authenticatedUser.getEmail(), authenticatedUser.getToken() );
 
                     synchronized (syncObject){
                         syncObject.notify();
@@ -104,7 +104,7 @@ public class ForestGuardianServiceTest {
                     //Uncomment addApiAuthorizationHeader() when this feature is enabled from backend.
                     //addApiAuthorizationHeader();
 
-                    ForestGuardianService.global().addAuthenticationHeaders( authenticatedUser.getEmail(), accessToken );
+                    ForestGuardianService.global().addAuthenticationHeaders( authenticatedUser.getEmail(), authenticatedUser.getToken() );
 
                     synchronized (syncObject){
                         syncObject.notify();

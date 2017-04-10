@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import okhttp3.Headers;
 import retrofit2.adapter.rxjava2.Result;
 
@@ -118,7 +119,14 @@ public class SignUpActivity  extends AppCompatActivity {
                         String accessToken = authHeaders.get("Access-Token");
                         User authenticatedUser = pSessionDataResult.response().body().getUser();
                         authenticatedUser.setToken(accessToken);
-                        ForestGuardianService.global().addAuthenticationHeaders(authenticatedUser.getEmail(), accessToken);
+
+                        // Persist in realm. TODO: We retrieve by calling the last object. Improve this.
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        realm.copyToRealm(authenticatedUser);
+                        realm.commitTransaction();
+
+                        ForestGuardianService.global().addAuthenticationHeaders(authenticatedUser.getEmail(), authenticatedUser.getToken());
 
                         // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
                         // ForestGuardianService.global().addApiAuthorizationHeader();

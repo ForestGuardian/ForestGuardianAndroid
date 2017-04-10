@@ -10,6 +10,7 @@ import io.realm.RealmObject;
 
 public class User extends RealmObject {
 
+    /*Fields */
     private String username;
     @Expose
     private String email;
@@ -21,6 +22,8 @@ public class User extends RealmObject {
     private String token;
 
     private String name;
+
+    /*Setters and Getters*/
 
     public String getEmail() {
         return email;

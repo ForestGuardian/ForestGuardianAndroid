@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 
 android {
@@ -12,10 +13,6 @@ android {
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "86bdbd8592ac4cb88a2181cec717e5ac"]
-
-        jackOptions {
-            enabled true
-        }
     }
     buildTypes {
         release {
