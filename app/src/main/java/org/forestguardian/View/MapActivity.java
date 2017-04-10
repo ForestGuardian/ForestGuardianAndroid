@@ -31,28 +31,34 @@ import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
 import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static String TAG = "MapActivity";
-    private WebView mMapWebView;
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
     private Location mCurrentLocation;
     private LocationManager mLocationManager;
     private WebMapInterface mMapInterface;
 
+    @BindView(R.id.nav_view) NavigationView mNavView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.current_location) FloatingActionButton mCurrentLocationBtn;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.map_web_view) WebView mMapWebView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
+        mFab.setOnClickListener(view -> {
             if (MapActivity.this.mInDefaultMap) {
                 MapActivity.this.mInDefaultMap = false;
                 MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
@@ -62,8 +68,7 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
-        FloatingActionButton currentLocationBtn = (FloatingActionButton) findViewById(R.id.current_location);
-        currentLocationBtn.setOnClickListener(v -> {
+        mCurrentLocationBtn.setOnClickListener(v -> {
             if (MapActivity.this.mCurrentLocation != null) {
                 MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
             }
@@ -71,12 +76,11 @@ public class MapActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavView.setNavigationItemSelectedListener(this);
 
         //Init the map
         initWebMap();
@@ -145,8 +149,6 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void initWebMap() {
-        //Init the web map
-        this.mMapWebView = (WebView) findViewById(R.id.map_web_view);
         //Load the default map
         this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
         //Getting the webview settings
