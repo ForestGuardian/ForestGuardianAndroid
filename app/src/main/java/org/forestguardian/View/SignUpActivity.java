@@ -88,7 +88,7 @@ public class SignUpActivity  extends AppCompatActivity {
             user.setPassword(pass);
             user.setPasswordConfirmation(confirmation);
 
-            // Send Login Request
+            // Send SignUp Request
             Observable<Result<SessionData>> sessionService = ForestGuardianService.global().service().signUp(user);
             sessionService.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
