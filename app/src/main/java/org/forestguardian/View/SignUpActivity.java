@@ -63,21 +63,24 @@ public class SignUpActivity  extends AppCompatActivity {
             if (!UserValidations.isEmailValid(email)) {
                 String error = "Email is invalid.";
                 Log.d(getLocalClassName(),error);
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                mEmail.setError(error);
+                mEmail.requestFocus();
                 return;
             }
 
             if (!UserValidations.isPasswordValid(pass)) {
                 String error = "Password should have at least 8 characters.";
                 Log.d(getLocalClassName(),error);
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                mPassword.setError(error);
+                mPassword.requestFocus();
                 return;
             }
 
             if (!pass.equals(confirmation)) {
                 String error = "Password and confirmation should be equal.";
                 Log.d(getLocalClassName(),error);
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                mPasswordConfirmation.setError(error);
+                mPasswordConfirmation.requestFocus();
                 return;
             }
 
