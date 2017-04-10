@@ -20,18 +20,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import org.forestguardian.DataAccess.IOverpassAPI;
-import org.forestguardian.DataAccess.IWeather;
 import org.forestguardian.DataAccess.OpenWeatherWrapper;
 import org.forestguardian.DataAccess.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
+import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 
 public class MapActivity extends AppCompatActivity
@@ -50,13 +52,20 @@ public class MapActivity extends AppCompatActivity
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.map_web_view) WebView mMapWebView;
-
+    private NavigationHolder navHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+
+        navHolder = new NavigationHolder(mNavView);
+        navHolder.header.email.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getEmail() );
+        navHolder.header.name.setText( "Welcome random citizen!" );
+        // TODO: navHolder.header.name.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getName() );
+        // TODO: same but with avatar. Is this required?
 
         mFab.setOnClickListener(view -> {
             if (MapActivity.this.mInDefaultMap) {
@@ -282,5 +291,31 @@ public class MapActivity extends AppCompatActivity
 
     public void setIsCurrentLocation(boolean mIsCurrentLocation) {
         this.mIsCurrentLocation = mIsCurrentLocation;
+    }
+
+    /**
+     *  The following static classes are required to properly use Butterknife.bind
+     *  in certain nested news.
+     *  Check https://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife
+     * */
+
+    static class NavigationHolder {
+
+        public NavigationHeaderHolder header;
+
+        public NavigationHolder(NavigationView view){
+            ButterKnife.bind(this,view);
+            header = new NavigationHeaderHolder( view.getHeaderView(0) );
+        }
+    }
+
+    static class NavigationHeaderHolder {
+        @BindView(R.id.nav_user_name) TextView name;
+        @BindView(R.id.nav_user_email) TextView email;
+        @BindView(R.id.nav_user_pic) ImageView avatar;
+
+        public NavigationHeaderHolder(View view){
+            ButterKnife.bind(this,view);
+        }
     }
 }

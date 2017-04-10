@@ -21,6 +21,7 @@ import retrofit2.adapter.rxjava2.Result;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
+import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.UserValidations;
 import org.forestguardian.R;
 
@@ -120,18 +121,10 @@ public class SignUpActivity  extends AppCompatActivity {
                         User authenticatedUser = pSessionDataResult.response().body().getUser();
                         authenticatedUser.setToken(accessToken);
 
-                        // Persist in realm. TODO: We retrieve by calling the last object. Improve this.
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.beginTransaction();
-                        realm.copyToRealm(authenticatedUser);
-                        realm.commitTransaction();
-
-                        ForestGuardianService.global().addAuthenticationHeaders(authenticatedUser.getEmail(), authenticatedUser.getToken());
+                        ((ForestGuardianApplication)getApplication()).setCurrentUser(authenticatedUser);
 
                         // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
                         // ForestGuardianService.global().addApiAuthorizationHeader();
-
-                        Log.e("Authenticated User:", authenticatedUser.getEmail());
 
                         Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
 
