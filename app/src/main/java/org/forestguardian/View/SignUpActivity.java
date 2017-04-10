@@ -55,7 +55,8 @@ public class SignUpActivity  extends AppCompatActivity {
 
             /* Check Local validations */
 
-            if (TextUtils.isEmpty(email)  || TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
+            // TODO: Add username validation
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(pass)) {
                 String error = "Please fill all fields.";
                 Log.d(getLocalClassName(),error);
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
