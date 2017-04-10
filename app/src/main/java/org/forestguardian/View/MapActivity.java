@@ -60,7 +60,6 @@ public class MapActivity extends AppCompatActivity
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        setTitle("REPORTAR INCENDIO");
 
         navHolder = new NavigationHolder(mNavView);
         navHolder.header.email.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getEmail() );

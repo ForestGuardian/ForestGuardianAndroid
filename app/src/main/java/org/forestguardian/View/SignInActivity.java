@@ -106,7 +106,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         checkForUpdates();
     }
 
-
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;

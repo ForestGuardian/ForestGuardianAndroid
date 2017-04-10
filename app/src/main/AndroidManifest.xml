@@ -18,19 +18,20 @@
         android:name="org.forestguardian.ForestGuardianApplication"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".View.SignInActivity">
+            android:name=".View.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>>
         <activity
-            android:name=".View.SignUpActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>>
+            android:name=".View.SignInActivity"
+            android:label="@string/title_signin_activity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".View.SignUpActivity"
+            android:label="@string/title_signup_activity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".View.MapActivity"
             android:label="@string/title_activity_map"

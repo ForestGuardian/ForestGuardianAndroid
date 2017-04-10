@@ -23,6 +23,15 @@ public class ForestGuardianApplication extends Application {
         Realm.init(this);
     }
 
+    public void loadCurrentUser(){
+        Realm realm = Realm.getDefaultInstance();
+        mCurrentUser = realm.where(User.class).findAll().last();
+    }
+
+    public boolean signedIn(){
+        return mCurrentUser != null;
+    }
+
     public User getCurrentUser() {
         return mCurrentUser;
     }

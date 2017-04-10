@@ -24,7 +24,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_map">REPORTAR INCENDIO</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -35,4 +35,7 @@
     <string name="user">Usuario</string>
     <string name="pass">Contraseña</string>
     <string name="pass_confirmation">Confirmar contraseña</string>
+    <string name="splash_loading_screen_msg">Apagando incendios...</string>
+    <string name="title_signin_activity">Iniciar Sessión</string>
+    <string name="title_signup_activity">Registrarse</string>
 </resources>
