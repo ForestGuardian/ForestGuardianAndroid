@@ -1,6 +1,8 @@
 package org.forestguardian.View;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -8,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -141,6 +144,31 @@ public class MapActivity extends AppCompatActivity
         if (id == R.id.nav_reportes) {
 
         } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.logout) {
+
+            /* Show confirmation dialog */
+            DialogInterface.OnClickListener listener = (dialog, option) -> {
+                switch (option){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // destroy session and go to SignInActivity
+                        ((ForestGuardianApplication)getApplication()).logout();
+                        Intent intent = new Intent(getApplicationContext(),SignInActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // Nothing
+                        break;
+                }
+            };
+
+            AlertDialog.Builder logoutConfirmation = new AlertDialog.Builder(this);
+            logoutConfirmation.setMessage("Are you sure?")
+                    .setPositiveButton("Logout", listener)
+                    .setNegativeButton("Cancel", listener)
+                    .show();
 
         } else if (id == R.id.nav_send) {
 

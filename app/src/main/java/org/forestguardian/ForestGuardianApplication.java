@@ -7,6 +7,7 @@ import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by emma on 09/04/17.
@@ -23,9 +24,22 @@ public class ForestGuardianApplication extends Application {
         Realm.init(this);
     }
 
+    /**
+     * Load current database user information if any.
+     */
     public void loadCurrentUser(){
         Realm realm = Realm.getDefaultInstance();
-        mCurrentUser = realm.where(User.class).findAll().last();
+        RealmResults<User> results = realm.where(User.class).findAll();
+        if ( results.size() > 0 ){
+            mCurrentUser = results.last();
+        }
+    }
+
+    public void logout(){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.where(User.class).findAll().deleteAllFromRealm();
+        realm.commitTransaction();
     }
 
     public boolean signedIn(){
