@@ -52,26 +52,20 @@ public class MapActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (MapActivity.this.mInDefaultMap) {
-                    MapActivity.this.mInDefaultMap = false;
-                    MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
-                } else {
-                    MapActivity.this.mInDefaultMap = true;
-                    MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
-                }
+        fab.setOnClickListener(view -> {
+            if (MapActivity.this.mInDefaultMap) {
+                MapActivity.this.mInDefaultMap = false;
+                MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
+            } else {
+                MapActivity.this.mInDefaultMap = true;
+                MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
             }
         });
 
         FloatingActionButton currentLocationBtn = (FloatingActionButton) findViewById(R.id.current_location);
-        currentLocationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MapActivity.this.mCurrentLocation != null) {
-                    MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
-                }
+        currentLocationBtn.setOnClickListener(v -> {
+            if (MapActivity.this.mCurrentLocation != null) {
+                MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
             }
         });
 
@@ -221,71 +215,61 @@ public class MapActivity extends AppCompatActivity
 
         //Get the weather info
         OpenWeatherWrapper openWeatherWrapper = new OpenWeatherWrapper(this);
-        openWeatherWrapper.requestCurrentForecastWeather(wildfireCoordinates, new IWeather() {
-            @Override
-            public void onForecastRequest(OpenWeatherWrapper openWeatherWrapper) {
-                Log.i(TAG, "Temperature: " + openWeatherWrapper.getTemperature()
-                        + ", humidity: " + openWeatherWrapper.getHumidity()
-                        + ", pressure: " + openWeatherWrapper.getPressure()
-                        + ", wind speed: " + openWeatherWrapper.getWind().getSpeed()
-                        + ", wind degree: " + openWeatherWrapper.getWind().getDeg());
-            }
-        });
+        openWeatherWrapper.requestCurrentForecastWeather(wildfireCoordinates,
+                openWeatherWrapper1 -> Log.i(TAG, "Temperature: " + openWeatherWrapper1.getTemperature()
+                + ", humidity: " + openWeatherWrapper1.getHumidity()
+                + ", pressure: " + openWeatherWrapper1.getPressure()
+                + ", wind speed: " + openWeatherWrapper1.getWind().getSpeed()
+                + ", wind degree: " + openWeatherWrapper1.getWind().getDeg()));
 
         //Get the nearest fire stations
         OverpassWrapper overpassWrapper = new OverpassWrapper();
         overpassWrapper.setOSMPoint(wildfireCoordinates);
-        overpassWrapper.getOSMDataForFireStations(100000, new IOverpassAPI() {
-            @Override
-            public void overpassCallback(OverpassQueryResult result) {
-                if (result != null) {
-                    OverpassQueryResult.Element nearestFireStation = null;
-                    double tmpDistance = 0;
+        overpassWrapper.getOSMDataForFireStations(100000, result -> {
+            if (result != null) {
+                OverpassQueryResult.Element nearestFireStation = null;
+                double tmpDistance = 0;
 
-                    Log.i(TAG, "Result: " + result.elements.size());
-                    for (int index = 0; index < result.elements.size(); index++) {
-                        //Initiate the coordinates of the fire stations
-                        Location fireStationCoordinates = new Location("");
-                        fireStationCoordinates.setLatitude(result.elements.get(index).lat);
-                        fireStationCoordinates.setLongitude(result.elements.get(index).lon);
+                Log.i(TAG, "Result: " + result.elements.size());
+                for (int index = 0; index < result.elements.size(); index++) {
+                    //Initiate the coordinates of the fire stations
+                    Location fireStationCoordinates = new Location("");
+                    fireStationCoordinates.setLatitude(result.elements.get(index).lat);
+                    fireStationCoordinates.setLongitude(result.elements.get(index).lon);
 
-                        //Set initial conditions
-                        if (nearestFireStation == null) {
-                            nearestFireStation = result.elements.get(index);
-                            tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
-                        }
-
-                        //Verify the distance between the wildfire and the fire stations
-                        double currentStationDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
-                        if (currentStationDistance < tmpDistance) {
-                            nearestFireStation = result.elements.get(index);
-                            tmpDistance = currentStationDistance;
-                        }
+                    //Set initial conditions
+                    if (nearestFireStation == null) {
+                        nearestFireStation = result.elements.get(index);
+                        tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
                     }
-                    //Print the nearest fire station information
-                    if (nearestFireStation != null) {
-                        Log.i(TAG, "Name: " + nearestFireStation.tags.name);
-                        Log.i(TAG, "City: " + nearestFireStation.tags.addressCity);
-                        Log.i(TAG, "Street: " + nearestFireStation.tags.addressStreet);
-                        Log.i(TAG, "Operator: " + nearestFireStation.tags.operator);
+
+                    //Verify the distance between the wildfire and the fire stations
+                    double currentStationDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStationCoordinates);
+                    if (currentStationDistance < tmpDistance) {
+                        nearestFireStation = result.elements.get(index);
+                        tmpDistance = currentStationDistance;
                     }
-                } else {
-                    Log.e(TAG, "Error getting the wildfires data!!");
                 }
+                //Print the nearest fire station information
+                if (nearestFireStation != null) {
+                    Log.i(TAG, "Name: " + nearestFireStation.tags.name);
+                    Log.i(TAG, "City: " + nearestFireStation.tags.addressCity);
+                    Log.i(TAG, "Street: " + nearestFireStation.tags.addressStreet);
+                    Log.i(TAG, "Operator: " + nearestFireStation.tags.operator);
+                }
+            } else {
+                Log.e(TAG, "Error getting the wildfires data!!");
             }
         });
 
         //Get the nearest rivers
-        overpassWrapper.getOSMDataForRivers(1000, new IOverpassAPI() {
-            @Override
-            public void overpassCallback(OverpassQueryResult result) {
-                if (result != null) {
-                    for (int index = 0; index < result.elements.size(); index++) {
-                        Log.i(TAG, "River: " + result.elements.get(index).tags.name);
-                    }
-                } else {
-                    Log.e(TAG, "Error getting the rivers data!!");
+        overpassWrapper.getOSMDataForRivers(1000, result -> {
+            if (result != null) {
+                for (int index = 0; index < result.elements.size(); index++) {
+                    Log.i(TAG, "River: " + result.elements.get(index).tags.name);
                 }
+            } else {
+                Log.e(TAG, "Error getting the rivers data!!");
             }
         });
     }
