@@ -1,6 +1,8 @@
 package org.forestguardian.View;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -8,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,76 +23,76 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
+import android.widget.ImageView;
+import android.widget.TextView;
 import org.forestguardian.DataAccess.IOverpassAPI;
 import org.forestguardian.DataAccess.IWeather;
 import org.forestguardian.DataAccess.OpenWeatherWrapper;
 import org.forestguardian.DataAccess.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
+import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Map;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static String TAG = "MapActivity";
-    private WebView mMapWebView;
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
     private Location mCurrentLocation;
     private LocationManager mLocationManager;
     private WebMapInterface mMapInterface;
 
+    @BindView(R.id.nav_view) NavigationView mNavView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.current_location) FloatingActionButton mCurrentLocationBtn;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.map_web_view) WebView mMapWebView;
+    private NavigationHolder navHolder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (MapActivity.this.mInDefaultMap) {
-                    MapActivity.this.mInDefaultMap = false;
-                    MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
-                } else {
-                    MapActivity.this.mInDefaultMap = true;
-                    MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
-                }
+        navHolder = new NavigationHolder(mNavView);
+        navHolder.header.email.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getEmail() );
+        navHolder.header.name.setText( "Welcome random citizen!" );
+        // TODO: navHolder.header.name.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getName() );
+        // TODO: same but with avatar. Is this required?
+
+        mFab.setOnClickListener(view -> {
+            if (MapActivity.this.mInDefaultMap) {
+                MapActivity.this.mInDefaultMap = false;
+                MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
+            } else {
+                MapActivity.this.mInDefaultMap = true;
+                MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
             }
         });
 
-        FloatingActionButton currentLocationBtn = (FloatingActionButton) findViewById(R.id.current_location);
-        currentLocationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MapActivity.this.mCurrentLocation != null) {
-                    MapActivity.this.mMapWebView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
-                        }
-                    });
-                }
+        mCurrentLocationBtn.setOnClickListener(v -> {
+            if (MapActivity.this.mCurrentLocation != null) {
+                MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
             }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavView.setNavigationItemSelectedListener(this);
 
         //Init the map
         initWebMap();
@@ -138,15 +141,34 @@ public class MapActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_reportes) {
 
         } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.logout) {
+
+            /* Show confirmation dialog */
+            DialogInterface.OnClickListener listener = (dialog, option) -> {
+                switch (option){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // destroy session and go to SignInActivity
+                        ((ForestGuardianApplication)getApplication()).logout();
+                        Intent intent = new Intent(getApplicationContext(),SignInActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // Nothing
+                        break;
+                }
+            };
+
+            AlertDialog.Builder logoutConfirmation = new AlertDialog.Builder(this);
+            logoutConfirmation.setMessage("Are you sure?")
+                    .setPositiveButton("Logout", listener)
+                    .setNegativeButton("Cancel", listener)
+                    .show();
 
         } else if (id == R.id.nav_send) {
 
@@ -158,8 +180,6 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void initWebMap() {
-        //Init the web map
-        this.mMapWebView = (WebView) findViewById(R.id.map_web_view);
         //Load the default map
         this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
         //Getting the webview settings
@@ -321,11 +341,38 @@ public class MapActivity extends AppCompatActivity
         });
     }
 
+
     public boolean isIsCurrentLocation() {
         return mIsCurrentLocation;
     }
 
     public void setIsCurrentLocation(boolean mIsCurrentLocation) {
         this.mIsCurrentLocation = mIsCurrentLocation;
+    }
+
+    /**
+     *  The following static classes are required to properly use Butterknife.bind
+     *  in certain nested news.
+     *  Check https://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife
+     * */
+
+    static class NavigationHolder {
+
+        public NavigationHeaderHolder header;
+
+        public NavigationHolder(NavigationView view){
+            ButterKnife.bind(this,view);
+            header = new NavigationHeaderHolder( view.getHeaderView(0) );
+        }
+    }
+
+    static class NavigationHeaderHolder {
+        @BindView(R.id.nav_user_name) TextView name;
+        @BindView(R.id.nav_user_email) TextView email;
+        @BindView(R.id.nav_user_pic) ImageView avatar;
+
+        public NavigationHeaderHolder(View view){
+            ButterKnife.bind(this,view);
+        }
     }
 }

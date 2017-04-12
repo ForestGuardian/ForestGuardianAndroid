@@ -1,14 +1,19 @@
 package org.forestguardian.DataAccess.WebServer;
 
+import android.util.Log;
+
 import com.google.gson.GsonBuilder;
 
+import org.forestguardian.DataAccess.Local.User;
+
+import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static org.forestguardian.DataAccess.WebServer.ForestGuardianAPI.TEST_ENDPOINT;
+import static org.forestguardian.DataAccess.WebServer.ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT;
 
 /**
  * Created by emma on 08/04/17.
@@ -24,16 +29,16 @@ public class ForestGuardianService {
 
     private static ForestGuardianService mInstance;
 
-    private okhttp3.OkHttpClient.Builder httpBuilder;
+    private okhttp3.OkHttpClient.Builder mHttpBuilder;
 
     private ForestGuardianService() {
 
-        httpBuilder = new okhttp3.OkHttpClient.Builder();
+        mHttpBuilder = new okhttp3.OkHttpClient.Builder();
 
-        mClient = httpBuilder.build();
+        mClient = mHttpBuilder.build();
 
         mRetrofit = new retrofit2.Retrofit.Builder()
-                .baseUrl(TEST_ENDPOINT)
+                .baseUrl(FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(mClient)
@@ -45,7 +50,7 @@ public class ForestGuardianService {
 
     public void addApiAuthorizationHeader(){
 
-        httpBuilder.addInterceptor(chain -> {
+        mHttpBuilder.addInterceptor(chain -> {
             Request original = chain.request();
 
             // Request customization: add request headers
@@ -57,9 +62,16 @@ public class ForestGuardianService {
         });
     }
 
+    /* TODO: Add case when a logout and relogin takes place.
+      * */
     public void addAuthenticationHeaders( String email, String token ){
 
-        httpBuilder.addInterceptor(chain -> {
+        if (email == null || token == null ){
+            Log.e(getClass().getSimpleName(), "Trying to add authentication headers without email or token");
+            return;
+        }
+
+        mHttpBuilder.addInterceptor(chain -> {
             Request original = chain.request();
 
             // Request customization: add request headers
