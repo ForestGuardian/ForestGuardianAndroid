@@ -1,12 +1,23 @@
 package org.forestguardian.Helpers;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.util.Log;
+
+import org.forestguardian.R;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by luisalonsomurillorojas on 1/4/17.
  */
 
 public class GeoHelper implements IContants{
+
+    private static final String TAG = "GeoHelper";
 
     public static Location calculateCoordinateDistanceFromAPoint(Location centerPoint, int distance, int directionInDegrees) {
         double tmpDistance = distance * Math.sqrt(2);
@@ -29,7 +40,29 @@ public class GeoHelper implements IContants{
     }
 
     public static double calculateDistanceBetweenTwoPoints(Location pointA, Location pointB) {
-        double distance = Math.sqrt(Math.pow(pointB.getLatitude() - pointA.getLatitude(), 2) + Math.pow(pointB.getLongitude() - pointA.getLongitude(), 2));
+        double dLat = Math.toRadians(pointB.getLatitude() - pointA.getLatitude());
+        double dLon = Math.toRadians(pointB.getLongitude() - pointA.getLongitude());
+        double a =  Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(Math.toRadians(pointA.getLatitude())) * Math.cos(Math.toRadians(pointB.getLatitude())) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double distance = EARTH_RADIUS * c; // Distance in km
         return distance;
+    }
+
+    public static String getAddressNameFromPoint(Context context, Location point) throws IOException {
+        Geocoder geocoder = new Geocoder(context);
+        List<Address> addressList = geocoder.getFromLocation(point.getLatitude(), point.getLongitude(), 5);
+        if (addressList.size() > 0) {
+            if (addressList.get(0).getLocality() != null) {
+                return addressList.get(0).getLocality();
+            } else if (addressList.get(0).getAdminArea() != null){
+                return addressList.get(0).getAdminArea();
+            } else {
+                return context.getResources().getString(R.string.unknown_place);
+            }
+        } else {
+            return context.getResources().getString(R.string.unknown_place);
+        }
     }
 }

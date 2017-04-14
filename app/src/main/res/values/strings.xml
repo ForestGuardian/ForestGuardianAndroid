@@ -3,8 +3,6 @@
 
     <!-- Open Weater API -->
     <string name="open_weather_api_key">58287bee46d0b29681931fd98adfe0c5</string>
-    <string name="open_weather_api_latitude">LATITUDE</string>
-    <string name="open_weather_api_longitude">LONGITUDE</string>
 
     <!-- WebView Strings -->
     <string name="web_view_map_1_url">http://forestdev6339.cloudapp.net/Leaflet/forestmap.html</string>
@@ -38,4 +36,7 @@
     <string name="splash_loading_screen_msg">Apagando incendios...</string>
     <string name="title_signin_activity">Iniciar Sessión</string>
     <string name="title_signup_activity">REGISTRARSE</string>
+
+    <!-- Wildfire details -->
+    <string name="unknown_place">Lugar desconocido</string>
 </resources>

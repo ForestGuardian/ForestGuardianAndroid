@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:background="@android:color/transparent" >
+
+    <Button
+        android:id="@+id/res_background_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".65"
+        android:background="@android:color/transparent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorDarkGray"
+        android:orientation="vertical"
+        android:layout_weight=".35">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Punto de calor:"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="@color/hockeyapp_text_white"/>
+
+            <TextView
+                android:id="@+id/res_wildfire_place_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/unknown_place"
+                android:textSize="18dp"
+                android:textColor="@color/hockeyapp_text_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/hockeyapp_text_white"
+                    android:textStyle="bold"
+                    android:text="Latitud: "
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/res_latitude_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/hockeyapp_text_white"
+                    android:text="0 "
+                    android:textSize="18dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/hockeyapp_text_white"
+                    android:textStyle="bold"
+                    android:text="Longitud: "
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/res_longitude_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/hockeyapp_text_white"
+                    android:text="0 "
+                    android:textSize="18dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/hockeyapp_text_white"
+                android:textStyle="bold"
+                android:text="Bomberos:"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:id="@+id/res_fire_station_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/hockeyapp_text_white"
+                android:text="INS"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/hockeyapp_text_white"
+                android:textStyle="bold"
+                android:text="Rercurso hídrico:"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:id="@+id/res_water_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/hockeyapp_text_white"
+                android:text="Río"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/calc_route_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calcular ruta"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
