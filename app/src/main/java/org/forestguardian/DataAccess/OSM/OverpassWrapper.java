@@ -1,8 +1,6 @@
-package org.forestguardian.DataAccess;
+package org.forestguardian.DataAccess.OSM;
 
 import android.location.Location;
-import android.os.HandlerThread;
-import android.util.Log;
 
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.Helpers.IContants;
@@ -12,12 +10,7 @@ import java.util.ArrayList;
 
 import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 import hu.supercluster.overpasser.adapter.OverpassServiceProvider;
-import hu.supercluster.overpasser.library.output.OutputModificator;
-import hu.supercluster.overpasser.library.output.OutputOrder;
-import hu.supercluster.overpasser.library.output.OutputVerbosity;
 import hu.supercluster.overpasser.library.query.OverpassQuery;
-
-import static hu.supercluster.overpasser.library.output.OutputFormat.JSON;
 
 /**
  * Created by luisalonsomurillorojas on 13/3/17.
@@ -109,6 +102,7 @@ public class OverpassWrapper implements IContants {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    iOverpassAPI.overpassCallback(null);
                 }
             }
         }.start();
@@ -126,6 +120,7 @@ public class OverpassWrapper implements IContants {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    iOverpassAPI.overpassCallback(null);
                 }
             }
         }.start();

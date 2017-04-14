@@ -3,9 +3,13 @@ package org.forestguardian.DataAccess;
 import android.content.Context;
 import android.webkit.JavascriptInterface;
 
+import org.forestguardian.DataAccess.NASA.MODIS;
+import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.View.MapActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 /**
  * Created by luisalonsomurillorojas on 12/3/17.
@@ -24,17 +28,27 @@ public class WebMapInterface {
     public void getMODISData(String data) {
         //Parse the JSON data
         JSONObject jsonMODIS = null;
+        MODIS modis = null;
         try {
             jsonMODIS = new JSONObject(data);
+            modis = new MODIS(jsonMODIS);
+            modis.setPlaceName(GeoHelper.getAddressNameFromPoint(this.mContext, modis.getCoordinate()));
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        ((MapActivity)mContext).processWildfireData(jsonMODIS);
+        ((MapActivity)mContext).processWildfireData(modis);
     }
 
     @JavascriptInterface
     public void notifyCurrentLocation() {
         ((MapActivity)mContext).setIsCurrentLocation(true);
+    }
+
+    @JavascriptInterface
+    public void showWildfireDetails() {
+        ((MapActivity)mContext).showWildfireDetails();
     }
 }
