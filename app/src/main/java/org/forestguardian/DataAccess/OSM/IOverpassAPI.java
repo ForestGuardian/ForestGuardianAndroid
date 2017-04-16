@@ -1,4 +1,4 @@
-package org.forestguardian.DataAccess;
+package org.forestguardian.DataAccess.OSM;
 
 import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 

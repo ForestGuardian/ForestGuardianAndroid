@@ -1,4 +1,4 @@
-package org.forestguardian.DataAccess;
+package org.forestguardian.DataAccess.Weather;
 
 import android.content.Context;
 import android.location.Location;
