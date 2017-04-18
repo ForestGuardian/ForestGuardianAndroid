@@ -62,14 +62,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
     @BindView(R.id.login_form) View mLoginFormView;
@@ -190,45 +182,50 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         Observable<Result<SessionData>> sessionService = ForestGuardianService.global().service().signIn(user);
         sessionService.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pSessionDataResult -> {
+                .subscribe(this::onLoginResult);
+    }
 
-                    showProgress(false);
+    /**
+     * Handles the result for the login request.
+     * @param pSessionDataResult
+     */
+    private void onLoginResult( Result<SessionData> pSessionDataResult ){
+
+        showProgress(false);
 
                     /* Check web service response validations. */
 
-                    if ( pSessionDataResult.isError() ){
+        if ( pSessionDataResult.isError() ){
                         /* TODO: Handle authentication error case. */
-                        Log.e( getLocalClassName(), pSessionDataResult.error().getMessage() );
-                        Toast.makeText(this, "Problems with online service..." , Toast.LENGTH_LONG ).show();
-                        return;
-                    }
+            Log.e( getLocalClassName(), pSessionDataResult.error().getMessage() );
+            Toast.makeText(this, "Problems with online service..." , Toast.LENGTH_LONG ).show();
+            return;
+        }
 
-                    if ( !pSessionDataResult.response().isSuccessful() ){
+        if ( !pSessionDataResult.response().isSuccessful() ){
                         /* Check for error messages are ready for user viewing. */
-                        Log.e( getLocalClassName(), "Problem processing request." );
-                        Toast.makeText(this, "Problem processing request.", Toast.LENGTH_LONG ).show();
-                        return;
-                    }
+            Log.e( getLocalClassName(), "Problem processing request." );
+            Toast.makeText(this, "Problem processing request.", Toast.LENGTH_LONG ).show();
+            return;
+        }
 
-                    // Save authentication headers for future requests.
-                    Headers authHeaders = pSessionDataResult.response().headers();
-                    String accessToken = authHeaders.get("Access-Token");
-                    User authenticatedUser = pSessionDataResult.response().body().getUser();
-                    authenticatedUser.setToken(accessToken);
+        // Save authentication headers for future requests.
+        Headers authHeaders = pSessionDataResult.response().headers();
+        String accessToken = authHeaders.get("Access-Token");
+        User authenticatedUser = pSessionDataResult.response().body().getUser();
+        authenticatedUser.setToken(accessToken);
 
-                    ((ForestGuardianApplication)getApplication()).setCurrentUser(authenticatedUser);
+        ((ForestGuardianApplication)getApplication()).setCurrentUser(authenticatedUser);
 
-                    // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
-                    // ForestGuardianService.global().addApiAuthorizationHeader();
+        // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
+        // ForestGuardianService.global().addApiAuthorizationHeader();
 
-                    Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
 
-                    // Load MapActivity.
-                    Intent intent = new Intent(getApplicationContext(),MapActivity.class);
-                    startActivity(intent);
-                    finish();
-                });
-
+        // Load MapActivity.
+        Intent intent = new Intent(getApplicationContext(),MapActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 
