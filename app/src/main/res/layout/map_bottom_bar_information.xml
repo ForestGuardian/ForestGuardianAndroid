@@ -62,19 +62,6 @@
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_conversion_absoluteX="0dp"
-        tools:layout_conversion_absoluteY="0dp"
-        tools:layout_conversion_absoluteWidth="57dp"
-        tools:layout_conversion_absoluteHeight="16dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"/>
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/current_location"
         app:backgroundTint="@color/colorGray"
@@ -114,7 +101,7 @@
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="160dp"
         android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -124,12 +111,31 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="20dp"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:layout_column="1"
             android:layout_margin="5dp"
             android:layout_row="1"
             android:layout_rowSpan="4"
             app:srcCompat="@mipmap/logo"/>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_column="2"
+            android:layout_margin="5dp"
+            android:layout_row="2"
+            app:srcCompat="@drawable/ic_toggle_temp_on"/>
+
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_column="2"
+            android:layout_margin="5dp"
+            android:layout_row="3"
+            app:srcCompat="@drawable/ic_toggle_temp_on"/>
 
 
         <TextView
@@ -140,7 +146,7 @@
             android:layout_columnSpan="2"
             android:layout_margin="5dp"
             android:layout_row="1"
-            android:text="TextView"
+            android:text="Bagaces, Guanacaste, CR"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -148,40 +154,46 @@
             tools:layout_editor_absoluteY="-30dp"/>
 
 
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_column="2"
+            android:layout_margin="5dp"
+            android:layout_row="4"
+            app:srcCompat="@drawable/ic_toggle_temp_on"/>
+
         <TextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_column="3"
             android:layout_margin="5dp"
             android:layout_row="2"
-            android:drawableStart="@drawable/ic_toggle_precip_on"
             android:gravity="center_vertical"
-            android:text="TextView"
+            android:text="Bomberos Bagaces"
             android:textColor="@android:color/white"/>
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_column="3"
             android:layout_margin="5dp"
             android:layout_row="3"
-            android:drawableStart="@drawable/ic_toggle_precip_on"
             android:gravity="center_vertical"
-            android:text="TextView"
+            android:text="Río Blanco"
             android:textColor="@android:color/white"/>
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_column="3"
             android:layout_margin="5dp"
             android:layout_row="4"
-            android:drawableStart="@drawable/ic_toggle_precip_on"
             android:gravity="center_vertical"
-            android:text="TextView"
+            android:text="37.3382° N, 121.8863° W"
             android:textColor="@android:color/white"/>
     </GridLayout>
 
