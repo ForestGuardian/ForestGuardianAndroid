@@ -1,9 +1,19 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ForestGuardianActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.50</item>
+    </style>
+
+    <style name="ForestGuardianActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@color/colorPrimaryDark</item>
+        <item name="titleTextStyle">@style/ForestGuardianActionBarTitle</item>
+    </style>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="actionBarStyle">@style/ForestGuardianActionBar</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
