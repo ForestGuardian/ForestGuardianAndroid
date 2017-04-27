@@ -32,7 +32,7 @@
     <string name="email">Correo Electrónico</string>
     <string name="user">Usuario</string>
     <string name="pass">Contraseña</string>
-    <string name="pass_confirmation">Confirmar contraseña</string>
+    <string name="pass_confirmation">Repetir contraseña</string>
     <string name="splash_loading_screen_msg">Apagando incendios...</string>
     <string name="title_signin_activity">Iniciar Sessión</string>
     <string name="title_signup_activity">REGISTRARSE</string>
