@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorDarkGray"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:layout_weight=".2">
 
@@ -28,8 +28,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Intencidad del fuego:"
+                android:layout_marginStart="10dp"
+                android:text="Intensidad del fuego:"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:textColor="@color/hockeyapp_text_white"/>
@@ -38,7 +38,7 @@
                 android:id="@+id/wildfire_intesity_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="0"
                 android:textSize="18dp"
                 android:textColor="@color/hockeyapp_text_white"/>
@@ -52,7 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="Humedad:"
                 android:textSize="18dp"
                 android:textStyle="bold"
@@ -62,7 +62,7 @@
                 android:id="@+id/wildfire_humidity_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="0"
                 android:textSize="18dp"
                 android:textColor="@color/hockeyapp_text_white"/>
@@ -76,7 +76,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="Presión:"
                 android:textSize="18dp"
                 android:textStyle="bold"
@@ -86,7 +86,7 @@
                 android:id="@+id/wildfire_pressure_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="0"
                 android:textSize="18dp"
                 android:textColor="@color/hockeyapp_text_white"/>
@@ -100,7 +100,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="Temperatura:"
                 android:textSize="18dp"
                 android:textStyle="bold"
@@ -110,7 +110,7 @@
                 android:id="@+id/wildfire_temperature_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="0"
                 android:textSize="18dp"
                 android:textColor="@color/hockeyapp_text_white"/>
@@ -124,7 +124,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="Velocidad del viento:"
                 android:textSize="18dp"
                 android:textStyle="bold"
@@ -134,7 +134,7 @@
                 android:id="@+id/wildfire_wind_velocity_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="0"
                 android:textSize="18dp"
                 android:textColor="@color/hockeyapp_text_white"/>

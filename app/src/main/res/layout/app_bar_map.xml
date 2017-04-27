@@ -23,23 +23,36 @@
 
     <include layout="@layout/content_map" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorAccent"
-        app:srcCompat="@mipmap/icon_add"/>
+        android:orientation="vertical">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/current_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin"
-        android:background="@color/colorPrimary"
-        app:backgroundTint="@color/colorAccent"
-        app:srcCompat="@mipmap/ic_current_location"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/current_location"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:background="@color/colorPrimary"
+            app:backgroundTint="@color/colorGray"
+            app:srcCompat="@mipmap/ic_current_location"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="@dimen/fab_margin"
+            android:scaleType="centerInside"
+            app:backgroundTint="@color/colorAccent"
+            app:srcCompat="@mipmap/icon_add"/>
+
+    </LinearLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>
