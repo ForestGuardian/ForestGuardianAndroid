@@ -14,7 +14,7 @@
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">INICIAR SESIÓN</string>
     <string name="action_sign_in_short">INICIAR SESIÓN</string>
-    <string name="action_sign_up">Registrarse</string>
+    <string name="action_sign_up"><u>Registrarse</u></string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>

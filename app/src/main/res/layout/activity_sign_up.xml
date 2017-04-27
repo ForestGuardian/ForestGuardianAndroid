@@ -12,14 +12,14 @@
         android:id="@+id/signup_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/rounded_rectangle_green"
         android:text="@string/signup_action"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/linearLayout"
         app:layout_constraintRight_toRightOf="@+id/linearLayout"
-        app:layout_constraintHorizontal_bias="0.0"/>
+        app:layout_constraintHorizontal_bias="1.0"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
