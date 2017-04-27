@@ -23,70 +23,84 @@
 
     <include layout="@layout/content_map" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:orientation="vertical">
+        android:layout_gravity="bottom">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_no_name_yet"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            app:srcCompat="@mipmap/logo"/>
+            android:layout_gravity="bottom|end"
+            android:orientation="vertical">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_temperature"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/current_location"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="@dimen/fab_margin"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:background="@color/colorPrimary"
+                app:backgroundTint="@color/colorGray"
+                app:srcCompat="@mipmap/ic_current_location"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="@dimen/fab_margin"
+                android:scaleType="centerInside"
+                app:backgroundTint="@color/colorAccent"
+                app:srcCompat="@mipmap/icon_add"/>
+
+        </LinearLayout>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"/>
+        </GridLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_toggle_temp_on"/>
+            android:layout_gravity="bottom|start"
+            android:orientation="vertical">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_precipitation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_toggle_precip_on"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_no_name_yet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:fabSize="mini"
+                app:srcCompat="@mipmap/logo"/>
 
-    </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_toggle_temp_on"/>
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_precipitation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_toggle_precip_on"/>
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:orientation="vertical">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/current_location"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginStart="@dimen/fab_margin"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:background="@color/colorPrimary"
-            app:backgroundTint="@color/colorGray"
-            app:srcCompat="@mipmap/ic_current_location"/>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_margin="@dimen/fab_margin"
-            android:scaleType="centerInside"
-            app:backgroundTint="@color/colorAccent"
-            app:srcCompat="@mipmap/icon_add"/>
-
-    </LinearLayout>
-
+        </LinearLayout>
+    </RelativeLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>
