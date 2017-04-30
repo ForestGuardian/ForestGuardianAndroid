@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="8dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_temperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_toggle_temp_on"
+            tools:layout_conversion_absoluteHeight="40dp"
+            tools:layout_conversion_absoluteWidth="40dp"
+            tools:layout_conversion_absoluteX="0dp"
+            tools:layout_conversion_absoluteY="40dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="40dp"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_no_name_yet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            app:fabSize="mini"
+            app:srcCompat="@mipmap/logo"
+            tools:layout_conversion_absoluteHeight="40dp"
+            tools:layout_conversion_absoluteWidth="40dp"
+            tools:layout_conversion_absoluteX="0dp"
+            tools:layout_conversion_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_precipitation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_toggle_precip_on"
+            tools:layout_conversion_absoluteHeight="40dp"
+            tools:layout_conversion_absoluteWidth="40dp"
+            tools:layout_conversion_absoluteX="0dp"
+            tools:layout_conversion_absoluteY="80dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="80dp"/>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton9"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/colorPrimary"
+        app:backgroundTint="@color/colorGray"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton10"
+        app:layout_constraintLeft_toLeftOf="@+id/floatingActionButton10"
+        app:layout_constraintRight_toRightOf="@+id/floatingActionButton10"
+        app:srcCompat="@mipmap/ic_current_location"
+        tools:layout_conversion_absoluteHeight="50dp"
+        tools:layout_conversion_absoluteWidth="50dp"
+        tools:layout_conversion_absoluteX="26dp"
+        tools:layout_conversion_absoluteY="16dp"
+        app:layout_constraintHorizontal_bias="1.0"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton10"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginRight="8dp"
+        android:scaleType="centerInside"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gridLayout"
+        app:srcCompat="@mipmap/icon_add"
+        tools:layout_conversion_absoluteHeight="70dp"
+        tools:layout_conversion_absoluteWidth="70dp"
+        tools:layout_conversion_absoluteX="16dp"
+        tools:layout_conversion_absoluteY="82dp"
+        android:layout_marginEnd="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_row="1"
+            android:gravity="center_vertical"
+            android:paddingStart="30dp"
+            android:text="Bagaces, Guanacaste, CR"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="-30dp"/>
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
