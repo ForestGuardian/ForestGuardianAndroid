@@ -224,6 +224,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onLocationChanged(Location location) {
                 MapActivity.this.mCurrentLocation = location;
+                Log.i("Location","Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
                 if (!MapActivity.this.mIsCurrentLocation) {
                     MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
                 }
@@ -271,10 +272,13 @@ public class MapActivity extends AppCompatActivity
         //Reset attribute's values
         this.resetAttributes();
         //Reset route
-        this.mMapWebView.post(() -> {
-            MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
-            MapActivity.this.mMapWebView.loadUrl("javascript:removeFireStationMark()");
-            MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()");
+        this.mMapWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
+                MapActivity.this.mMapWebView.loadUrl("javascript:removeFireStationMark()");
+                MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()");
+            }
         });
 
         //Create the wildfire coordinate
