@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -68,11 +69,10 @@ public class MapActivity extends AppCompatActivity
 
     @BindView(R.id.nav_view) NavigationView mNavView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.current_location) FloatingActionButton mCurrentLocationBtn;
-    @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.map_container) RelativeLayout mMapContainer;
     @BindView(R.id.map_web_view) WebView mMapWebView;
+    @BindView(R.id.map_interaction_layout) FrameLayout mInteractionLayout;
     private NavigationHolder navHolder;
 
     @Override
@@ -87,22 +87,6 @@ public class MapActivity extends AppCompatActivity
         navHolder.header.name.setText( "Welcome random citizen!" );
         // TODO: navHolder.header.name.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getName() );
         // TODO: same but with avatar. Is this required?
-
-        mFab.setOnClickListener(view -> {
-            if (MapActivity.this.mInDefaultMap) {
-                MapActivity.this.mInDefaultMap = false;
-                MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_2_url));
-            } else {
-                MapActivity.this.mInDefaultMap = true;
-                MapActivity.this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
-            }
-        });
-
-        mCurrentLocationBtn.setOnClickListener(v -> {
-            if (MapActivity.this.mCurrentLocation != null) {
-                MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(MapActivity.this.mCurrentLocation.getLatitude()) + ", " + String.valueOf(MapActivity.this.mCurrentLocation.getLongitude()) + ")");
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
