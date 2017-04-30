@@ -38,6 +38,7 @@ import org.forestguardian.DataAccess.OSM.WaterResource;
 import org.forestguardian.DataAccess.Weather.OpenWeatherWrapper;
 import org.forestguardian.DataAccess.OSM.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
+import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
 import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
@@ -189,7 +190,8 @@ public class MapActivity extends AppCompatActivity
 
     private void initWebMap() {
         //Load the default map
-        this.mMapWebView.loadUrl(getResources().getString(R.string.web_view_map_1_url));
+        // TODO: Improve path assignation.
+        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + getResources().getString(R.string.web_view_map_1_url));
         //Getting the webview settings
         WebSettings webSettings = this.mMapWebView.getSettings();
         //Enable javascript
@@ -223,12 +225,7 @@ public class MapActivity extends AppCompatActivity
             public void onLocationChanged(Location location) {
                 MapActivity.this.mCurrentLocation = location;
                 if (!MapActivity.this.mIsCurrentLocation) {
-                    MapActivity.this.mMapWebView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")");
-                        }
-                    });
+                    MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
                 }
             }
 
@@ -274,13 +271,10 @@ public class MapActivity extends AppCompatActivity
         //Reset attribute's values
         this.resetAttributes();
         //Reset route
-        this.mMapWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
-                MapActivity.this.mMapWebView.loadUrl("javascript:removeFireStationMark()");
-                MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()");
-            }
+        this.mMapWebView.post(() -> {
+            MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
+            MapActivity.this.mMapWebView.loadUrl("javascript:removeFireStationMark()");
+            MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()");
         });
 
         //Create the wildfire coordinate
@@ -289,155 +283,119 @@ public class MapActivity extends AppCompatActivity
 
         //Get the weather info
         OpenWeatherWrapper openWeatherWrapper = new OpenWeatherWrapper(this);
-        openWeatherWrapper.requestCurrentForecastWeather(wildfireCoordinates, new IWeather() {
-            @Override
-            public void onForecastRequest(OpenWeatherWrapper openWeatherWrapper) {
-                MapActivity.this.mWeather = openWeatherWrapper;
-                MapActivity.this.mMapWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "Creating popup");
-                        MapActivity.this.mMapWebView.loadUrl("javascript:addWildfireMessage(" + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLatitude()) + "," +
-                                String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLongitude()) + "," +
-                                String.valueOf(MapActivity.this.mMODIS.getBrightness()) + "," +
-                                String.valueOf(MapActivity.this.mWeather.getTemperature()) + "," +
-                                String.valueOf(MapActivity.this.mWeather.getHumidity()) + ")");
-                    }
-                });
-            }
+        openWeatherWrapper.requestCurrentForecastWeather(wildfireCoordinates, openWeatherWrapper1 -> {
+            MapActivity.this.mWeather = openWeatherWrapper1;
+            MapActivity.this.mMapWebView.post(() -> {
+                Log.d(TAG, "Creating popup");
+                MapActivity.this.mMapWebView.loadUrl("javascript:addWildfireMessage(" + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLatitude()) + "," +
+                        String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLongitude()) + "," +
+                        String.valueOf(MapActivity.this.mMODIS.getBrightness()) + "," +
+                        String.valueOf(MapActivity.this.mWeather.getTemperature()) + "," +
+                        String.valueOf(MapActivity.this.mWeather.getHumidity()) + ")");
+            });
         });
 
         //Get the nearest fire stations
         OverpassWrapper overpassWrapper = new OverpassWrapper();
         overpassWrapper.setOSMPoint(wildfireCoordinates);
-        overpassWrapper.getOSMDataForFireStations(100000, new IOverpassAPI() {
-            @Override
-            public void overpassCallback(OverpassQueryResult result) {
-                if (result != null) {
-                    FireStation nearestFireStation = null;
-                    double tmpDistance = 0;
+        overpassWrapper.getOSMDataForFireStations(100000, result -> {
+            if (result != null) {
+                FireStation nearestFireStation = null;
+                double tmpDistance = 0;
 
-                    Log.i(TAG, "Result: " + result.elements.size());
-                    for (int index = 0; index < result.elements.size(); index++) {
-                        //Initiate the fire station model
-                        FireStation fireStation = new FireStation();
-                        fireStation.setName(result.elements.get(index).tags.name);
-                        fireStation.setCity(result.elements.get(index).tags.addressCity);
-                        fireStation.setStreet(result.elements.get(index).tags.addressStreet);
-                        fireStation.setOperator(result.elements.get(index).tags.operator);
-                        fireStation.setCoordinate(result.elements.get(index).lat, result.elements.get(index).lon);
-                        MapActivity.this.mFireStations.add(fireStation);
+                Log.i(TAG, "Result: " + result.elements.size());
+                for (int index = 0; index < result.elements.size(); index++) {
+                    //Initiate the fire station model
+                    FireStation fireStation = new FireStation();
+                    fireStation.setName(result.elements.get(index).tags.name);
+                    fireStation.setCity(result.elements.get(index).tags.addressCity);
+                    fireStation.setStreet(result.elements.get(index).tags.addressStreet);
+                    fireStation.setOperator(result.elements.get(index).tags.operator);
+                    fireStation.setCoordinate(result.elements.get(index).lat, result.elements.get(index).lon);
+                    MapActivity.this.mFireStations.add(fireStation);
 
-                        //Set initial conditions
-                        if (nearestFireStation == null) {
-                            nearestFireStation = fireStation;
-                            tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStation.getCoordinate());
-                        }
-
-                        //Verify the distance between the wildfire and the fire stations
-                        double currentStationDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStation.getCoordinate());
-                        if (currentStationDistance < tmpDistance) {
-                            nearestFireStation = fireStation;
-                            tmpDistance = currentStationDistance;
-                        }
+                    //Set initial conditions
+                    if (nearestFireStation == null) {
+                        nearestFireStation = fireStation;
+                        tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStation.getCoordinate());
                     }
-                    //Print the nearest fire station information
-                    if (nearestFireStation != null) {
-                        MapActivity.this.mNearestFireStation = nearestFireStation;
+
+                    //Verify the distance between the wildfire and the fire stations
+                    double currentStationDistance = GeoHelper.calculateDistanceBetweenTwoPoints(wildfireCoordinates, fireStation.getCoordinate());
+                    if (currentStationDistance < tmpDistance) {
+                        nearestFireStation = fireStation;
+                        tmpDistance = currentStationDistance;
                     }
-                } else {
-                    Log.e(TAG, "Error getting the wildfires data!!");
                 }
+                //Print the nearest fire station information
+                if (nearestFireStation != null) {
+                    MapActivity.this.mNearestFireStation = nearestFireStation;
+                }
+            } else {
+                Log.e(TAG, "Error getting the wildfires data!!");
             }
         });
 
         //Get the nearest rivers
-        overpassWrapper.getOSMDataForRivers(1000, new IOverpassAPI() {
-            @Override
-            public void overpassCallback(OverpassQueryResult result) {
-                if (result != null) {
-                    Log.i(TAG, "Water resources result: " + result.elements.size());
-                    for (int index = 0; index < result.elements.size(); index++) {
-                        WaterResource waterResource = new WaterResource();
-                        waterResource.setName(result.elements.get(index).tags.name);
-                        waterResource.setType(result.elements.get(index).tags.type);
-                        waterResource.setCoordinate(result.elements.get(index).lat, result.elements.get(index).lon);
-                        MapActivity.this.mWaterResources.add(waterResource);
-                    }
-                } else {
-                    Log.e(TAG, "Error getting the rivers data!!");
+        overpassWrapper.getOSMDataForRivers(1000, result -> {
+            if (result != null) {
+                Log.i(TAG, "Water resources result: " + result.elements.size());
+                for (int index = 0; index < result.elements.size(); index++) {
+                    WaterResource waterResource = new WaterResource();
+                    waterResource.setName(result.elements.get(index).tags.name);
+                    waterResource.setType(result.elements.get(index).tags.type);
+                    waterResource.setCoordinate(result.elements.get(index).lat, result.elements.get(index).lon);
+                    MapActivity.this.mWaterResources.add(waterResource);
                 }
+            } else {
+                Log.e(TAG, "Error getting the rivers data!!");
             }
         });
     }
 
     public void showWildfireDetails() {
-        this.mMapWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()");
-            }
-        });
+        this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()"));
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                RouteDetails routeDetails = new RouteDetails(MapActivity.this);
-                routeDetails.setMODISData(MapActivity.this.mMODIS);
-                if (MapActivity.this.mWaterResources.size() > 0) {
-                    routeDetails.setOSMData(MapActivity.this.mNearestFireStation, MapActivity.this.mWaterResources.get(0));
-                } else {
-                    routeDetails.setOSMData(MapActivity.this.mNearestFireStation, null);
-                }
-                MapActivity.this.mMapContainer.addView(routeDetails);
+        runOnUiThread(() -> {
+            RouteDetails routeDetails = new RouteDetails(MapActivity.this);
+            routeDetails.setMODISData(MapActivity.this.mMODIS);
+            if (MapActivity.this.mWaterResources.size() > 0) {
+                routeDetails.setOSMData(MapActivity.this.mNearestFireStation, MapActivity.this.mWaterResources.get(0));
+            } else {
+                routeDetails.setOSMData(MapActivity.this.mNearestFireStation, null);
             }
+            MapActivity.this.mMapContainer.addView(routeDetails);
         });
 
     }
 
     public void removeWildfireDetails(RouteDetails routeDetails) {
         final RouteDetails tmpRouteDetails = routeDetails;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MapActivity.this.mMapContainer.removeView(tmpRouteDetails);
-            }
-        });
+        runOnUiThread(() -> MapActivity.this.mMapContainer.removeView(tmpRouteDetails));
     }
 
     public void showRouteDetails(RouteDetails routeDetails) {
         removeWildfireDetails(routeDetails);
 
         final FireStation tmpNearestFireStation = this.mNearestFireStation;
-        MapActivity.this.mMapWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (MapActivity.this.mNearestFireStation != null) {
-                    MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLatitude()) + ", " + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLongitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLatitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLongitude()) + ")");
-                    MapActivity.this.mMapWebView.loadUrl("javascript:addFireStationMark(" + String.valueOf(tmpNearestFireStation.getCoordinate().getLatitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLongitude()) + ")");
-                }
+        MapActivity.this.mMapWebView.post(() -> {
+            if (MapActivity.this.mNearestFireStation != null) {
+                MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLatitude()) + ", " + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLongitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLatitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLongitude()) + ")");
+                MapActivity.this.mMapWebView.loadUrl("javascript:addFireStationMark(" + String.valueOf(tmpNearestFireStation.getCoordinate().getLatitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLongitude()) + ")");
             }
         });
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WildfireDetails wildfireDetails = new WildfireDetails(MapActivity.this);
-                wildfireDetails.setMODISData(MapActivity.this.mMODIS);
-                wildfireDetails.setWeatherData(MapActivity.this.mWeather);
-                MapActivity.this.mMapContainer.addView(wildfireDetails);
-            }
+        runOnUiThread(() -> {
+            WildfireDetails wildfireDetails = new WildfireDetails(MapActivity.this);
+            wildfireDetails.setMODISData(MapActivity.this.mMODIS);
+            wildfireDetails.setWeatherData(MapActivity.this.mWeather);
+            MapActivity.this.mMapContainer.addView(wildfireDetails);
         });
     }
 
     public void removeRouteDetails(WildfireDetails wildfireDetails) {
         final WildfireDetails tmpWildfireDetails = wildfireDetails;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MapActivity.this.mMapContainer.removeView(tmpWildfireDetails);
-            }
-        });
+        runOnUiThread(() -> MapActivity.this.mMapContainer.removeView(tmpWildfireDetails));
     }
 
     public boolean isIsCurrentLocation() {

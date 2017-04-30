@@ -5,8 +5,8 @@
     <string name="open_weather_api_key">58287bee46d0b29681931fd98adfe0c5</string>
 
     <!-- WebView Strings -->
-    <string name="web_view_map_1_url">http://app.forestguardian.org/maps/fires</string>
-    <string name="web_view_map_2_url">http://app.forestguardian.org/maps/windy</string>
+    <string name="web_view_map_1_url">/maps/fires</string>
+    <string name="web_view_map_2_url">/maps/windy</string>
     <string name="title_activity_sign_in">Sign in</string>
 
     <!-- Strings related to login -->
