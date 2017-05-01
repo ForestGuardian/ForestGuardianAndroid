@@ -71,7 +71,10 @@ public class MapActivity extends AppCompatActivity
     @BindView(R.id.map_web_view) WebView mMapWebView;
     @BindView(R.id.map_interaction_layout) FrameLayout mInteractionLayout;
     private NavigationHolder navHolder;
+
     private Fragment mMapInteractionFragment;
+    private Fragment mReportLocalizationFragment;
+    private Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -416,6 +419,7 @@ public class MapActivity extends AppCompatActivity
         MapActivity.this.mMapWebView.post(() -> {
             MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
         });
+        loadReportLocalizationInteraction();
     }
 
     @Override
@@ -452,10 +456,32 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    private void loadNewInteraction(Fragment fragment){
+
+        Log.d("Replacing Fragment",fragment.getClass().getCanonicalName());
+
+        if ( mCurrentFragment != null ){
+            getFragmentManager().beginTransaction().replace(R.id.map_interaction_layout, fragment).commit();
+        }else{
+            getFragmentManager().beginTransaction().add(R.id.map_interaction_layout, fragment).commit();
+        }
+        mCurrentFragment = fragment;
+    }
+
     private void loadDefaultInteraction(){
-        mMapInteractionFragment = new DefaultMapInteractionFragment();
-        ((DefaultMapInteractionFragment)mMapInteractionFragment).setListener(this);
-        getFragmentManager().beginTransaction().add( R.id.map_interaction_layout, mMapInteractionFragment).commit();
+        if (mMapInteractionFragment == null) {
+            mMapInteractionFragment = new DefaultMapInteractionFragment();
+            ((DefaultMapInteractionFragment) mMapInteractionFragment).setListener(this);
+        }
+        loadNewInteraction(mMapInteractionFragment);
+    }
+
+    private void loadReportLocalizationInteraction(){
+        if (mReportLocalizationFragment == null) {
+            mReportLocalizationFragment = new ReportLocalizationFragment();
+            ((ReportLocalizationFragment) mReportLocalizationFragment).setListener(this);
+        }
+        loadNewInteraction(mReportLocalizationFragment);
     }
 
 }
