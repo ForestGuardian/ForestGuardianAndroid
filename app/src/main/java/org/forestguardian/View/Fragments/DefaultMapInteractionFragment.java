@@ -1,18 +1,14 @@
 package org.forestguardian.View.Fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import org.forestguardian.R;
-import org.forestguardian.View.MapActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,12 +19,12 @@ import butterknife.OnClick;
  */
 public class DefaultMapInteractionFragment extends Fragment{
 
-    public interface DefaultInteractionListener{
+    public interface OnDefaultInteractionListener {
         void addReport();
         void centerOnLocation();
     }
 
-    private DefaultInteractionListener mListener;
+    private OnDefaultInteractionListener mListener;
 
     @BindView(R.id.add_report_btn) FloatingActionButton mAddReportBtn;
     @BindView(R.id.center_location_btn) FloatingActionButton mCenterLocationBtn;
@@ -61,11 +57,11 @@ public class DefaultMapInteractionFragment extends Fragment{
         }
     }
 
-    public DefaultInteractionListener getListener() {
+    public OnDefaultInteractionListener getListener() {
         return mListener;
     }
 
-    public void setListener(final DefaultInteractionListener pListener) {
+    public void setListener(final OnDefaultInteractionListener pListener) {
         mListener = pListener;
     }
 }

@@ -49,7 +49,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, DefaultMapInteractionFragment.DefaultInteractionListener
+        implements NavigationView.OnNavigationItemSelectedListener,
+        DefaultMapInteractionFragment.OnDefaultInteractionListener, ReportLocalizationFragment.OnReportLocalizationListener
 {
 
     private static String TAG = "MapActivity";
@@ -428,6 +429,19 @@ public class MapActivity extends AppCompatActivity
         MapActivity.this.mMapWebView.post(() -> {
             MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
         });
+    }
+
+    @Override
+    public void reportLocationReady() {
+        Log.d("ButtonAction","reportLocationReady");
+        MapActivity.this.mMapWebView.post(() -> {
+            MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:prepareReportLocation()"));
+        });
+    }
+
+    public void openReportCreation(){
+        Log.d("FragmentsAction","openReportCreation");
+
     }
 
     /**

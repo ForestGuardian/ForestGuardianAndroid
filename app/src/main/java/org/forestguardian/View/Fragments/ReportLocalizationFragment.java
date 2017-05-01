@@ -11,6 +11,7 @@ import org.forestguardian.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by emma on 30/04/17.
@@ -18,9 +19,13 @@ import butterknife.ButterKnife;
 
 public class ReportLocalizationFragment extends Fragment {
 
+    public interface OnReportLocalizationListener{
+        void reportLocationReady();
+    }
+
     @BindView(R.id.next_btn) FloatingActionButton mNextButton;
 
-    private DefaultMapInteractionFragment.DefaultInteractionListener mListener;
+    private OnReportLocalizationListener mListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,11 +36,19 @@ public class ReportLocalizationFragment extends Fragment {
         return view;
     }
 
-    public DefaultMapInteractionFragment.DefaultInteractionListener getListener() {
+    @OnClick(R.id.next_btn)
+    public void onNextBtnClick(){
+        if (mListener != null){
+            mListener.reportLocationReady();
+        }
+        mListener.reportLocationReady();
+    }
+
+    public OnReportLocalizationListener getListener() {
         return mListener;
     }
 
-    public void setListener(final DefaultMapInteractionFragment.DefaultInteractionListener pListener) {
+    public void setListener(final OnReportLocalizationListener pListener) {
         mListener = pListener;
     }
 }

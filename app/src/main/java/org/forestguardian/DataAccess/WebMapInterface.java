@@ -1,6 +1,7 @@
 package org.forestguardian.DataAccess;
 
 import android.content.Context;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
@@ -50,5 +51,11 @@ public class WebMapInterface {
     @JavascriptInterface
     public void showWildfireDetails() {
         ((MapActivity)mContext).showWildfireDetails();
+    }
+
+    @JavascriptInterface
+    public void reportLocation( Double latitude, Double longitude ){
+        Log.d("ReportLocation",String.valueOf(latitude) + " - " + String.valueOf(longitude));
+        ((MapActivity)mContext).openReportCreation();
     }
 }
