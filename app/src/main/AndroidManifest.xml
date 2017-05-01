@@ -40,6 +40,10 @@
             android:name=".View.MapActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".View.CreateReportActivity"
+            android:label="@string/title_create_report_activity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data android:name="net.hockeyapp.android.appIdentifier" android:value="${HOCKEYAPP_APP_ID}" />
     </application>

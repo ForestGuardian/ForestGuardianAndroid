@@ -39,4 +39,5 @@
 
     <!-- Wildfire details -->
     <string name="unknown_place">Lugar desconocido</string>
+    <string name="title_create_report_activity">REPORTAR INCENDIO</string>
 </resources>
