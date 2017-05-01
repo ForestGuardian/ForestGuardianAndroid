@@ -2,6 +2,7 @@
 
     <style name="ForestGuardianActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:letterSpacing" tools:targetApi="lollipop">0.50</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="ForestGuardianActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
