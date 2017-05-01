@@ -43,7 +43,7 @@
         <activity
             android:name=".View.CreateReportActivity"
             android:label="@string/title_create_report_activity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme"></activity>
 
         <meta-data android:name="net.hockeyapp.android.appIdentifier" android:value="${HOCKEYAPP_APP_ID}" />
     </application>
