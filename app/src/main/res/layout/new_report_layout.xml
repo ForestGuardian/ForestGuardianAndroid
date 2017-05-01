@@ -11,38 +11,55 @@
         android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="70dp"
+        android:backgroundTint="@android:color/white"
         android:ems="10"
+        android:hint="@string/new_report_title"
         android:inputType="textPersonName"
         android:padding="15dp"
-        android:text="Title"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"/>
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:backgroundTint="@android:color/white"
+        android:drawableStart="@drawable/ic_email_black_24dp"
         android:ems="10"
+        android:hint="@string/new_report_description"
         android:inputType="textPersonName"
         android:padding="15dp"
-        android:text="Description"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"/>
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:backgroundTint="@android:color/white"
         android:padding="15dp"/>
 
     <EditText
         android:id="@+id/editText3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:backgroundTint="@android:color/white"
+        android:drawableStart="@drawable/ic_subdirectory_arrow_right_black_24dp"
         android:ems="10"
+        android:hint="@string/new_report_comments"
         android:inputType="textPersonName"
         android:padding="15dp"
-        android:text="Difficultad de acceso."
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,9 +78,9 @@
                 android:layout_width="100dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@android:color/transparent"
+                android:background="@color/colorDarkGray"
                 android:padding="10dp"
-                app:srcCompat="@mipmap/alert"/>
+                app:srcCompat="@drawable/ic_photo_camera_black_24dp"/>
         </FrameLayout>
 
         <FrameLayout
@@ -83,7 +100,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:padding="10dp"
-                    app:srcCompat="@mipmap/ic_current_location"/>
+                    app:srcCompat="@drawable/ic_location_on_black_24dp"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
