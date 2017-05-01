@@ -441,7 +441,8 @@ public class MapActivity extends AppCompatActivity
 
     public void openReportCreation(){
         Log.d("FragmentsAction","openReportCreation");
-
+        Intent intent = new Intent(this, CreateReportActivity.class);
+        startActivity(intent);
     }
 
     /**
