@@ -63,7 +63,7 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton9"
+        android:id="@+id/center_location_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -73,18 +73,18 @@
         android:layout_marginStart="8dp"
         android:background="@color/colorPrimary"
         app:backgroundTint="@color/colorGray"
-        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton10"
-        app:layout_constraintLeft_toLeftOf="@+id/floatingActionButton10"
-        app:layout_constraintRight_toRightOf="@+id/floatingActionButton10"
+        app:layout_constraintBottom_toTopOf="@+id/add_report_btn"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="@+id/add_report_btn"
+        app:layout_constraintRight_toRightOf="@+id/add_report_btn"
         app:srcCompat="@mipmap/ic_current_location"
         tools:layout_conversion_absoluteHeight="50dp"
         tools:layout_conversion_absoluteWidth="50dp"
         tools:layout_conversion_absoluteX="26dp"
-        tools:layout_conversion_absoluteY="16dp"
-        app:layout_constraintHorizontal_bias="1.0"/>
+        tools:layout_conversion_absoluteY="16dp"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton10"
+        android:id="@+id/add_report_btn"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginRight="8dp"

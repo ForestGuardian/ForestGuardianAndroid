@@ -49,7 +49,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DefaultMapInteractionFragment.DefaultInteractionListener
+{
 
     private static String TAG = "MapActivity";
     private boolean mInDefaultMap;
@@ -108,8 +109,7 @@ public class MapActivity extends AppCompatActivity
         this.mIsCurrentLocation = false;
 
         //Load Fragment
-        mMapInteractionFragment = new DefaultMapInteractionFragment();
-        getFragmentManager().beginTransaction().add( R.id.map_interaction_layout, mMapInteractionFragment).commit();
+        loadDefaultInteraction();
     }
 
     @Override
@@ -248,10 +248,6 @@ public class MapActivity extends AppCompatActivity
 
         this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
-    }
-
-    private void addReportLocation(){
-        MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
     }
 
     private void resetAttributes(){
@@ -414,6 +410,22 @@ public class MapActivity extends AppCompatActivity
         this.mIsCurrentLocation = mIsCurrentLocation;
     }
 
+    @Override
+    public void addReport() {
+        Log.d("ButtonAction","addReport");
+        MapActivity.this.mMapWebView.post(() -> {
+            MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
+        });
+    }
+
+    @Override
+    public void centerOnLocation() {
+        Log.d("ButtonAction","centerOnLocation");
+        MapActivity.this.mMapWebView.post(() -> {
+            MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
+        });
+    }
+
     /**
      *  The following static classes are required to properly use Butterknife.bind
      *  in certain nested news.
@@ -439,4 +451,11 @@ public class MapActivity extends AppCompatActivity
             ButterKnife.bind(this,view);
         }
     }
+
+    private void loadDefaultInteraction(){
+        mMapInteractionFragment = new DefaultMapInteractionFragment();
+        ((DefaultMapInteractionFragment)mMapInteractionFragment).setListener(this);
+        getFragmentManager().beginTransaction().add( R.id.map_interaction_layout, mMapInteractionFragment).commit();
+    }
+
 }
