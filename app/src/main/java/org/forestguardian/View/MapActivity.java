@@ -1,6 +1,7 @@
 package org.forestguardian.View;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,7 +9,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -23,16 +23,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
-import org.forestguardian.DataAccess.OSM.IOverpassAPI;
-import org.forestguardian.DataAccess.Weather.IWeather;
 import org.forestguardian.DataAccess.OSM.FireStation;
 import org.forestguardian.DataAccess.OSM.WaterResource;
 import org.forestguardian.DataAccess.Weather.OpenWeatherWrapper;
@@ -44,14 +40,13 @@ import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 import org.forestguardian.View.CustomViews.RouteDetails;
 import org.forestguardian.View.CustomViews.WildfireDetails;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
+import org.forestguardian.View.Fragments.ReportLocalizationFragment;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import hu.supercluster.overpasser.adapter.OverpassQueryResult;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -75,6 +70,7 @@ public class MapActivity extends AppCompatActivity
     @BindView(R.id.map_web_view) WebView mMapWebView;
     @BindView(R.id.map_interaction_layout) FrameLayout mInteractionLayout;
     private NavigationHolder navHolder;
+    private Fragment mMapInteractionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +106,10 @@ public class MapActivity extends AppCompatActivity
         //Variable default values
         this.mCurrentLocation = null;
         this.mIsCurrentLocation = false;
+
+        //Load Fragment
+        mMapInteractionFragment = new DefaultMapInteractionFragment();
+        getFragmentManager().beginTransaction().add( R.id.map_interaction_layout, mMapInteractionFragment).commit();
     }
 
     @Override
@@ -248,6 +248,10 @@ public class MapActivity extends AppCompatActivity
 
         this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+    }
+
+    private void addReportLocation(){
+        MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
     }
 
     private void resetAttributes(){
