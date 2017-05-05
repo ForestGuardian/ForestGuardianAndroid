@@ -413,29 +413,35 @@ public class MapActivity extends AppCompatActivity
         this.mIsCurrentLocation = mIsCurrentLocation;
     }
 
-    @Override
-    public void addReport() {
-        Log.d("ButtonAction","addReport");
-        MapActivity.this.mMapWebView.post(() -> {
-            MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
-        });
-        loadReportLocalizationInteraction();
-    }
+    // region TapOnCenterLocationInMap
 
     @Override
     public void centerOnLocation() {
         Log.d("ButtonAction","centerOnLocation");
-        MapActivity.this.mMapWebView.post(() -> {
-            MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(mCurrentLocation.getLatitude()) + ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")"));
-        });
+        MapActivity.this.mMapWebView.post(() ->
+            MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" +
+            String.valueOf(mCurrentLocation.getLatitude()) + ", " +
+            String.valueOf(mCurrentLocation.getLongitude()) + ")"));;
     }
 
     @Override
     public void reportLocationReady() {
         Log.d("ButtonAction","reportLocationReady");
-        MapActivity.this.mMapWebView.post(() -> {
-            MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:prepareReportLocation()"));
-        });
+        MapActivity.this.mMapWebView.post(() ->
+                MapActivity.this.mMapWebView.loadUrl("javascript:prepareReportLocation()"));
+    }
+
+    // endregion
+
+    // region Reports Creation
+
+    @Override
+    public void addReport() {
+        Log.d("ButtonAction","addReport");
+        MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl(
+            "javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) +
+            ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")") );
+        loadReportLocalizationInteraction();
     }
 
     public void openReportCreation(){
@@ -443,6 +449,8 @@ public class MapActivity extends AppCompatActivity
         Intent intent = new Intent(this, CreateReportActivity.class);
         startActivity(intent);
     }
+
+    // endregion
 
     /**
      *  The following static classes are required to properly use Butterknife.bind
