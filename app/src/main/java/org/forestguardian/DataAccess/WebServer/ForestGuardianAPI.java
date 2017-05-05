@@ -26,7 +26,7 @@ public interface ForestGuardianAPI {
     * running docker-compose up or docker-compose start commands.
     * */
     String DEVELOPMENT_DOCKER_ENDPOINT = "http://192.168.99.100:3000";
-    String DEVELOPMENT_EMMA_ENDPOINT = "http://192.168.0.102:3000";
+    String DEVELOPMENT_EMMA_ENDPOINT = "http://192.168.0.101:3000";
     String DEVELOPMENT_LUIS_ENDPOINT = "http://your-lan-ip-here:3000";
 
     /* For normal runs and automated tests. */
