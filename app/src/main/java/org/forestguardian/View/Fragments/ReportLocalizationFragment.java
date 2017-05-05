@@ -41,7 +41,6 @@ public class ReportLocalizationFragment extends Fragment {
         if (mListener != null){
             mListener.reportLocationReady();
         }
-        mListener.reportLocationReady();
     }
 
     public OnReportLocalizationListener getListener() {
