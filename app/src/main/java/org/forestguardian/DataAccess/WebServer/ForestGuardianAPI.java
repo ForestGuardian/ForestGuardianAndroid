@@ -30,7 +30,7 @@ public interface ForestGuardianAPI {
     String DEVELOPMENT_LUIS_ENDPOINT = "http://your-lan-ip-here:3000";
 
     /* For normal runs and automated tests. */
-    String FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT = PRODUCTION_ENDPOINT;
+    String FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT = DEVELOPMENT_EMMA_ENDPOINT;
 
     /**
      * Observable<Result<SessionData>> is a async callback,
