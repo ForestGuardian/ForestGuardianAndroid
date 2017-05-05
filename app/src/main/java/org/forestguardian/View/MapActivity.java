@@ -278,13 +278,10 @@ public class MapActivity extends AppCompatActivity
         //Reset attribute's values
         this.resetAttributes();
         //Reset route
-        this.mMapWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
-                MapActivity.this.mMapWebView.loadUrl("javascript:removeFireStationMark()");
-                MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()");
-            }
+        this.mMapWebView.post(() -> {
+            MapActivity.this.mMapWebView.loadUrl("javascript:removeRoute()");
+            MapActivity.this.mMapWebView.loadUrl("javascript:removeFireStationMark()");
+            MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()");
         });
 
         //Create the wildfire coordinate
