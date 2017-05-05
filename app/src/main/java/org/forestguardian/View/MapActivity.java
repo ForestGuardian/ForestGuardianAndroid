@@ -1,6 +1,7 @@
 package org.forestguardian.View;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -192,6 +193,7 @@ public class MapActivity extends AppCompatActivity
         return true;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWebMap() {
         //Load the default map
         // TODO: Improve path assignation.
