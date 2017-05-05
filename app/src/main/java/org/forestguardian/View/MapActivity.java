@@ -444,9 +444,11 @@ public class MapActivity extends AppCompatActivity
         loadReportLocalizationInteraction();
     }
 
-    public void openReportCreation(){
+    public void openReportCreation(final Double pLatitude, final Double pLongitude){
         Log.d("FragmentsAction","openReportCreation");
         Intent intent = new Intent(this, CreateReportActivity.class);
+        intent.putExtra("latitude",pLatitude);
+        intent.putExtra("longitude",pLongitude);
         startActivity(intent);
     }
 

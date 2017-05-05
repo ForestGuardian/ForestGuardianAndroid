@@ -54,8 +54,8 @@ public class WebMapInterface {
     }
 
     @JavascriptInterface
-    public void reportLocation( Double latitude, Double longitude ){
-        Log.d("ReportLocation",String.valueOf(latitude) + " - " + String.valueOf(longitude));
-        ((MapActivity)mContext).openReportCreation();
+    public void reportLocation( String pLatitude, String pLongitude ){
+        Log.d("ReportLocation",pLatitude+ " - " + pLongitude);
+        ((MapActivity)mContext).openReportCreation(Double.valueOf(pLatitude),Double.valueOf(pLongitude));
     }
 }

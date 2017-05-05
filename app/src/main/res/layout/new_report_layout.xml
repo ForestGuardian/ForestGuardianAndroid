@@ -109,7 +109,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/latitude_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -118,7 +118,7 @@
                         android:textColor="@android:color/white"/>
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/longitude_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
