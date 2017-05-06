@@ -31,7 +31,7 @@ public class ForestGuardianServiceTest {
     public void signIn() throws InterruptedException {
 
         User user = new User();
-        user.setEmail("emmanuelmora05@gmail.com");
+        user.setEmail("testing@forestguardian.org");
         user.setPassword("pojapoja");
         user.setPasswordConfirmation("pojapoja");
 
