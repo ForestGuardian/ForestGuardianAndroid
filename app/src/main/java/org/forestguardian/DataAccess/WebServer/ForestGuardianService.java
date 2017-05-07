@@ -1,10 +1,15 @@
 package org.forestguardian.DataAccess.WebServer;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.GsonBuilder;
 
+import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.User;
+import org.forestguardian.R;
+
+import java.util.HashMap;
 
 import io.realm.Realm;
 import okhttp3.OkHttpClient;
@@ -62,22 +67,24 @@ public class ForestGuardianService {
         });
     }
 
-    /* TODO: Add case when a logout and relogin takes place.
-      * */
-    public void addAuthenticationHeaders( String email, String token ){
-
-        if (email == null || token == null ){
-            Log.e(getClass().getSimpleName(), "Trying to add authentication headers without email or token");
-            return;
-        }
+    public void addAuthenticationHeaders( Context pContext, AuthData pAuthData ){
 
         mHttpBuilder.addInterceptor(chain -> {
             Request original = chain.request();
 
             // Request customization: add request headers
             Request.Builder requestBuilder = original.newBuilder()
-                    .addHeader("X-User-Email", email)
-                    .addHeader("X-User-Token", token);
+                    .addHeader(pContext.getString(R.string.header_auth_uid),
+                            pAuthData.getUid() )
+                    .addHeader(pContext.getString(R.string.header_auth_access_token),
+                            pAuthData.getAccessToken() )
+                    .addHeader(pContext.getString(R.string.header_auth_client),
+                            pAuthData.getClient() )
+                    .addHeader(pContext.getString(R.string.header_auth_expiry),
+                            pAuthData.getExpiry() )
+                    .addHeader(pContext.getString(R.string.header_auth_token_type),
+                            pAuthData.getTokenType() );
+
 
             Request request = requestBuilder.build();
             return chain.proceed(request);

@@ -19,10 +19,12 @@ import io.realm.Realm;
 import okhttp3.Headers;
 import retrofit2.adapter.rxjava2.Result;
 
+import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.ForestGuardianApplication;
+import org.forestguardian.Helpers.HeadersHelper;
 import org.forestguardian.Helpers.UserValidations;
 import org.forestguardian.R;
 
@@ -126,10 +128,16 @@ public class SignUpActivity  extends AppCompatActivity {
 
             // Save authentication headers for future requests.
             Headers authHeaders = pSessionDataResult.response().headers();
-            String accessToken = authHeaders.get("Access-Token");
-            User authenticatedUser = pSessionDataResult.response().body().getUser();
-            authenticatedUser.setToken(accessToken);
+            AuthData authData = HeadersHelper.parseHeaders(this, authHeaders );
+            if ( authData == null ){
+                            /* Check for error messages are ready for user viewing. */
+                Log.e( getLocalClassName(), "Auth headers are invalid." );
+                Toast.makeText(this, "Auth headers are invalid.", Toast.LENGTH_LONG ).show();
+                return;
+            }
 
+            User authenticatedUser = pSessionDataResult.response().body().getUser();
+            authenticatedUser.setAuth( authData );
             ((ForestGuardianApplication)getApplication()).setCurrentUser(authenticatedUser);
 
             // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.

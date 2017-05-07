@@ -2,6 +2,12 @@ package org.forestguardian.DataAccess.Local;
 
 import com.google.gson.annotations.Expose;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
+
 import io.realm.RealmObject;
 
 /**
@@ -19,7 +25,7 @@ public class User extends RealmObject {
 
     private String password_confirmation;
 
-    private String token;
+    private AuthData auth;
 
     private String name;
 
@@ -33,12 +39,12 @@ public class User extends RealmObject {
         email = pEmail;
     }
 
-    public String getToken() {
-        return token;
+    public AuthData getAuth() {
+        return auth;
     }
 
-    public void setToken(final String pToken) {
-        token = pToken;
+    public void setAuth(final AuthData pAuth) {
+        auth = pAuth;
     }
 
     public String getPassword() {

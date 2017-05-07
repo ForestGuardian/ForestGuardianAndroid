@@ -52,7 +52,7 @@ public class ForestGuardianApplication extends Application {
 
     public void setCurrentUser(final User pCurrentUser) {
         mCurrentUser = pCurrentUser;
-        ForestGuardianService.global().addAuthenticationHeaders(pCurrentUser.getEmail(), pCurrentUser.getToken());
+        ForestGuardianService.global().addAuthenticationHeaders( this, pCurrentUser.getAuth() );
 
         // Persist in realm. TODO: We retrieve by calling the last object. Improve this.
         Realm realm = Realm.getDefaultInstance();
