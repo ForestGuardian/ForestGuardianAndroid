@@ -33,8 +33,6 @@ public class MODIS implements IContants{
         this.setBrightness(jsonMODIS.getDouble(MODIS_BRIGHTNESS));
         this.setScan(jsonMODIS.getDouble(MODIS_SCAN));
         this.setTrack(jsonMODIS.getDouble(MODIS_TRACK));
-        this.setDate(jsonMODIS.getString(MODIS_ACQ_DATE));
-        this.setTime(jsonMODIS.getString(MODIS_ACQ_TIME));
         this.setSatellite(jsonMODIS.getString(MODIS_SATELLITE));
         this.setConfidence(jsonMODIS.getInt(MODIS_CONFIDENCE));
         this.setBright_t31(jsonMODIS.getDouble(MODIS_BRIGHT_T31));
