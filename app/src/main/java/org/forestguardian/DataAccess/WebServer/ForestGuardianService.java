@@ -85,7 +85,6 @@ public class ForestGuardianService {
                     .addHeader(pContext.getString(R.string.header_auth_token_type),
                             pAuthData.getTokenType() );
 
-
             Request request = requestBuilder.build();
             return chain.proceed(request);
         });
