@@ -74,7 +74,7 @@
             android:layout_weight="0.5">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/take_picture_btn"
                 android:layout_width="100dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center_horizontal"
