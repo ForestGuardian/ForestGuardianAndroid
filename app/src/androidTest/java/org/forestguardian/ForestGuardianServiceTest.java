@@ -7,6 +7,7 @@ import android.util.Log;
 import junit.framework.Assert;
 
 import org.forestguardian.DataAccess.Local.AuthData;
+import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
@@ -25,6 +26,8 @@ import retrofit2.adapter.rxjava2.Result;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.*;
+import static org.forestguardian.R.string.user;
+
 /**
  * Created by emma on 26/03/17.
  */
@@ -113,6 +116,45 @@ public class ForestGuardianServiceTest {
                     //addApiAuthorizationHeader();
 
                     ForestGuardianService.global().addAuthenticationHeaders(context, authData);
+
+                    synchronized (syncObject){
+                        syncObject.notify();
+                    }
+                });
+
+        synchronized (syncObject){
+            syncObject.wait();
+        }
+    }
+
+    @Test
+    public void createReport() throws InterruptedException {
+
+        Report report = new Report();
+        report.setTitle("ReportTitle_" + UUID.randomUUID().toString() );
+        report.setComments("Just follow the right line from the mango tree, if it hasn't burned yet.");
+        report.setDescription("A couple of evil smoking squirrels. Please send help!");
+        report.setGeo_latitude(0.1);
+        report.setGeo_longitude(0.2);
+        report.setPicture(context.getString(R.string.sample_picture_base64));
+
+        Observable<Report> reportService = ForestGuardianService.global().service().createReport(report);
+
+        //Wait for sync.
+        final Object syncObject = new Object();
+
+        reportService.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( pCreatedReport -> {
+
+                    Assert.assertNotNull(pCreatedReport.getId() );
+
+                    Log.i("Created Report", "id:" + String.valueOf( pCreatedReport.getId() ) );
+                    Log.i("Created Report", "title:" + pCreatedReport.getTitle() );
+                    Log.i("Created Report", "description:" + pCreatedReport.getDescription() );
+                    Log.i("Created Report", "comments:" + pCreatedReport.getComments() );
+                    Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeo_latitude()) );
+                    Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeo_longitude()) );
 
                     synchronized (syncObject){
                         syncObject.notify();

@@ -1,5 +1,6 @@
 package org.forestguardian.DataAccess.WebServer;
 
+import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 
@@ -41,7 +42,7 @@ public interface ForestGuardianAPI {
      */
 
     /**
-     * Login
+     * Login.
      * @param pUser
      * @return
      */
@@ -49,11 +50,20 @@ public interface ForestGuardianAPI {
     Observable<Result<SessionData>> signIn(@Body User pUser);
 
     /**
-     * Register a new account
+     * Register a new account.
      * @param pUser
      * @return
      */
     @POST("api/v1/users.json")
     Observable<Result<SessionData>> signUp(@Body User pUser);
+
+
+    /**
+     * Creates a new report.
+     * @param pReport
+     * @return
+     */
+    @POST("reports.json")
+    Observable<Report> createReport(@Body Report pReport);
 
 }
