@@ -4,6 +4,9 @@
     <!-- Open Weater API -->
     <string name="open_weather_api_key">58287bee46d0b29681931fd98adfe0c5</string>
 
+    <!-- Mapbox Geocoding -->
+    <string name="mapbox_geocodign_token">pk.eyJ1IjoibHVtdXJpbGxvIiwiYSI6IlVRTlZkbFkifQ.nFkWwVMJm_5mUy-9ye65Og</string>
+
     <!-- WebView Strings -->
     <string name="web_view_map_1_url">/maps/fires</string>
     <string name="web_view_map_2_url">/maps/windy</string>
