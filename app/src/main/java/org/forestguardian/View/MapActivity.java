@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -45,6 +47,7 @@ import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
 import org.forestguardian.View.Fragments.ReportLocalizationFragment;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -228,10 +231,12 @@ public class MapActivity extends AppCompatActivity
         }
 
         LocationListener locationListener = new LocationListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onLocationChanged(Location location) {
                 MapActivity.this.mCurrentLocation = location;
                 Log.i("Location","Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+                ((DefaultMapInteractionFragment)MapActivity.this.mMapInteractionFragment).setCurrentLocation(location);
                 if (!MapActivity.this.mIsCurrentLocation) {
                     MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
                 }

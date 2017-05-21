@@ -52,6 +52,10 @@ public class GeoHelper implements IContants{
     }
 
     public static String getAddressNameFromPoint(Context context, Location point) throws IOException {
+        if (context == null || point == null) {
+            return null;
+        }
+
         AndroidGeocoder geocoder = new AndroidGeocoder(context, Locale.getDefault());
         geocoder.setAccessToken(context.getResources().getString(R.string.mapbox_geocodign_token));
         List<Address> address = geocoder.getFromLocation(point.getLatitude(), point.getLongitude(), 1);
