@@ -36,6 +36,8 @@ public class CreateReportActivity extends AppCompatActivity {
     private static final int CAMERA_IMAGE_REQUEST = 101;
     private static final int GALLERY_IMAGE_REQUEST = 102;
 
+    public final static int SUCCESS_RESULT = 0;
+
     @BindView(R.id.latitude_label) TextView mLatitudeLabel;
     @BindView(R.id.longitude_label) TextView mLongitudeLabel;
     @BindView(R.id.take_picture_btn) ImageButton mTakePictureBtn;
@@ -80,21 +82,21 @@ public class CreateReportActivity extends AppCompatActivity {
         report.setGeoLatitude( mLatitude );
         report.setGeoLongitude( mLongitude );
 
-        // Check for a valid title, if the user entered one.
+        // Check for a valid title.
         if ( TextUtils.isEmpty(report.getTitle()) ) {
             mTitle.setError( getString(R.string.empty_report_title_error) );
             mTitle.requestFocus();
             return;
         }
 
-        // Check for a valid title, if the user entered one.
+        // Check for a valid description.
         if ( TextUtils.isEmpty(report.getDescription()) ) {
             mDescription.setError( getString(R.string.empty_report_description_error) );
             mDescription.requestFocus();
             return;
         }
 
-        // Check for a valid title, if the user entered one.
+        // Check for a valid comment.
         if ( TextUtils.isEmpty(report.getComments()) ) {
             mComments.setError( getString(R.string.empty_report_comments_error) );
             mComments.requestFocus();
@@ -122,6 +124,18 @@ public class CreateReportActivity extends AppCompatActivity {
                     Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeo_latitude()) );
                     Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeo_longitude()) );
 
+                    // Check that server answered successfully.
+                    if ( pCreatedReport.getId() == null ) {
+
+                        String error = "There was a problem uploading the report. Please, try again.";
+                        Log.e("ReportUploadError",error);
+                        Toast.makeText(this, error,Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    // Success
+                    this.setResult(SUCCESS_RESULT);
+                    this.finish();
                 });
     }
 
