@@ -151,8 +151,8 @@ public class ForestGuardianServiceTest {
                     Log.i("Created Report", "title:" + pCreatedReport.getTitle() );
                     Log.i("Created Report", "description:" + pCreatedReport.getDescription() );
                     Log.i("Created Report", "comments:" + pCreatedReport.getComments() );
-                    Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeo_latitude()) );
-                    Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeo_longitude()) );
+                    Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeoLatitude()) );
+                    Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeoLongitude()) );
 
                     synchronized (syncObject){
                         syncObject.notify();

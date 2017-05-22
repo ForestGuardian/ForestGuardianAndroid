@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
-import org.forestguardian.Helpers.UserValidations;
 import org.forestguardian.R;
 
 import java.io.ByteArrayOutputStream;
@@ -121,8 +120,8 @@ public class CreateReportActivity extends AppCompatActivity {
                     Log.i("Created Report", "title:" + pCreatedReport.getTitle() );
                     Log.i("Created Report", "description:" + pCreatedReport.getDescription() );
                     Log.i("Created Report", "comments:" + pCreatedReport.getComments() );
-                    Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeo_latitude()) );
-                    Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeo_longitude()) );
+                    Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeoLatitude()) );
+                    Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeoLongitude()) );
 
                     // Check that server answered successfully.
                     if ( pCreatedReport.getId() == null ) {
