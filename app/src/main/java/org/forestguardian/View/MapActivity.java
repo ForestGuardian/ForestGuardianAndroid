@@ -160,6 +160,10 @@ public class MapActivity extends AppCompatActivity
 
         if (id == R.id.nav_reportes) {
 
+            // Load Profile activity who also contains a list of all reports.
+            Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.logout) {

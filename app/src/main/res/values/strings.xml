@@ -52,4 +52,5 @@
     <string name="empty_report_title_error">Title can\'t be empty!</string>
     <string name="empty_report_description_error">Description can\'t be empty!</string>
     <string name="empty_report_comments_error">Comments can\'t be empty!</string>
+    <string name="profile_activity_title">Perfil</string>
 </resources>
