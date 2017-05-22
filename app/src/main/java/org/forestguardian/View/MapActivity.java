@@ -459,10 +459,18 @@ public class MapActivity extends AppCompatActivity
     private void handleReportCreation( int resultCode ){
         switch( resultCode ){
             case CreateReportActivity.SUCCESS_RESULT:
+
+                // Load default map menu.
                 loadDefaultInteraction();
+
+                // Report success.
                 String msg = "Reported!";
                 Log.i("Report",msg);
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+                // Remove marker.
+                MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl(
+                        "javascript:clearReportLocation()") );
                 break;
             default:
                 break;
