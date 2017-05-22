@@ -15,7 +15,6 @@ import org.forestguardian.Helpers.HeadersHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 import io.reactivex.Observable;
@@ -26,7 +25,6 @@ import retrofit2.adapter.rxjava2.Result;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.*;
-import static org.forestguardian.R.string.user;
 
 /**
  * Created by emma on 26/03/17.
@@ -134,8 +132,8 @@ public class ForestGuardianServiceTest {
         report.setTitle("ReportTitle_" + UUID.randomUUID().toString() );
         report.setComments("Just follow the right line from the mango tree, if it hasn't burned yet.");
         report.setDescription("A couple of evil smoking squirrels. Please send help!");
-        report.setGeo_latitude(0.1);
-        report.setGeo_longitude(0.2);
+        report.setGeoLatitude(0.1);
+        report.setGeoLongitude(0.2);
         report.setPicture(context.getString(R.string.sample_picture_base64));
 
         Observable<Report> reportService = ForestGuardianService.global().service().createReport(report);

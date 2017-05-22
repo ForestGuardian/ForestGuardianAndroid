@@ -63,7 +63,7 @@ public class Report extends RealmObject{
         return geo_latitude;
     }
 
-    public void setGeo_latitude(final Double pGeo_latitude) {
+    public void setGeoLatitude(final Double pGeo_latitude) {
         geo_latitude = pGeo_latitude;
     }
 
@@ -71,7 +71,7 @@ public class Report extends RealmObject{
         return geo_longitude;
     }
 
-    public void setGeo_longitude(final Double pGeo_longitude) {
+    public void setGeoLongitude(final Double pGeo_longitude) {
         geo_longitude = pGeo_longitude;
     }
 
