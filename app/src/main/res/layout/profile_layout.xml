@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@color/colorPrimary"
+              android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView4"
@@ -12,22 +13,24 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="20dp"
-        app:srcCompat="@mipmap/logo"/>
+        app:srcCompat="@drawable/ic_person_white_24dp"/>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/profile_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="Marcela Amador"
+        android:textColor="@android:color/white"
         android:textSize="24sp"/>
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/profile_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Heredia"/>
+        android:text="Heredia"
+        android:textColor="@android:color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +47,7 @@
             >
 
             <TextView
-                android:id="@+id/textView19"
+                android:id="@+id/profile_created_reports"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -60,6 +63,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="Reportes"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -70,7 +74,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView17"
+                android:id="@+id/profile_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -80,19 +84,22 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/profile_work"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Institución de voluntariado"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/report_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
-    </LinearLayout>
+        android:orientation="horizontal"
+        android:padding="20dp">
+    </ListView>
 
 </LinearLayout>

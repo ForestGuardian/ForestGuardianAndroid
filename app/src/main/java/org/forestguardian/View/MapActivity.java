@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
@@ -56,6 +57,8 @@ public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DefaultMapInteractionFragment.OnDefaultInteractionListener, ReportLocalizationFragment.OnReportLocalizationListener
 {
+
+    public final static int REPORT_CREATION_REQUEST = 234;
 
     private static String TAG = "MapActivity";
     private boolean mInDefaultMap;
@@ -159,6 +162,10 @@ public class MapActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_reportes) {
+
+            // Load Profile activity who also contains a list of all reports.
+            Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
@@ -455,7 +462,41 @@ public class MapActivity extends AppCompatActivity
         Intent intent = new Intent(this, CreateReportActivity.class);
         intent.putExtra("latitude",pLatitude);
         intent.putExtra("longitude",pLongitude);
-        startActivity(intent);
+        startActivityForResult(intent,REPORT_CREATION_REQUEST);
+    }
+
+    private void handleReportCreation( int resultCode ){
+        switch( resultCode ){
+            case CreateReportActivity.SUCCESS_RESULT:
+
+                // Load default map menu.
+                loadDefaultInteraction();
+
+                // Report success.
+                String msg = "Reported!";
+                Log.i("Report",msg);
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+                // Remove marker.
+                MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl(
+                        "javascript:clearReportLocation()") );
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case REPORT_CREATION_REQUEST:
+                handleReportCreation(resultCode);
+                break;
+            default:
+                break;
+        }
     }
 
     // endregion

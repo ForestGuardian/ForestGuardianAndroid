@@ -1,7 +1,23 @@
 package org.forestguardian.DataAccess.Local;
 
+import android.os.Environment;
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.UUID;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.realm.RealmObject;
 
 /**
@@ -24,6 +40,8 @@ public class Report extends RealmObject{
     private Double geo_longitude;
     @Expose
     private String picture;
+
+    private boolean isPictureDownloaded;
 
     /** Getters and Setters **/
 
@@ -59,19 +77,19 @@ public class Report extends RealmObject{
         comments = pComments;
     }
 
-    public Double getGeo_latitude() {
+    public Double getGeoLatitude() {
         return geo_latitude;
     }
 
-    public void setGeo_latitude(final Double pGeo_latitude) {
+    public void setGeoLatitude(final Double pGeo_latitude) {
         geo_latitude = pGeo_latitude;
     }
 
-    public Double getGeo_longitude() {
+    public Double getGeoLongitude() {
         return geo_longitude;
     }
 
-    public void setGeo_longitude(final Double pGeo_longitude) {
+    public void setGeoLongitude(final Double pGeo_longitude) {
         geo_longitude = pGeo_longitude;
     }
 
@@ -82,4 +100,56 @@ public class Report extends RealmObject{
     public void setPicture(final String pPicture) {
         picture = pPicture;
     }
+
+//    public Observable<String> getPictureData() {
+//        return Observable.create(e -> {
+//
+//            String pictureData;
+//            if ( isPictureDownloaded ) {
+//                pictureData = getPicture();
+//            } else{
+//                pictureData = download(getPicture());
+//            }
+//
+//            if (!e.isDisposed()) {
+//                e.onNext( pictureData );
+//                e.onComplete();
+//            }
+//        });
+//    }
+//
+//    private String download(String stringUrl){
+//        String pictureData;
+//        int count;
+//        try {
+//            URL url = new URL(stringUrl);
+//            URLConnection connection = url.openConnection();
+//            connection.connect();
+//
+//            // download the file
+//            InputStream input = new BufferedInputStream(url.openStream(),
+//                    8192);
+//
+//            // Output stream
+//            ByteArrayOutputStream output = new ByteArrayOutputStream();
+//
+//            byte data[] = new byte[1024];
+//
+//            while ((count = input.read(data)) != -1) {
+//                // writing data to file
+//                output.write(data, 0, count);
+//            }
+//
+//            pictureData = new String(output.toByteArray());
+//
+//            // closing streams
+//            output.close();
+//            input.close();
+//
+//        } catch (Exception e) {
+//            Log.e("Error: ", e.getMessage());
+//            return null;
+//        }
+//        return pictureData;
+//    }
 }
