@@ -71,4 +71,25 @@ public class GeoHelper implements IContants{
             return context.getResources().getString(R.string.unknown_place);
         }
     }
+
+    public static String formatCoordinates(Location location) {
+        if (location == null) {
+            return null;
+        }
+
+        String coordinatesLabel = String.valueOf(location.getLatitude());
+        if (location.getLatitude() >= 0) {
+            coordinatesLabel += "° N, ";
+        } else {
+            coordinatesLabel += "° S, ";
+        }
+
+        coordinatesLabel += String.valueOf(location.getLongitude());
+        if (location.getLongitude() >= 0) {
+            coordinatesLabel += "° E";
+        } else {
+            coordinatesLabel += "° O";
+        }
+        return coordinatesLabel;
+    }
 }
