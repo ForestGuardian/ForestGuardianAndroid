@@ -4,7 +4,7 @@ package org.forestguardian.View.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +37,6 @@ public class WildfireResourcesMapInteractionFragment extends Fragment {
     private static String MODIS_KEY = "MODISKey";
 
     private OnGeneralInteractionListener mListener;
-    private String mFirestationText;
-    private String mWaterText;
-    private String mWildfireLocationText;
 
     @BindView(R.id.firestationLabel) TextView mFirestationLabel;
     @BindView(R.id.waterLabel) TextView mWaterLabel;
@@ -63,9 +60,15 @@ public class WildfireResourcesMapInteractionFragment extends Fragment {
         FireStation fireStation = (FireStation) getArguments().getSerializable(FIRESTATION_KEY);
         WaterResource waterResource = (WaterResource) getArguments().getSerializable(WATER_KEY);
         // Set TextViews
-        this.mFirestationLabel.setText(fireStation.getName() + ", " + fireStation.getCity());
-        this.mWaterLabel.setText(waterResource.getName());
-        this.mWildfireLocationLabel.setText(GeoHelper.formatCoordinates(modis.getCoordinate()));
+        if (fireStation != null) {
+            this.mFirestationLabel.setText(fireStation.getName() + ", " + fireStation.getCity());
+        }
+        if (waterResource != null) {
+            this.mWaterLabel.setText(waterResource.getName());
+        }
+        if (modis != null) {
+            this.mWildfireLocationLabel.setText(GeoHelper.formatCoordinates(modis.getCoordinate()));
+        }
         return view;
     }
 
@@ -74,7 +77,7 @@ public class WildfireResourcesMapInteractionFragment extends Fragment {
         super.onAttach(context);
     }
 
-    public static WildfireResourcesMapInteractionFragment setFireData(MODIS modis, FireStation fireStation, WaterResource waterResource) {
+    public static Fragment setFireData(MODIS modis, FireStation fireStation, WaterResource waterResource) {
         WildfireResourcesMapInteractionFragment wildfireResourcesMapInteractionFragment = new WildfireResourcesMapInteractionFragment();
 
         Bundle fragmentBundle = new Bundle();

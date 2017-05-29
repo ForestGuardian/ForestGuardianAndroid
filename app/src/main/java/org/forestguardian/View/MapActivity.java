@@ -42,20 +42,20 @@ import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
 import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
-import org.forestguardian.View.CustomViews.RouteDetails;
-import org.forestguardian.View.CustomViews.WildfireDetails;
 import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
 import org.forestguardian.View.Fragments.ReportLocalizationFragment;
+import org.forestguardian.View.Fragments.RouteMapInteractionFragment;
+import org.forestguardian.View.Fragments.WildfireResourcesMapInteractionFragment;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        DefaultMapInteractionFragment.OnDefaultInteractionListener, ReportLocalizationFragment.OnReportLocalizationListener
+        DefaultMapInteractionFragment.OnDefaultInteractionListener, ReportLocalizationFragment.OnReportLocalizationListener,
+        WildfireResourcesMapInteractionFragment.OnGeneralInteractionListener, RouteMapInteractionFragment.OnRouteInteractionListener
 {
 
     public final static int REPORT_CREATION_REQUEST = 234;
@@ -81,6 +81,8 @@ public class MapActivity extends AppCompatActivity
     private NavigationHolder navHolder;
 
     private Fragment mMapInteractionFragment;
+    private Fragment mMapGeneralInteractionFragment;
+    private Fragment mMapRouteInteractionFragment;
     private Fragment mReportLocalizationFragment;
     private Fragment mCurrentFragment;
 
@@ -375,47 +377,7 @@ public class MapActivity extends AppCompatActivity
 
     public void showWildfireDetails() {
         this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:removeWildfireMessage()"));
-
-        runOnUiThread(() -> {
-            RouteDetails routeDetails = new RouteDetails(MapActivity.this);
-            routeDetails.setMODISData(MapActivity.this.mMODIS);
-            if (MapActivity.this.mWaterResources.size() > 0) {
-                routeDetails.setOSMData(MapActivity.this.mNearestFireStation, MapActivity.this.mWaterResources.get(0));
-            } else {
-                routeDetails.setOSMData(MapActivity.this.mNearestFireStation, null);
-            }
-            MapActivity.this.mMapContainer.addView(routeDetails);
-        });
-
-    }
-
-    public void removeWildfireDetails(RouteDetails routeDetails) {
-        final RouteDetails tmpRouteDetails = routeDetails;
-        runOnUiThread(() -> MapActivity.this.mMapContainer.removeView(tmpRouteDetails));
-    }
-
-    public void showRouteDetails(RouteDetails routeDetails) {
-        removeWildfireDetails(routeDetails);
-
-        final FireStation tmpNearestFireStation = this.mNearestFireStation;
-        MapActivity.this.mMapWebView.post(() -> {
-            if (MapActivity.this.mNearestFireStation != null) {
-                MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLatitude()) + ", " + String.valueOf(MapActivity.this.mMODIS.getCoordinate().getLongitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLatitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLongitude()) + ")");
-                MapActivity.this.mMapWebView.loadUrl("javascript:addFireStationMark(" + String.valueOf(tmpNearestFireStation.getCoordinate().getLatitude()) + ", " + String.valueOf(tmpNearestFireStation.getCoordinate().getLongitude()) + ")");
-            }
-        });
-
-        runOnUiThread(() -> {
-            WildfireDetails wildfireDetails = new WildfireDetails(MapActivity.this);
-            wildfireDetails.setMODISData(MapActivity.this.mMODIS);
-            wildfireDetails.setWeatherData(MapActivity.this.mWeather);
-            MapActivity.this.mMapContainer.addView(wildfireDetails);
-        });
-    }
-
-    public void removeRouteDetails(WildfireDetails wildfireDetails) {
-        final WildfireDetails tmpWildfireDetails = wildfireDetails;
-        runOnUiThread(() -> MapActivity.this.mMapContainer.removeView(tmpWildfireDetails));
+        loadGeneralInfoInteraction();
     }
 
     public boolean isIsCurrentLocation() {
@@ -499,6 +461,25 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void showRouteOptions() {
+        loadRouteInteraction();
+    }
+
+    @Override
+    public void drawRoute(Location startPlace, Location endPlace) {
+        final Location fstartPlace = startPlace;
+        final Location fendPlace = endPlace;
+        MapActivity.this.mMapWebView.post(() -> {
+            if (fstartPlace != null && fendPlace != null) {
+                MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(fstartPlace.getLatitude()) + ", " + String.valueOf(fstartPlace.getLongitude()) + ", " + String.valueOf(fendPlace.getLatitude()) + ", " + String.valueOf(fendPlace.getLongitude()) + ")");
+            } else {
+                Toast.makeText(this, "Error desplegando la ruta", Toast.LENGTH_LONG).show();
+            }
+        });
+        loadDefaultInteraction();
+    }
+
     // endregion
 
     /**
@@ -553,6 +534,30 @@ public class MapActivity extends AppCompatActivity
             ((ReportLocalizationFragment) mReportLocalizationFragment).setListener(this);
         }
         loadNewInteraction(mReportLocalizationFragment);
+    }
+
+    private void loadGeneralInfoInteraction() {
+        if (mMapGeneralInteractionFragment == null) {
+            if (mWaterResources.size() > 0) {
+                mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0));
+            } else {
+                mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null);
+            }
+            ((WildfireResourcesMapInteractionFragment) mMapGeneralInteractionFragment).setListener(this);
+        }
+        loadNewInteraction(mMapGeneralInteractionFragment);
+    }
+
+    private void loadRouteInteraction() {
+        if (mMapRouteInteractionFragment == null) {
+            if (mWaterResources.size() > 0) {
+                mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0), this.mCurrentLocation);
+            } else {
+                mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null, this.mCurrentLocation);
+            }
+            ((RouteMapInteractionFragment) mMapRouteInteractionFragment).setListener(this);
+        }
+        loadNewInteraction(mMapRouteInteractionFragment);
     }
 
 }
