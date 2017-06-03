@@ -2,16 +2,19 @@ package org.forestguardian.DataAccess.OSM;
 
 import android.location.Location;
 
+import java.io.Serializable;
+
 /**
  * Created by luisalonsomurillorojas on 12/4/17.
  */
 
-public class FireStation {
+public class FireStation implements Serializable {
 
     /* Attributes */
     private String mName;
     private String mCity;
     private String mStreet;
+    private String mAddress;
     private String mOperator;
     private Location mCoordinate;
 
@@ -68,5 +71,13 @@ public class FireStation {
         location.setLatitude(latitude);
         location.setLongitude(longitude);
         this.mCoordinate = location;
+    }
+
+    public String getAddress() {
+        return mAddress;
+    }
+
+    public void setAddress(String mAddress) {
+        this.mAddress = mAddress;
     }
 }

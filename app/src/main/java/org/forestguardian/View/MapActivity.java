@@ -47,6 +47,7 @@ import org.forestguardian.View.Fragments.ReportLocalizationFragment;
 import org.forestguardian.View.Fragments.RouteMapInteractionFragment;
 import org.forestguardian.View.Fragments.WildfireResourcesMapInteractionFragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -336,6 +337,20 @@ public class MapActivity extends AppCompatActivity
                     fireStation.setCoordinate(result.elements.get(index).lat, result.elements.get(index).lon);
                     MapActivity.this.mFireStations.add(fireStation);
 
+                    //Set the address of the firestation
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                FireStation tmpFirestation = MapActivity.this.mFireStations.get(MapActivity.this.mFireStations.size() - 1);
+                                String firestationAddress = GeoHelper.getAddressNameFromPoint(MapActivity.this, tmpFirestation.getCoordinate());
+                                tmpFirestation.setAddress(firestationAddress);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
                     //Set initial conditions
                     if (nearestFireStation == null) {
                         nearestFireStation = fireStation;
@@ -537,26 +552,22 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void loadGeneralInfoInteraction() {
-        if (mMapGeneralInteractionFragment == null) {
-            if (mWaterResources.size() > 0) {
-                mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0));
-            } else {
-                mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null);
-            }
-            ((WildfireResourcesMapInteractionFragment) mMapGeneralInteractionFragment).setListener(this);
+        if (mWaterResources.size() > 0) {
+            mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0));
+        } else {
+            mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null);
         }
+        ((WildfireResourcesMapInteractionFragment) mMapGeneralInteractionFragment).setListener(this);
         loadNewInteraction(mMapGeneralInteractionFragment);
     }
 
     private void loadRouteInteraction() {
-        if (mMapRouteInteractionFragment == null) {
-            if (mWaterResources.size() > 0) {
-                mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0), this.mCurrentLocation);
-            } else {
-                mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null, this.mCurrentLocation);
-            }
-            ((RouteMapInteractionFragment) mMapRouteInteractionFragment).setListener(this);
+        if (mWaterResources.size() > 0) {
+            mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0), this.mCurrentLocation);
+        } else {
+            mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null, this.mCurrentLocation);
         }
+        ((RouteMapInteractionFragment) mMapRouteInteractionFragment).setListener(this);
         loadNewInteraction(mMapRouteInteractionFragment);
     }
 

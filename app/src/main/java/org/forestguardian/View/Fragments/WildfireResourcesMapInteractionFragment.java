@@ -38,11 +38,11 @@ public class WildfireResourcesMapInteractionFragment extends Fragment {
 
     private OnGeneralInteractionListener mListener;
 
+    @BindView(R.id.wildfire_location_place_name) TextView mWildfireLocationName;
     @BindView(R.id.firestationLabel) TextView mFirestationLabel;
     @BindView(R.id.waterLabel) TextView mWaterLabel;
     @BindView(R.id.wildfireLocationLabel) TextView mWildfireLocationLabel;
     @BindView(R.id.fab_route) FloatingActionButton mFabRoute;
-
 
     public WildfireResourcesMapInteractionFragment() {
         // Required empty public constructor
@@ -61,12 +61,17 @@ public class WildfireResourcesMapInteractionFragment extends Fragment {
         WaterResource waterResource = (WaterResource) getArguments().getSerializable(WATER_KEY);
         // Set TextViews
         if (fireStation != null) {
-            this.mFirestationLabel.setText(fireStation.getName() + ", " + fireStation.getCity());
+            if (fireStation.getName() != null) {
+                this.mFirestationLabel.setText(fireStation.getName());
+            } else {
+                this.mFirestationLabel.setText(fireStation.getAddress());
+            }
         }
         if (waterResource != null) {
             this.mWaterLabel.setText(waterResource.getName());
         }
         if (modis != null) {
+            this.mWildfireLocationName.setText(modis.getPlaceName());
             this.mWildfireLocationLabel.setText(GeoHelper.formatCoordinates(modis.getCoordinate()));
         }
         return view;
@@ -81,9 +86,9 @@ public class WildfireResourcesMapInteractionFragment extends Fragment {
         WildfireResourcesMapInteractionFragment wildfireResourcesMapInteractionFragment = new WildfireResourcesMapInteractionFragment();
 
         Bundle fragmentBundle = new Bundle();
-        fragmentBundle.putSerializable(MODIS_KEY, (Serializable) modis);
-        fragmentBundle.putSerializable(FIRESTATION_KEY, (Serializable) fireStation);
-        fragmentBundle.putSerializable(WATER_KEY, (Serializable) waterResource);
+        fragmentBundle.putSerializable(MODIS_KEY, modis);
+        fragmentBundle.putSerializable(FIRESTATION_KEY, fireStation);
+        fragmentBundle.putSerializable(WATER_KEY, waterResource);
 
         wildfireResourcesMapInteractionFragment.setArguments(fragmentBundle);
         return wildfireResourcesMapInteractionFragment;

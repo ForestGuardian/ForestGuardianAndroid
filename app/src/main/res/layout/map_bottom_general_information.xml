@@ -139,7 +139,7 @@
 
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/wildfire_location_place_name"
             android:layout_width="344dp"
             android:layout_height="wrap_content"
             android:layout_column="2"
@@ -151,7 +151,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="-30dp"/>
+            tools:layout_editor_absoluteY="-30dp" />
 
 
         <ImageView

@@ -81,12 +81,14 @@ public class DefaultMapInteractionFragment extends Fragment{
             public void run() {
                 try {
                     final String locationText = GeoHelper.getAddressNameFromPoint(getActivity(), point);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mCurrentLocationText.setText(locationText);
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mCurrentLocationText.setText(locationText);
+                            }
+                        });
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
