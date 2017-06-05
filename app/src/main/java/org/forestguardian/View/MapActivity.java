@@ -244,6 +244,11 @@ public class MapActivity extends AppCompatActivity
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onLocationChanged(Location location) {
+
+                if ( MapActivity.this.mCurrentLocation == null ){
+                    Toast.makeText(MapActivity.this,"Información de GPS lista.",Toast.LENGTH_LONG).show();
+                }
+
                 MapActivity.this.mCurrentLocation = location;
                 Log.i("Location","Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
                 ((DefaultMapInteractionFragment)MapActivity.this.mMapInteractionFragment).setCurrentLocation(location);
@@ -408,6 +413,13 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void centerOnLocation() {
         Log.d("ButtonAction","centerOnLocation");
+
+        if ( mCurrentLocation == null ){
+            Log.w("ButtonAction","No location information yet.");
+            Toast.makeText(this, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         MapActivity.this.mMapWebView.post(() ->
             MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" +
             String.valueOf(mCurrentLocation.getLatitude()) + ", " +
@@ -417,6 +429,13 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void reportLocationReady() {
         Log.d("ButtonAction","reportLocationReady");
+
+        if ( mCurrentLocation == null ){
+            Log.w("ButtonAction","No location information yet.");
+            Toast.makeText(this, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         MapActivity.this.mMapWebView.post(() ->
                 MapActivity.this.mMapWebView.loadUrl("javascript:prepareReportLocation()"));
     }
