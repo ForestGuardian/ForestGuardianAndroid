@@ -105,14 +105,14 @@
 
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/currentLocationTextView"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="5dp"
             android:layout_row="1"
             android:gravity="center_vertical"
             android:paddingStart="30dp"
-            android:text="Bagaces, Guanacaste, CR"
+            android:text="Cargando ubicación..."
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"

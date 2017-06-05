@@ -74,16 +74,16 @@
         tools:layout_conversion_absoluteWidth="50dp"
         tools:layout_conversion_absoluteHeight="50dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintBottom_toTopOf="@+id/fab_route"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/fab"
+        app:layout_constraintLeft_toLeftOf="@+id/fab_route"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/fab"
+        app:layout_constraintRight_toRightOf="@+id/fab_route"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_route"
         app:backgroundTint="@color/colorAccent"
         app:srcCompat="@mipmap/icon_add"
         android:layout_width="70dp"
@@ -139,7 +139,7 @@
 
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/wildfire_location_place_name"
             android:layout_width="344dp"
             android:layout_height="wrap_content"
             android:layout_column="2"
@@ -151,7 +151,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="-30dp"/>
+            tools:layout_editor_absoluteY="-30dp" />
 
 
         <ImageView
@@ -164,7 +164,7 @@
             app:srcCompat="@drawable/ic_toggle_temp_on"/>
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/firestationLabel"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_column="3"
@@ -172,10 +172,10 @@
             android:layout_row="2"
             android:gravity="center_vertical"
             android:text="Bomberos Bagaces"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/waterLabel"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_column="3"
@@ -183,10 +183,10 @@
             android:layout_row="3"
             android:gravity="center_vertical"
             android:text="Río Blanco"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/wildfireLocationLabel"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_column="3"
@@ -194,7 +194,7 @@
             android:layout_row="4"
             android:gravity="center_vertical"
             android:text="37.3382° N, 121.8863° W"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
     </GridLayout>
 
 

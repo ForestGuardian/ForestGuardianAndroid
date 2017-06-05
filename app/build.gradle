@@ -91,4 +91,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:answers:1.3.13@aar') {
         transitive = true;
     }
+    //Mapbox geocoder
+    compile ('com.mapbox.mapboxsdk:mapbox-android-geocoder:1.0.0@aar'){
+        transitive=true
+    }
 }

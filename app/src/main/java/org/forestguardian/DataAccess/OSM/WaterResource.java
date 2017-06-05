@@ -2,11 +2,13 @@ package org.forestguardian.DataAccess.OSM;
 
 import android.location.Location;
 
+import java.io.Serializable;
+
 /**
  * Created by luisalonsomurillorojas on 12/4/17.
  */
 
-public class WaterResource {
+public class WaterResource implements Serializable {
 
     /* Attributes */
     private String mType;

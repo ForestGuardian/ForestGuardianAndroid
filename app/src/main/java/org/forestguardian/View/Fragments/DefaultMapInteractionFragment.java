@@ -2,13 +2,21 @@ package org.forestguardian.View.Fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +36,7 @@ public class DefaultMapInteractionFragment extends Fragment{
 
     @BindView(R.id.add_report_btn) FloatingActionButton mAddReportBtn;
     @BindView(R.id.center_location_btn) FloatingActionButton mCenterLocationBtn;
+    @BindView(R.id.currentLocationTextView) TextView mCurrentLocationText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,5 +72,27 @@ public class DefaultMapInteractionFragment extends Fragment{
 
     public void setListener(final OnDefaultInteractionListener pListener) {
         mListener = pListener;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void setCurrentLocation(Location point) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final String locationText = GeoHelper.getAddressNameFromPoint(getActivity(), point);
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mCurrentLocationText.setText(locationText);
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

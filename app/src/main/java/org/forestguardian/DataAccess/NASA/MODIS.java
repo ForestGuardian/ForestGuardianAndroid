@@ -6,11 +6,13 @@ import org.forestguardian.Helpers.IContants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by luisalonsomurillorojas on 12/4/17.
  */
 
-public class MODIS implements IContants{
+public class MODIS implements IContants, Serializable {
 
     /* Attribute */
     private Location mCoordinate;
