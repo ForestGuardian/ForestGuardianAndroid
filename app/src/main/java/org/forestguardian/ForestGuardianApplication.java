@@ -3,6 +3,8 @@ package org.forestguardian;
 import android.app.Application;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 
@@ -20,6 +22,7 @@ public class ForestGuardianApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Realm.init(this);
     }
