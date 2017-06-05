@@ -28,9 +28,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
 import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
@@ -48,7 +45,6 @@ import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 import okhttp3.Headers;
 import retrofit2.adapter.rxjava2.Result;
 
@@ -95,9 +91,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             Intent activityIntent = new Intent( SignInActivity.this, SignUpActivity.class );
             startActivity(activityIntent);
         });
-
-        //Check for HockeyApp updates
-        checkForUpdates();
     }
 
     private void populateAutoComplete() {
@@ -321,13 +314,11 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     public void onResume() {
         super.onResume();
-        checkForCrashes();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        unregisterManagers();
     }
 
     @Override
@@ -338,20 +329,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterManagers();
-    }
-
-    private void checkForCrashes() {
-        CrashManager.register(this);
-    }
-
-    private void checkForUpdates() {
-        // Remove this for store builds!
-        UpdateManager.register(this);
-    }
-
-    private void unregisterManagers() {
-        UpdateManager.unregister();
     }
 }
 

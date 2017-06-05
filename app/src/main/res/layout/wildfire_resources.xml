@@ -32,7 +32,8 @@
                 android:text="Punto de calor:"
                 android:textSize="18dp"
                 android:textStyle="bold"
-                android:textColor="@color/hockeyapp_text_white"/>
+                android:textColor="@android:color/white"
+                />
 
             <TextView
                 android:id="@+id/res_wildfire_place_name"
@@ -41,7 +42,8 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/unknown_place"
                 android:textSize="18dp"
-                android:textColor="@color/hockeyapp_text_white"/>
+                android:textColor="@android:color/white"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/hockeyapp_text_white"
+                    android:textColor="@android:color/white"
                     android:textStyle="bold"
                     android:text="Latitud: "
                     android:textSize="18dp"/>
@@ -68,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:textColor="@color/hockeyapp_text_white"
+                    android:textColor="@android:color/white"
                     android:text="0 "
                     android:textSize="18dp"/>
             </LinearLayout>
@@ -82,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/hockeyapp_text_white"
+                    android:textColor="@android:color/white"
                     android:textStyle="bold"
                     android:text="Longitud: "
                     android:textSize="18dp"/>
@@ -92,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:textColor="@color/hockeyapp_text_white"
+                    android:textColor="@android:color/white"
                     android:text="0 "
                     android:textSize="18dp"/>
             </LinearLayout>
@@ -108,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/hockeyapp_text_white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:text="Bomberos:"
                 android:textSize="18dp"/>
@@ -118,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/hockeyapp_text_white"
+                android:textColor="@android:color/white"
                 android:text="INS"
                 android:textSize="18dp"/>
         </LinearLayout>
@@ -133,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/hockeyapp_text_white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:text="Rercurso hídrico:"
                 android:textSize="18dp"/>
@@ -143,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/hockeyapp_text_white"
+                android:textColor="@android:color/white"
                 android:text="Río"
                 android:textSize="18dp"/>
         </LinearLayout>

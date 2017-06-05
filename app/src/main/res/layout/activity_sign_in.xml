@@ -98,7 +98,7 @@
         android:background="@drawable/rounded_rectangle_dark_gray"
         android:ellipsize="middle"
         android:text="@string/action_sign_in"
-        android:textColor="@color/hockeyapp_text_white"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
