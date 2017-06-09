@@ -12,7 +12,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="20dp"
-        app:srcCompat="@drawable/ic_person_white_24dp"/>
+        android:background="@drawable/ic_perfil"/>
 
     <TextView
         android:id="@+id/profile_name"
