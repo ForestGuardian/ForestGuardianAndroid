@@ -16,6 +16,7 @@ import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.R;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -58,10 +59,15 @@ public class ProfileActivity extends Activity {
             if (avatar == null){
                 return;
             }
-            Bitmap picture = BitmapFactory.decodeStream( new URL(avatar).openConnection().getInputStream() );
-            if (!e.isDisposed()){
-                e.onNext(picture);
-                e.onComplete();
+            try {
+                Bitmap picture = BitmapFactory.decodeStream(new URL(avatar).openConnection().getInputStream());
+                if (!e.isDisposed()){
+                    e.onNext(picture);
+                    e.onComplete();
+                }
+            }catch(MalformedURLException error){
+                error.printStackTrace();
+                return;
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
