@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.forestguardian.Adapters.ReportListAdapter;
 import org.forestguardian.DataAccess.Local.Report;
@@ -25,6 +26,9 @@ import io.reactivex.schedulers.Schedulers;
 public class ProfileActivity extends Activity {
 
     @BindView(R.id.report_list) ListView mListView;
+    @BindView(R.id.profile_name) TextView mProfileNameView;
+    @BindView(R.id.profile_city) TextView mProfileCity;
+    @BindView(R.id.profile_created_reports) TextView mProfileCountCreatedReports;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class ProfileActivity extends Activity {
 
                 ReportListAdapter adapter = new ReportListAdapter(this, pReportList);
                 mListView.setAdapter(adapter);
+                mProfileCountCreatedReports.setText( String.valueOf(pReportList.size()) );
 
         });
 
