@@ -51,7 +51,14 @@ public class ProfileActivity extends Activity {
     private void loadProfileAvatar(){
         Observable.create(e -> {
             User currentUser = ((ForestGuardianApplication)getApplicationContext()).getCurrentUser();
-            Bitmap picture = BitmapFactory.decodeStream( new URL(currentUser.getAvatar()).openConnection().getInputStream() );
+
+            mProfileNameView.setText(currentUser.getName());
+
+            String avatar = currentUser.getAvatar();
+            if (avatar == null){
+                return;
+            }
+            Bitmap picture = BitmapFactory.decodeStream( new URL(avatar).openConnection().getInputStream() );
             if (!e.isDisposed()){
                 e.onNext(picture);
                 e.onComplete();

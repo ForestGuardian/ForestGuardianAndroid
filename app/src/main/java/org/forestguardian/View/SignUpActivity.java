@@ -41,6 +41,7 @@ public class SignUpActivity  extends AppCompatActivity {
     @BindView(R.id.signup_email) EditText mEmail;
     @BindView(R.id.signup_pass) EditText mPassword;
     @BindView(R.id.signup_pass_confirmation) EditText mPasswordConfirmation;
+    @BindView(R.id.signup_name) EditText mName;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -55,6 +56,7 @@ public class SignUpActivity  extends AppCompatActivity {
             String username = mUsername.getText().toString();
             String pass = mPassword.getText().toString();
             String confirmation = mPasswordConfirmation.getText().toString();
+            String name = mName.getText().toString();
 
             /* Check Local validations */
 
@@ -90,12 +92,21 @@ public class SignUpActivity  extends AppCompatActivity {
                 return;
             }
 
+            if (TextUtils.isEmpty(name)) {
+                String error = "Please introduce a name.";
+                Log.d(getLocalClassName(),error);
+                mName.setError(error);
+                mName.requestFocus();
+                return;
+            }
+
             // Create Model
             User user = new User();
             user.setEmail(email);
             user.setUsername(username);
             user.setPassword(pass);
             user.setPasswordConfirmation(confirmation);
+            user.setName(name);
 
             // Send SignUp Request
             Observable<Result<SessionData>> sessionService = ForestGuardianService.global().service().signUp(user);
