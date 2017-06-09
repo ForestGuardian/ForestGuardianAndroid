@@ -9,6 +9,7 @@ import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -23,6 +24,11 @@ public class ForestGuardianApplication extends Application {
         Fabric.with(this, new Crashlytics());
 
         Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .schemaVersion(1) // Must be bumped when the schema changes
+                .migration(new DataMigration()) // Migration to run instead of throwing an exception
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     /**

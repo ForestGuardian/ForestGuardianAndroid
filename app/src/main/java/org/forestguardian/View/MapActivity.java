@@ -52,12 +52,16 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DefaultMapInteractionFragment.OnDefaultInteractionListener, ReportLocalizationFragment.OnReportLocalizationListener,
-        WildfireResourcesMapInteractionFragment.OnGeneralInteractionListener, RouteMapInteractionFragment.OnRouteInteractionListener
-{
+        WildfireResourcesMapInteractionFragment.OnGeneralInteractionListener, RouteMapInteractionFragment.OnRouteInteractionListener {
 
     public final static int REPORT_CREATION_REQUEST = 234;
 
@@ -73,12 +77,18 @@ public class MapActivity extends AppCompatActivity
     private OpenWeatherWrapper mWeather;
     private MODIS mMODIS;
 
-    @BindView(R.id.nav_view) NavigationView mNavView;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.map_container) RelativeLayout mMapContainer;
-    @BindView(R.id.map_web_view) WebView mMapWebView;
-    @BindView(R.id.map_interaction_layout) FrameLayout mInteractionLayout;
+    @BindView(R.id.nav_view)
+    NavigationView mNavView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.map_container)
+    RelativeLayout mMapContainer;
+    @BindView(R.id.map_web_view)
+    WebView mMapWebView;
+    @BindView(R.id.map_interaction_layout)
+    FrameLayout mInteractionLayout;
     private NavigationHolder navHolder;
 
     private Fragment mMapInteractionFragment;
@@ -95,8 +105,8 @@ public class MapActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
 
         navHolder = new NavigationHolder(mNavView);
-        navHolder.header.email.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getEmail() );
-        navHolder.header.name.setText( "Welcome random citizen!" );
+        navHolder.header.email.setText(((ForestGuardianApplication) getApplication()).getCurrentUser().getEmail());
+        navHolder.header.name.setText("Welcome random citizen!");
         // TODO: navHolder.header.name.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getName() );
         // TODO: same but with avatar. Is this required?
 
@@ -117,7 +127,7 @@ public class MapActivity extends AppCompatActivity
         //Init the map
         initWebMap();
         //Init the GPS location
-        initLocation();
+        MapActivityPermissionsDispatcher.initLocationWithCheck(this);
         //Variable default values
         this.mCurrentLocation = null;
         this.mIsCurrentLocation = false;
@@ -167,7 +177,7 @@ public class MapActivity extends AppCompatActivity
         if (id == R.id.nav_reportes) {
 
             // Load Profile activity who also contains a list of all reports.
-            Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
@@ -176,11 +186,11 @@ public class MapActivity extends AppCompatActivity
 
             /* Show confirmation dialog */
             DialogInterface.OnClickListener listener = (dialog, option) -> {
-                switch (option){
+                switch (option) {
                     case DialogInterface.BUTTON_POSITIVE:
                         // destroy session and go to SignInActivity
-                        ((ForestGuardianApplication)getApplication()).logout();
-                        Intent intent = new Intent(getApplicationContext(),SignInActivity.class);
+                        ((ForestGuardianApplication) getApplication()).logout();
+                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -226,32 +236,22 @@ public class MapActivity extends AppCompatActivity
         this.mMapWebView.addJavascriptInterface(this.mMapInterface, "mobile");
     }
 
-    private void initLocation() {
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    void initLocation() {
         this.mLocationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Log.e("Permissions","not enough permissions");
-            return;
-        }
 
         LocationListener locationListener = new LocationListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onLocationChanged(Location location) {
 
-                if ( MapActivity.this.mCurrentLocation == null ){
-                    Toast.makeText(MapActivity.this,"Información de GPS lista.",Toast.LENGTH_LONG).show();
+                if (MapActivity.this.mCurrentLocation == null) {
+                    Toast.makeText(MapActivity.this, "Información de GPS lista.", Toast.LENGTH_LONG).show();
                 }
 
                 MapActivity.this.mCurrentLocation = location;
-                Log.i("Location","Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-                ((DefaultMapInteractionFragment)MapActivity.this.mMapInteractionFragment).setCurrentLocation(location);
+                Log.i("Location", "Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+                ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setCurrentLocation(location);
                 if (!MapActivity.this.mIsCurrentLocation) {
                     MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
                 }
@@ -273,8 +273,27 @@ public class MapActivity extends AppCompatActivity
             }
         };
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+    }
+
+    @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage("Necesitamos averiguar tu localizacion para poder crear un reporte.")
+                .setPositiveButton("Aceptar", (dialog, button) -> request.proceed())
+                .setNegativeButton("Cancelar", (dialog, button) -> request.cancel())
+                .show();
     }
 
     private void resetAttributes(){

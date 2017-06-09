@@ -1,9 +1,11 @@
 package org.forestguardian.View;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -25,11 +27,16 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Created by emma on 30/04/17.
  */
 
+@RuntimePermissions
 public class CreateReportActivity extends AppCompatActivity {
 
     private static final int CAMERA_IMAGE_REQUEST = 101;
@@ -63,11 +70,26 @@ public class CreateReportActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.take_picture_btn)
-    public void captureImage(){
+    public void captureImageAction(){
 
+        CreateReportActivityPermissionsDispatcher.captureImageWithCheck(this);
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    public void captureImage(){
         // Creating image here
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(takePictureIntent, CAMERA_IMAGE_REQUEST);
+    }
+
+
+    @OnShowRationale(Manifest.permission.CAMERA)
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage("Necesitamos acceso a la camara.")
+                .setPositiveButton("Aceptar", (dialog, button) -> request.proceed())
+                .setNegativeButton("Cancelar", (dialog, button) -> request.cancel())
+                .show();
     }
 
     @OnClick(R.id.send_report_btn)
