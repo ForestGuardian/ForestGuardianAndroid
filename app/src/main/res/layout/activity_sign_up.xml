@@ -68,11 +68,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_perfil"
             android:ems="10"
+            android:hint="Nombre"
             android:inputType="textPersonName"
-            android:text="Nombre"
             android:textColor="@android:color/white"
-            tools:drawableStart="@drawable/ic_perfil"/>
+            android:textColorHighlight="@android:color/white"
+            android:textColorHint="@android:color/white"/>
 
         <EditText
             android:id="@+id/signup_user"
