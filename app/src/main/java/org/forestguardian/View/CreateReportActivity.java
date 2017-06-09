@@ -98,8 +98,8 @@ public class CreateReportActivity extends AppCompatActivity {
         // Send report request.
         Report report = new Report();
         report.setTitle( mTitle.getText().toString() );
-        report.setComments( mDescription.getText().toString() );
-        report.setDescription( mComments.getText().toString() );
+        report.setDescription( mDescription.getText().toString() );
+        report.setComments( mComments.getText().toString() );
         report.setGeoLatitude( mLatitude );
         report.setGeoLongitude( mLongitude );
 
