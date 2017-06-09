@@ -41,8 +41,6 @@ public class Report extends RealmObject{
     @Expose
     private String picture;
 
-    private boolean isPictureDownloaded;
-
     /** Getters and Setters **/
 
     public Integer getId() {
@@ -101,55 +99,4 @@ public class Report extends RealmObject{
         picture = pPicture;
     }
 
-//    public Observable<String> getPictureData() {
-//        return Observable.create(e -> {
-//
-//            String pictureData;
-//            if ( isPictureDownloaded ) {
-//                pictureData = getPicture();
-//            } else{
-//                pictureData = download(getPicture());
-//            }
-//
-//            if (!e.isDisposed()) {
-//                e.onNext( pictureData );
-//                e.onComplete();
-//            }
-//        });
-//    }
-//
-//    private String download(String stringUrl){
-//        String pictureData;
-//        int count;
-//        try {
-//            URL url = new URL(stringUrl);
-//            URLConnection connection = url.openConnection();
-//            connection.connect();
-//
-//            // download the file
-//            InputStream input = new BufferedInputStream(url.openStream(),
-//                    8192);
-//
-//            // Output stream
-//            ByteArrayOutputStream output = new ByteArrayOutputStream();
-//
-//            byte data[] = new byte[1024];
-//
-//            while ((count = input.read(data)) != -1) {
-//                // writing data to file
-//                output.write(data, 0, count);
-//            }
-//
-//            pictureData = new String(output.toByteArray());
-//
-//            // closing streams
-//            output.close();
-//            input.close();
-//
-//        } catch (Exception e) {
-//            Log.e("Error: ", e.getMessage());
-//            return null;
-//        }
-//        return pictureData;
-//    }
 }
