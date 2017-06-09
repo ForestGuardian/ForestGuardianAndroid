@@ -67,27 +67,45 @@ public class ForestGuardianService {
         });
     }
 
-    public void addAuthenticationHeaders( Context pContext, AuthData pAuthData ){
+    public void addAuthenticationHeaders( Context pContext, String pUID ){
+
 
         mHttpBuilder.addInterceptor(chain -> {
             Request original = chain.request();
 
+            Realm realm = Realm.getDefaultInstance();
+            AuthData authData = realm.where(AuthData.class).equalTo("uid",pUID).findFirst();
+
             // Request customization: add request headers
             Request.Builder requestBuilder = original.newBuilder()
                     .addHeader(pContext.getString(R.string.header_auth_uid),
-                            pAuthData.getUid() )
+                            authData.getUid() )
                     .addHeader(pContext.getString(R.string.header_auth_access_token),
-                            pAuthData.getAccessToken() )
+                            authData.getAccessToken() )
                     .addHeader(pContext.getString(R.string.header_auth_client),
-                            pAuthData.getClient() )
+                            authData.getClient() )
                     .addHeader(pContext.getString(R.string.header_auth_expiry),
-                            pAuthData.getExpiry() )
+                            authData.getExpiry() )
                     .addHeader(pContext.getString(R.string.header_auth_token_type),
-                            pAuthData.getTokenType() );
+                            authData.getTokenType() );
 
             Request request = requestBuilder.build();
+
+            Log.e("Request", request.toString() );
             return chain.proceed(request);
         });
+
+        mClient = mHttpBuilder.build();
+
+        mRetrofit = new retrofit2.Retrofit.Builder()
+                .baseUrl(FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT)
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(mClient)
+                .build();
+
+
+        mService = mRetrofit.create(ForestGuardianAPI.class);
     }
 
 

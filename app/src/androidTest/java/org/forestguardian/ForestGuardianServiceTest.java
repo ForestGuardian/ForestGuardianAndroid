@@ -42,6 +42,7 @@ public class ForestGuardianServiceTest {
         user.setEmail("testing@forestguardian.org");
         user.setPassword("12341234");
         user.setPasswordConfirmation("12341234");
+        user.setName("emmanuel");
 
         Observable<Result<SessionData>> sessionService = ForestGuardianService.global().service().signIn(user);
 
@@ -69,7 +70,7 @@ public class ForestGuardianServiceTest {
                     //Uncomment addApiAuthorizationHeader() when this feature is enabled from backend.
                     //addApiAuthorizationHeader();
 
-                    ForestGuardianService.global().addAuthenticationHeaders(context,authData);
+                    ForestGuardianService.global().addAuthenticationHeaders(context,authData.getUid() );
 
                     synchronized (syncObject){
                         syncObject.notify();
@@ -113,7 +114,7 @@ public class ForestGuardianServiceTest {
                     //Uncomment addApiAuthorizationHeader() when this feature is enabled from backend.
                     //addApiAuthorizationHeader();
 
-                    ForestGuardianService.global().addAuthenticationHeaders(context, authData);
+                    ForestGuardianService.global().addAuthenticationHeaders(context, authData.getUid() );
 
                     synchronized (syncObject){
                         syncObject.notify();

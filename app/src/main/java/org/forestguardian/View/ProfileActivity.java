@@ -45,9 +45,10 @@ public class ProfileActivity extends Activity {
         ButterKnife.bind(this);
 
         loadReportList();
+        loadProfileAvatar();
     }
 
-    private void loadProfileAvater(){
+    private void loadProfileAvatar(){
         Observable.create(e -> {
             User currentUser = ((ForestGuardianApplication)getApplicationContext()).getCurrentUser();
             Bitmap picture = BitmapFactory.decodeStream( new URL(currentUser.getAvatar()).openConnection().getInputStream() );

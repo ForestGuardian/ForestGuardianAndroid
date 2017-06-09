@@ -17,8 +17,6 @@ import io.realm.RealmResults;
 
 public class ForestGuardianApplication extends Application {
 
-    public User mCurrentUser;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -34,7 +32,7 @@ public class ForestGuardianApplication extends Application {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<User> results = realm.where(User.class).findAll();
         if ( results.size() > 0 ){
-            mCurrentUser = results.last();
+            setCurrentUser(results.last());
         }
     }
 
@@ -46,16 +44,21 @@ public class ForestGuardianApplication extends Application {
     }
 
     public boolean signedIn(){
-        return mCurrentUser != null;
+        return getCurrentUser() != null;
     }
 
     public User getCurrentUser() {
-        return mCurrentUser;
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<User> results = realm.where(User.class).findAll();
+        if ( results.size() > 0 ){
+            return results.first();
+        }
+        return null;
     }
 
     public void setCurrentUser(final User pCurrentUser) {
-        mCurrentUser = pCurrentUser;
-        ForestGuardianService.global().addAuthenticationHeaders( this, pCurrentUser.getAuth() );
+        ForestGuardianService.global().addAuthenticationHeaders( this, pCurrentUser.getAuth().getUid() );
+        Log.e("headers",pCurrentUser.getAuth().toString());
 
         // Persist in realm. TODO: We retrieve by calling the last object. Improve this.
         Realm realm = Realm.getDefaultInstance();
