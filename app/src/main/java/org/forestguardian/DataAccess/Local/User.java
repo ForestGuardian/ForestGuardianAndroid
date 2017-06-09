@@ -27,7 +27,11 @@ public class User extends RealmObject {
 
     private AuthData auth;
 
+    @Expose
     private String name;
+
+    @Expose
+    private String avatar;
 
     /*Setters and Getters*/
 
@@ -77,5 +81,13 @@ public class User extends RealmObject {
 
     public void setUsername(final String pUsername) {
         username = pUsername;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(final String pAvatar) {
+        avatar = pAvatar;
     }
 }
