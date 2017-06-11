@@ -11,9 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.forestguardian.Helpers.GeoHelper;
+import org.forestguardian.Helpers.IContants;
 import org.forestguardian.R;
 
 import java.io.IOException;
@@ -25,11 +27,12 @@ import butterknife.OnClick;
 /**
  * Created by emma on 30/04/17.
  */
-public class DefaultMapInteractionFragment extends Fragment{
+public class DefaultMapInteractionFragment extends Fragment implements IContants{
 
     public interface OnDefaultInteractionListener {
         void addReport();
         void centerOnLocation();
+        void changeBasemap(String basemapURL);
     }
 
     private OnDefaultInteractionListener mListener;
@@ -37,6 +40,9 @@ public class DefaultMapInteractionFragment extends Fragment{
     @BindView(R.id.add_report_btn) FloatingActionButton mAddReportBtn;
     @BindView(R.id.center_location_btn) FloatingActionButton mCenterLocationBtn;
     @BindView(R.id.currentLocationTextView) TextView mCurrentLocationText;
+    @BindView(R.id.fab_temperature) ImageButton mTemperatureMapButton;
+    @BindView(R.id.fab_wind) ImageButton mWindMapButton;
+    @BindView(R.id.fab_precipitation) ImageButton mPrecipitationMapButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +69,27 @@ public class DefaultMapInteractionFragment extends Fragment{
     public void onCenterLocationClick(){
         if ( mListener != null ){
             mListener.centerOnLocation();
+        }
+    }
+
+    @OnClick(R.id.fab_temperature)
+    public void onTemperatureMapClick() {
+        if ( mListener != null ) {
+            mListener.changeBasemap(TEMPERATURE_BASEMAP);
+        }
+    }
+
+    @OnClick(R.id.fab_wind)
+    public void onWindMapClick() {
+        if ( mListener != null ) {
+            mListener.changeBasemap(WIND_BASEMAP);
+        }
+    }
+
+    @OnClick(R.id.fab_precipitation)
+    public void onPrecipitationMapClick() {
+        if ( mListener != null ) {
+            mListener.changeBasemap(FIRE_BASEMAP);
         }
     }
 

@@ -25,5 +25,10 @@ public interface IContants {
     public static final String MODIS_BRIGHT_T31 = "BRIGHT_T31";
     public static final String MODIS_FRP = "FRP";
     public static final String MODIS_DAYNIGHT = "DAYNIGHT";
+    //Basemaps
+    public static final String FIRE_BASEMAP = "/maps/fires";
+    public static final String TEMPERATURE_BASEMAP = "/maps/weather_perspective";
+    public static final String WIND_BASEMAP = "/maps/windy";
+    public static final String PRECIPITATION_BASEMAP = "/maps/protected_area";
 
 }

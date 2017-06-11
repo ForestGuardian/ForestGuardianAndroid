@@ -446,6 +446,11 @@ public class MapActivity extends AppCompatActivity
     }
 
     @Override
+    public void changeBasemap(String basemapURL) {
+        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + basemapURL);
+    }
+
+    @Override
     public void reportLocationReady() {
         Log.d("ButtonAction","reportLocationReady");
 

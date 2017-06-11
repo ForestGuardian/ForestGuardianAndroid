@@ -31,7 +31,7 @@
             tools:layout_editor_absoluteY="40dp"/>
 
         <ImageButton
-            android:id="@+id/fab_no_name_yet"
+            android:id="@+id/fab_wind"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
