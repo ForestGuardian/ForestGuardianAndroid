@@ -25,8 +25,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -237,6 +240,15 @@ public class MapActivity extends AppCompatActivity
         //Setup the javascript interface
         this.mMapInterface = new WebMapInterface(this);
         this.mMapWebView.addJavascriptInterface(this.mMapInterface, "mobile");
+        //Capture load errors
+        this.mMapWebView.setWebViewClient(new WebViewClient() {
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                Log.e(TAG, "Error loading the URL");
+                //TODO: set an error page
+                //this.mMapWebView.loadUrl("file:///android_asset/myerrorpage.html");
+
+            }
+        });
     }
 
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
