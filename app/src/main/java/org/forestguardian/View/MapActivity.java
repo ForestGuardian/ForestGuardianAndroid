@@ -79,12 +79,6 @@ public class MapActivity extends AppCompatActivity
     private OpenWeatherWrapper mWeather;
     private MODIS mMODIS;
 
-    /* Location flags */
-    private boolean gpsProviderEnable;
-    private boolean gpsProviderOutOfService;
-    private boolean gpsProviderTemporarilyUnavailable;
-    private boolean gpsProviderAvailable;
-
     @BindView(R.id.nav_view)
     NavigationView mNavView;
     @BindView(R.id.drawer_layout)
@@ -248,12 +242,6 @@ public class MapActivity extends AppCompatActivity
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     void initLocation() {
 
-        /* int the localization flags */
-        this.gpsProviderEnable = false;
-        this.gpsProviderAvailable = false;
-        this.gpsProviderOutOfService = false;
-        this.gpsProviderTemporarilyUnavailable = false;
-
         /* init the location manager */
         this.mLocationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
 
@@ -277,31 +265,23 @@ public class MapActivity extends AppCompatActivity
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-                Log.i(TAG, "Provider: " + provider + ". Code: " + status);
-                /* Reset some of the location flags */
-                MapActivity.this.gpsProviderOutOfService = false;
-                MapActivity.this.gpsProviderTemporarilyUnavailable = false;
-                MapActivity.this.gpsProviderAvailable = false;
 
                 /* Check the status of the location signal */
                 String toastMessage = "";
                 switch (status) {
                     case LocationProvider.OUT_OF_SERVICE:
-                        MapActivity.this.gpsProviderOutOfService = true;
                         //TODO: Move this string to the string.xml file
                         toastMessage = "Señal de GPS no disponible";
                         //TODO: Move this string to the string.xml file
                         changeGPSLabel("GPS no disponible");
                         break;
                     case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                        MapActivity.this.gpsProviderTemporarilyUnavailable = true;
                         //TODO: Move this string to the string.xml file
                         toastMessage = "La señal de GPS presenta problemas";
                         //TODO: Move this string to the string.xml file
                         changeGPSLabel("Cargando ubicación...");
                         break;
                     case LocationProvider.AVAILABLE:
-                        MapActivity.this.gpsProviderAvailable = true;
                         //TODO: Move this string to the string.xml file
                         toastMessage = "Señal de GPS disponible";
                         break;
@@ -312,8 +292,6 @@ public class MapActivity extends AppCompatActivity
 
             @Override
             public void onProviderEnabled(String provider) {
-                //TODO: Move this string to the string.xml file
-                MapActivity.this.gpsProviderEnable = true;
                 /* Update the message text */
                 //TODO: Move this string to the string.xml file
                 changeGPSLabel("Cargando ubicación...");
@@ -321,8 +299,6 @@ public class MapActivity extends AppCompatActivity
 
             @Override
             public void onProviderDisabled(String provider) {
-                //TODO: Move this string to the string.xml file
-                MapActivity.this.gpsProviderEnable = false;
                 /* Update the message text */
                 //TODO: Move this string to the string.xml file
                 changeGPSLabel("GPS no disponible");
@@ -608,6 +584,7 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
