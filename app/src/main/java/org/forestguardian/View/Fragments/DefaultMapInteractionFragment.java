@@ -42,11 +42,21 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     @BindView(R.id.currentLocationTextView) TextView mCurrentLocationText;
     @BindView(R.id.fab_temperature) ImageButton mTemperatureMapButton;
     @BindView(R.id.fab_wind) ImageButton mWindMapButton;
-    @BindView(R.id.fab_precipitation) ImageButton mPrecipitationMapButton;
+    @BindView(R.id.fab_precipitation) ImageButton mForestMapButton;
+
+    /* Map buttons flags */
+    private boolean mTemperatureState;
+    private boolean mWindState;
+    private boolean mForestState;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Init the map button flags
+        mTemperatureState = false;
+        mWindState = false;
+        mForestState = false;
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.map_bottom_default, container, false);
         ButterKnife.bind(this, view);
@@ -74,21 +84,66 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
 
     @OnClick(R.id.fab_temperature)
     public void onTemperatureMapClick() {
-        if ( mListener != null ) {
+        //check the layer state
+        if (mTemperatureState) {
+            mTemperatureState = false;
+            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_on));
+        } else {
+            mTemperatureState = true;
+            mWindState = false;
+            mForestState = false;
+            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_off));
+            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_on));
+            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_on));
+        }
+        //notify the change
+        if ( mListener != null && mTemperatureState ) {
             mListener.changeBasemap(TEMPERATURE_BASEMAP);
+        } else if ( mListener != null && !mTemperatureState) {
+            mListener.changeBasemap(FIRE_BASEMAP);
         }
     }
 
     @OnClick(R.id.fab_wind)
     public void onWindMapClick() {
-        if ( mListener != null ) {
+        //check the layer state
+        if (mWindState) {
+            mWindState = false;
+            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_on));
+        } else {
+            mWindState = true;
+            mTemperatureState = false;
+            mForestState = false;
+            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_off));
+            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_on));
+            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_on));
+        }
+        //notify the change
+        if ( mListener != null && mWindState ) {
             mListener.changeBasemap(WIND_BASEMAP);
+        } else if ( mListener != null && !mWindState ) {
+            mListener.changeBasemap(FIRE_BASEMAP);
         }
     }
 
     @OnClick(R.id.fab_precipitation)
-    public void onPrecipitationMapClick() {
-        if ( mListener != null ) {
+    public void onForestMapClick() {
+        //check the layer state
+        if (mForestState) {
+            mForestState = false;
+            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_on));
+        } else {
+            mForestState = true;
+            mTemperatureState = false;
+            mWindState = false;
+            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_off));
+            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_on));
+            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_on));
+        }
+        //notify the change
+        if ( mListener != null && mForestState ) {
+            mListener.changeBasemap(FOREST_BASEMAP);
+        } else if ( mListener != null && !mForestState ) {
             mListener.changeBasemap(FIRE_BASEMAP);
         }
     }

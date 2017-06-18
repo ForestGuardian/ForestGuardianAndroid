@@ -29,6 +29,7 @@ public interface IContants {
     public static final String FIRE_BASEMAP = "/maps/fires";
     public static final String TEMPERATURE_BASEMAP = "/maps/weather_perspective";
     public static final String WIND_BASEMAP = "/maps/windy";
+    public static final String FOREST_BASEMAP = "/maps/forests";
     public static final String PRECIPITATION_BASEMAP = "/maps/protected_area";
 
 }
