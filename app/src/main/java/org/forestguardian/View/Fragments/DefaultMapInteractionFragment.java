@@ -112,7 +112,7 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mCurrentLocationText.setText(locationText);
+                                setLocationLabelText(locationText);
                             }
                         });
                     }
@@ -121,5 +121,11 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
                 }
             }
         }).start();
+    }
+
+    public void setLocationLabelText(String message) {
+        if (mCurrentLocationText != null) {
+            mCurrentLocationText.setText(message);
+        }
     }
 }
