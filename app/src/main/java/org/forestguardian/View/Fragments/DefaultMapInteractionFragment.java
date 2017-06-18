@@ -102,22 +102,19 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void setCurrentLocation(Location point) {
+    public void setCurrentLocation(String locationText) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    final String locationText = GeoHelper.getAddressNameFromPoint(getActivity(), point);
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setLocationLabelText(locationText);
+                final String tmpLocationText = locationText;
+                Log.i("MapActivity","Setting the location text: " + locationText);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                                setLocationLabelText(tmpLocationText);
                             }
-                        });
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    });
                 }
             }
         }).start();
@@ -125,6 +122,7 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
 
     public void setLocationLabelText(String message) {
         if (mCurrentLocationText != null) {
+            Log.i("MapActivity", "Location text set!!");
             mCurrentLocationText.setText(message);
         }
     }

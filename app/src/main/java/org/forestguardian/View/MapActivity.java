@@ -105,6 +105,7 @@ public class MapActivity extends AppCompatActivity
     private Fragment mReportLocalizationFragment;
     private Fragment mCurrentFragment;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -268,9 +269,7 @@ public class MapActivity extends AppCompatActivity
 
                 MapActivity.this.mCurrentLocation = location;
                 Log.i("Location", "Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-                if (MapActivity.this.mMapInteractionFragment != null) {
-                    ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setCurrentLocation(location);
-                }
+                setLocationText();
                 if (!MapActivity.this.mIsCurrentLocation) {
                     MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
                 }
@@ -329,7 +328,7 @@ public class MapActivity extends AppCompatActivity
                 changeGPSLabel("GPS no disponible");
             }
         };
-        if (checkLocationPermissions()) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Location permission was granted");
             this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
             this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
@@ -343,13 +342,6 @@ public class MapActivity extends AppCompatActivity
             Log.i(TAG,"Changing the text to: " + message);
             ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setLocationLabelText(message);
         }
-    }
-
-    private boolean checkLocationPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
     }
 
     @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -543,6 +535,29 @@ public class MapActivity extends AppCompatActivity
                 MapActivity.this.mMapWebView.loadUrl("javascript:prepareReportLocation()"));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setLocationText() {
+        if (mCurrentLocation == null) {
+            return;
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String locationText = "";
+                try {
+                    locationText = GeoHelper.getAddressNameFromPoint(MapActivity.this, mCurrentLocation);
+                    if (MapActivity.this.mMapInteractionFragment != null && mCurrentLocation != null) {
+                        Log.i(TAG, "Resetting the location information");
+                        ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setCurrentLocation(locationText);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
     // endregion
 
     // region Reports Creation
@@ -571,7 +586,8 @@ public class MapActivity extends AppCompatActivity
         startActivityForResult(intent,REPORT_CREATION_REQUEST);
     }
 
-    private void handleReportCreation( int resultCode ){
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void handleReportCreation(int resultCode ){
         switch( resultCode ){
             case CreateReportActivity.SUCCESS_RESULT:
 
@@ -610,6 +626,7 @@ public class MapActivity extends AppCompatActivity
         loadRouteInteraction();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void drawRoute(Location startPlace, Location endPlace) {
         final Location fstartPlace = startPlace;
@@ -664,12 +681,18 @@ public class MapActivity extends AppCompatActivity
         mCurrentFragment = fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void loadDefaultInteraction(){
         if (mMapInteractionFragment == null) {
             mMapInteractionFragment = new DefaultMapInteractionFragment();
             ((DefaultMapInteractionFragment) mMapInteractionFragment).setListener(this);
         }
         loadNewInteraction(mMapInteractionFragment);
+
+        //Update the GPS Label
+        //TODO: Move this string to the string.xml file
+        changeGPSLabel("Cargando ubicación...");
+        setLocationText();
     }
 
     private void loadReportLocalizationInteraction(){
