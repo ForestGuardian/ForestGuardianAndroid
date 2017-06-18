@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -24,8 +25,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -53,6 +57,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
@@ -97,6 +102,7 @@ public class MapActivity extends AppCompatActivity
     private Fragment mReportLocalizationFragment;
     private Fragment mCurrentFragment;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,10 +240,21 @@ public class MapActivity extends AppCompatActivity
         //Setup the javascript interface
         this.mMapInterface = new WebMapInterface(this);
         this.mMapWebView.addJavascriptInterface(this.mMapInterface, "mobile");
+        //Capture load errors
+        this.mMapWebView.setWebViewClient(new WebViewClient() {
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                Log.e(TAG, "Error loading the URL");
+                //TODO: set an error page
+                //this.mMapWebView.loadUrl("file:///android_asset/myerrorpage.html");
+
+            }
+        });
     }
 
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     void initLocation() {
+
+        /* init the location manager */
         this.mLocationManager = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
 
         LocationListener locationListener = new LocationListener() {
@@ -246,12 +263,13 @@ public class MapActivity extends AppCompatActivity
             public void onLocationChanged(Location location) {
 
                 if (MapActivity.this.mCurrentLocation == null) {
+                    //TODO: Move this string to the string.xml file
                     Toast.makeText(MapActivity.this, "Información de GPS lista.", Toast.LENGTH_LONG).show();
                 }
 
                 MapActivity.this.mCurrentLocation = location;
                 Log.i("Location", "Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-                ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setCurrentLocation(location);
+                setLocationText();
                 if (!MapActivity.this.mIsCurrentLocation) {
                     MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
                 }
@@ -260,31 +278,58 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
 
+                /* Check the status of the location signal */
+                String toastMessage = "";
+                switch (status) {
+                    case LocationProvider.OUT_OF_SERVICE:
+                        //TODO: Move this string to the string.xml file
+                        toastMessage = "Señal de GPS no disponible";
+                        //TODO: Move this string to the string.xml file
+                        changeGPSLabel("GPS no disponible");
+                        break;
+                    case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                        //TODO: Move this string to the string.xml file
+                        toastMessage = "La señal de GPS presenta problemas";
+                        //TODO: Move this string to the string.xml file
+                        changeGPSLabel("Cargando ubicación...");
+                        break;
+                    case LocationProvider.AVAILABLE:
+                        //TODO: Move this string to the string.xml file
+                        toastMessage = "Señal de GPS disponible";
+                        break;
+                }
+                /* Show the toast message */
+                Toast.makeText(MapActivity.this, toastMessage, Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onProviderEnabled(String provider) {
-
+                /* Update the message text */
+                //TODO: Move this string to the string.xml file
+                changeGPSLabel("Cargando ubicación...");
             }
 
             @Override
             public void onProviderDisabled(String provider) {
-
+                /* Update the message text */
+                //TODO: Move this string to the string.xml file
+                changeGPSLabel("GPS no disponible");
             }
         };
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Location permission was granted");
+            this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+        } else {
+            Log.e(TAG, "Location permission was not granted");
         }
-        this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-        this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+    }
+
+    private void changeGPSLabel(String message) {
+        if (MapActivity.this.mMapInteractionFragment != null) {
+            Log.i(TAG,"Changing the text to: " + message);
+            ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setLocationLabelText(message);
+        }
     }
 
     @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -294,6 +339,20 @@ public class MapActivity extends AppCompatActivity
                 .setPositiveButton("Aceptar", (dialog, button) -> request.proceed())
                 .setNegativeButton("Cancelar", (dialog, button) -> request.cancel())
                 .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        //REQUEST_INITLOCATION = 1
+        if (requestCode == 1) {
+            // Check if the only required permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Location permission granted");
+                initLocation();
+            } else {
+                Log.e(TAG, "Location permission not granted");
+            }
+        }
     }
 
     private void resetAttributes(){
@@ -434,7 +493,7 @@ public class MapActivity extends AppCompatActivity
         Log.d("ButtonAction","centerOnLocation");
 
         if ( mCurrentLocation == null ){
-            Log.w("ButtonAction","No location information yet.");
+            Log.w("centerOnLocation","No location information yet.");
             Toast.makeText(this, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
             return;
         }
@@ -455,13 +514,36 @@ public class MapActivity extends AppCompatActivity
         Log.d("ButtonAction","reportLocationReady");
 
         if ( mCurrentLocation == null ){
-            Log.w("ButtonAction","No location information yet.");
+            Log.w("reportLocationReady","No location information yet.");
             Toast.makeText(this, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
             return;
         }
 
         MapActivity.this.mMapWebView.post(() ->
                 MapActivity.this.mMapWebView.loadUrl("javascript:prepareReportLocation()"));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setLocationText() {
+        if (mCurrentLocation == null) {
+            return;
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String locationText = "";
+                try {
+                    locationText = GeoHelper.getAddressNameFromPoint(MapActivity.this, mCurrentLocation);
+                    if (MapActivity.this.mMapInteractionFragment != null && mCurrentLocation != null) {
+                        Log.i(TAG, "Resetting the location information");
+                        ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setCurrentLocation(locationText);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     // endregion
@@ -471,6 +553,13 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void addReport() {
         Log.d("ButtonAction","addReport");
+
+        if ( mCurrentLocation == null ){
+            Log.w("addReport","No location information yet.");
+            Toast.makeText(this, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl(
             "javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) +
             ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")") );
@@ -485,7 +574,8 @@ public class MapActivity extends AppCompatActivity
         startActivityForResult(intent,REPORT_CREATION_REQUEST);
     }
 
-    private void handleReportCreation( int resultCode ){
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void handleReportCreation(int resultCode ){
         switch( resultCode ){
             case CreateReportActivity.SUCCESS_RESULT:
 
@@ -506,6 +596,7 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -524,6 +615,7 @@ public class MapActivity extends AppCompatActivity
         loadRouteInteraction();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void drawRoute(Location startPlace, Location endPlace) {
         final Location fstartPlace = startPlace;
@@ -578,12 +670,18 @@ public class MapActivity extends AppCompatActivity
         mCurrentFragment = fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void loadDefaultInteraction(){
         if (mMapInteractionFragment == null) {
             mMapInteractionFragment = new DefaultMapInteractionFragment();
             ((DefaultMapInteractionFragment) mMapInteractionFragment).setListener(this);
         }
         loadNewInteraction(mMapInteractionFragment);
+
+        //Update the GPS Label
+        //TODO: Move this string to the string.xml file
+        changeGPSLabel("Cargando ubicación...");
+        setLocationText();
     }
 
     private void loadReportLocalizationInteraction(){
@@ -605,6 +703,12 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void loadRouteInteraction() {
+        if ( mCurrentLocation == null ){
+            Log.w("loadRouteInteraction","No location information yet.");
+            Toast.makeText(this, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (mWaterResources.size() > 0) {
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0), this.mCurrentLocation);
         } else {

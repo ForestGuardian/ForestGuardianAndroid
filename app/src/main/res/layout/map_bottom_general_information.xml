@@ -171,7 +171,7 @@
             android:layout_margin="5dp"
             android:layout_row="2"
             android:gravity="center_vertical"
-            android:text="Bomberos Bagaces"
+            android:text="No se encontraron bomberos"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -182,7 +182,7 @@
             android:layout_margin="5dp"
             android:layout_row="3"
             android:gravity="center_vertical"
-            android:text="Río Blanco"
+            android:text="No se encontraron recursos hídricos"
             android:textColor="@android:color/white" />
 
         <TextView

@@ -110,7 +110,7 @@
             android:gravity="center_vertical"
             android:paddingStart="30dp"
             android:paddingTop="30dp"
-            android:text="Cargando ubicación..."
+            android:text="GPS no disponible"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:textStyle="bold"
