@@ -140,23 +140,23 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     public void updateLayersUI(Context context) {
         //Update the temperature layer
         if (mTemperatureState) {
-            mTemperatureMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_agua_layer_off));
-        } else {
             mTemperatureMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_agua_layer_on));
+        } else {
+            mTemperatureMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_agua_layer_off));
         }
 
         //Update the wind layer
         if (mWindState) {
-            mWindMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_viento_layer_off));
-        } else {
             mWindMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_viento_layer_on));
+        } else {
+            mWindMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_viento_layer_off));
         }
 
         //Update the forest layer
         if (mForestState) {
-            mForestMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_bosque_layer_off));
-        } else {
             mForestMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_bosque_layer_on));
+        } else {
+            mForestMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_bosque_layer_off));
         }
     }
 
