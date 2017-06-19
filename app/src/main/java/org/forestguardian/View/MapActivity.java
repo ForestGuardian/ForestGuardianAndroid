@@ -651,11 +651,11 @@ public class MapActivity extends AppCompatActivity
 
         if ( mCurrentFragment != null ){
             transaction.replace(R.id.map_interaction_layout, fragment);
+            transaction.addToBackStack(null);
         }else{
             transaction.add(R.id.map_interaction_layout, fragment);
         }
         mCurrentFragment = fragment;
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 

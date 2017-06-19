@@ -42,7 +42,7 @@ public class CreateReportActivity extends AppCompatActivity {
     private static final int CAMERA_IMAGE_REQUEST = 101;
     private static final int GALLERY_IMAGE_REQUEST = 102;
 
-    public final static int SUCCESS_RESULT = 0;
+    public final static int SUCCESS_RESULT = 456;
 
     @BindView(R.id.latitude_label) TextView mLatitudeLabel;
     @BindView(R.id.longitude_label) TextView mLongitudeLabel;
