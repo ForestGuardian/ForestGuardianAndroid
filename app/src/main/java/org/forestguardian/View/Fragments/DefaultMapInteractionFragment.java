@@ -2,6 +2,7 @@ package org.forestguardian.View.Fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,14 +43,21 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     @BindView(R.id.currentLocationTextView) TextView mCurrentLocationText;
     @BindView(R.id.fab_temperature) ImageButton mTemperatureMapButton;
     @BindView(R.id.fab_wind) ImageButton mWindMapButton;
-    @BindView(R.id.fab_precipitation) ImageButton mPrecipitationMapButton;
+    @BindView(R.id.fab_precipitation) ImageButton mForestMapButton;
+
+    /* Map buttons flags */
+    private boolean mTemperatureState;
+    private boolean mWindState;
+    private boolean mForestState;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.map_bottom_default, container, false);
         ButterKnife.bind(this, view);
+        updateLayersUI(getActivity());
         return view;
     }
 
@@ -74,22 +82,81 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
 
     @OnClick(R.id.fab_temperature)
     public void onTemperatureMapClick() {
-        if ( mListener != null ) {
+        //check the layer state
+        if (mTemperatureState) {
+            mTemperatureState = false;
+        } else {
+            mTemperatureState = true;
+            mWindState = false;
+            mForestState = false;
+        }
+        updateLayersUI(getActivity());
+        //notify the change
+        if ( mListener != null && mTemperatureState ) {
             mListener.changeBasemap(TEMPERATURE_BASEMAP);
+        } else if ( mListener != null && !mTemperatureState) {
+            mListener.changeBasemap(FIRE_BASEMAP);
         }
     }
 
     @OnClick(R.id.fab_wind)
     public void onWindMapClick() {
-        if ( mListener != null ) {
+        //check the layer state
+        if (mWindState) {
+            mWindState = false;
+        } else {
+            mWindState = true;
+            mTemperatureState = false;
+            mForestState = false;
+        }
+        updateLayersUI(getActivity());
+        //notify the change
+        if ( mListener != null && mWindState ) {
             mListener.changeBasemap(WIND_BASEMAP);
+        } else if ( mListener != null && !mWindState ) {
+            mListener.changeBasemap(FIRE_BASEMAP);
         }
     }
 
     @OnClick(R.id.fab_precipitation)
-    public void onPrecipitationMapClick() {
-        if ( mListener != null ) {
+    public void onForestMapClick() {
+        //check the layer state
+        if (mForestState) {
+            mForestState = false;
+        } else {
+            mForestState = true;
+            mTemperatureState = false;
+            mWindState = false;
+        }
+        updateLayersUI(getActivity());
+        //notify the change
+        if ( mListener != null && mForestState ) {
+            mListener.changeBasemap(FOREST_BASEMAP);
+        } else if ( mListener != null && !mForestState ) {
             mListener.changeBasemap(FIRE_BASEMAP);
+        }
+    }
+
+    public void updateLayersUI(Context context) {
+        //Update the temperature layer
+        if (mTemperatureState) {
+            mTemperatureMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_agua_layer_off));
+        } else {
+            mTemperatureMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_agua_layer_on));
+        }
+
+        //Update the wind layer
+        if (mWindState) {
+            mWindMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_viento_layer_off));
+        } else {
+            mWindMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_viento_layer_on));
+        }
+
+        //Update the forest layer
+        if (mForestState) {
+            mForestMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_bosque_layer_off));
+        } else {
+            mForestMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_bosque_layer_on));
         }
     }
 

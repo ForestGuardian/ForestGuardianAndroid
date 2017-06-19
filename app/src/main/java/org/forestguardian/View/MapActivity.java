@@ -668,7 +668,6 @@ public class MapActivity extends AppCompatActivity
         }
         loadNewInteraction(mMapInteractionFragment);
 
-        //Update the GPS Label
         //TODO: Move this string to the string.xml file
         changeGPSLabel("Cargando ubicación...");
         setLocationText();
