@@ -305,7 +305,8 @@ public class MapActivity extends AppCompatActivity
                         break;
                 }
                 /* Show the toast message */
-                Toast.makeText(MapActivity.this, toastMessage, Toast.LENGTH_LONG).show();
+//                Toast.makeText(MapActivity.this, toastMessage, Toast.LENGTH_LONG).show();
+                Log.w("Location", toastMessage);
             }
 
             @Override

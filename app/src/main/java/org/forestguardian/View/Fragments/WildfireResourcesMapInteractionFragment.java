@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
@@ -42,7 +43,7 @@ public class WildfireResourcesMapInteractionFragment extends Fragment {
     @BindView(R.id.firestationLabel) TextView mFirestationLabel;
     @BindView(R.id.waterLabel) TextView mWaterLabel;
     @BindView(R.id.wildfireLocationLabel) TextView mWildfireLocationLabel;
-    @BindView(R.id.fab_route) FloatingActionButton mFabRoute;
+    @BindView(R.id.fab_route) Button mFabRoute;
 
     public WildfireResourcesMapInteractionFragment() {
         // Required empty public constructor
