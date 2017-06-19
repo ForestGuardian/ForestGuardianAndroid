@@ -3,6 +3,7 @@ package org.forestguardian.View;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -144,6 +145,11 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
+        // Remove marker.
+        MapActivity.this.mMapWebView.post(() -> MapActivity.this.mMapWebView.loadUrl(
+                "javascript:clearReportLocation()") );
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -407,16 +413,13 @@ public class MapActivity extends AppCompatActivity
                     MapActivity.this.mFireStations.add(fireStation);
 
                     //Set the address of the firestation
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                FireStation tmpFirestation = MapActivity.this.mFireStations.get(MapActivity.this.mFireStations.size() - 1);
-                                String firestationAddress = GeoHelper.getAddressNameFromPoint(MapActivity.this, tmpFirestation.getCoordinate());
-                                tmpFirestation.setAddress(firestationAddress);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                    new Thread(() -> {
+                        try {
+                            FireStation tmpFirestation = MapActivity.this.mFireStations.get(MapActivity.this.mFireStations.size() - 1);
+                            String firestationAddress = GeoHelper.getAddressNameFromPoint(MapActivity.this, tmpFirestation.getCoordinate());
+                            tmpFirestation.setAddress(firestationAddress);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }).start();
 
@@ -515,19 +518,16 @@ public class MapActivity extends AppCompatActivity
             return;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String locationText = "";
-                try {
-                    locationText = GeoHelper.getAddressNameFromPoint(MapActivity.this, mCurrentLocation);
-                    if (MapActivity.this.mMapInteractionFragment != null && mCurrentLocation != null) {
-                        Log.i(TAG, "Resetting the location information");
-                        ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setCurrentLocation(locationText);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+        new Thread(() -> {
+            String locationText = "";
+            try {
+                locationText = GeoHelper.getAddressNameFromPoint(MapActivity.this, mCurrentLocation);
+                if (MapActivity.this.mMapInteractionFragment != null && mCurrentLocation != null) {
+                    Log.i(TAG, "Resetting the location information");
+                    ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setCurrentLocation(locationText);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }).start();
     }
@@ -647,17 +647,21 @@ public class MapActivity extends AppCompatActivity
     private void loadNewInteraction(Fragment fragment){
 
         Log.d("Replacing Fragment",fragment.getClass().getCanonicalName());
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         if ( mCurrentFragment != null ){
-            getFragmentManager().beginTransaction().replace(R.id.map_interaction_layout, fragment).commit();
+            transaction.replace(R.id.map_interaction_layout, fragment);
         }else{
-            getFragmentManager().beginTransaction().add(R.id.map_interaction_layout, fragment).commit();
+            transaction.add(R.id.map_interaction_layout, fragment);
         }
         mCurrentFragment = fragment;
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void loadDefaultInteraction(){
+
         if (mMapInteractionFragment == null) {
             mMapInteractionFragment = new DefaultMapInteractionFragment();
             ((DefaultMapInteractionFragment) mMapInteractionFragment).setListener(this);
