@@ -26,7 +26,8 @@ public class ForestGuardianApplication extends Application {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .schemaVersion(1) // Must be bumped when the schema changes
-                .migration(new DataMigration()) // Migration to run instead of throwing an exception
+//                .migration(new DataMigration()) // Migration to run instead of throwing an exception
+                .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
     }
