@@ -2,6 +2,7 @@ package org.forestguardian.View.Fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,14 +53,11 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Init the map button flags
-        mTemperatureState = false;
-        mWindState = false;
-        mForestState = false;
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.map_bottom_default, container, false);
         ButterKnife.bind(this, view);
+        updateLayersUI(getActivity());
         return view;
     }
 
@@ -87,15 +85,12 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
         //check the layer state
         if (mTemperatureState) {
             mTemperatureState = false;
-            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_on));
         } else {
             mTemperatureState = true;
             mWindState = false;
             mForestState = false;
-            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_off));
-            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_on));
-            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_on));
         }
+        updateLayersUI(getActivity());
         //notify the change
         if ( mListener != null && mTemperatureState ) {
             mListener.changeBasemap(TEMPERATURE_BASEMAP);
@@ -109,15 +104,12 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
         //check the layer state
         if (mWindState) {
             mWindState = false;
-            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_on));
         } else {
             mWindState = true;
             mTemperatureState = false;
             mForestState = false;
-            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_off));
-            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_on));
-            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_on));
         }
+        updateLayersUI(getActivity());
         //notify the change
         if ( mListener != null && mWindState ) {
             mListener.changeBasemap(WIND_BASEMAP);
@@ -131,20 +123,40 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
         //check the layer state
         if (mForestState) {
             mForestState = false;
-            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_on));
         } else {
             mForestState = true;
             mTemperatureState = false;
             mWindState = false;
-            mForestMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_bosque_layer_off));
-            mWindMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_viento_layer_on));
-            mTemperatureMapButton.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_agua_layer_on));
         }
+        updateLayersUI(getActivity());
         //notify the change
         if ( mListener != null && mForestState ) {
             mListener.changeBasemap(FOREST_BASEMAP);
         } else if ( mListener != null && !mForestState ) {
             mListener.changeBasemap(FIRE_BASEMAP);
+        }
+    }
+
+    public void updateLayersUI(Context context) {
+        //Update the temperature layer
+        if (mTemperatureState) {
+            mTemperatureMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_agua_layer_off));
+        } else {
+            mTemperatureMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_agua_layer_on));
+        }
+
+        //Update the wind layer
+        if (mWindState) {
+            mWindMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_viento_layer_off));
+        } else {
+            mWindMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_viento_layer_on));
+        }
+
+        //Update the forest layer
+        if (mForestState) {
+            mForestMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_bosque_layer_off));
+        } else {
+            mForestMapButton.setBackground(context.getResources().getDrawable(R.drawable.ic_bosque_layer_on));
         }
     }
 

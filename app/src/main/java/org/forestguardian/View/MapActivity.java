@@ -672,13 +672,13 @@ public class MapActivity extends AppCompatActivity
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void loadDefaultInteraction(){
+
         if (mMapInteractionFragment == null) {
             mMapInteractionFragment = new DefaultMapInteractionFragment();
             ((DefaultMapInteractionFragment) mMapInteractionFragment).setListener(this);
         }
         loadNewInteraction(mMapInteractionFragment);
 
-        //Update the GPS Label
         //TODO: Move this string to the string.xml file
         changeGPSLabel("Cargando ubicación...");
         setLocationText();
