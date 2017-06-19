@@ -1,6 +1,7 @@
 package org.forestguardian.View;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -133,10 +135,16 @@ public class CreateReportActivity extends AppCompatActivity {
         String encodedPicture = Base64.encodeToString(reportPictureByteArray, Base64.DEFAULT);
         report.setPicture( "data:image/png;base64," + encodedPicture );
 
+        // spin animation
+        ProgressDialog dialog = ProgressDialog.show(this, "", "Uploading. Please wait...", true);
+        dialog.show();
+
         Observable<Report> reportService = ForestGuardianService.global().service().createReport(report);
         reportService.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( pCreatedReport -> {
+
+                    dialog.hide();
 
                     Log.i("Created Report", "id:" + String.valueOf( pCreatedReport.getId() ) );
                     Log.i("Created Report", "title:" + pCreatedReport.getTitle() );
