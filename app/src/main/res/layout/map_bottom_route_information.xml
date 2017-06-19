@@ -6,126 +6,52 @@
                                              android:layout_height="match_parent">
 
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        app:srcCompat="@drawable/ic_toggle_temp_on"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <ImageButton
-        android:id="@+id/fab_temperature"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        app:srcCompat="@drawable/ic_toggle_temp_on"
-        tools:layout_conversion_absoluteHeight="40dp"
-        tools:layout_conversion_absoluteWidth="40dp"
-        tools:layout_conversion_absoluteX="0dp"
-        tools:layout_conversion_absoluteY="40dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <ImageButton
-        android:id="@+id/fab_no_name_yet"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_toggle_temp_on"
-        tools:layout_conversion_absoluteHeight="40dp"
-        tools:layout_conversion_absoluteWidth="40dp"
-        tools:layout_conversion_absoluteX="0dp"
-        tools:layout_conversion_absoluteY="0dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"/>
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_route"
-        app:backgroundTint="@color/colorAccent"
-        app:srcCompat="@mipmap/icon_add"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:scaleType="centerInside"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="82dp"
-        tools:layout_conversion_absoluteWidth="70dp"
-        tools:layout_conversion_absoluteHeight="70dp"
-        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
-        app:layout_constraintTop_toTopOf="@+id/gridLayout"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:background="@color/colorAccent"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="8dp"/>
+        app:layout_constraintTop_toTopOf="@+id/gridLayout"
+        app:srcCompat="@drawable/ic_directions_24dp"
+        tools:layout_conversion_absoluteHeight="70dp"
+        tools:layout_conversion_absoluteWidth="70dp"
+        tools:layout_conversion_absoluteX="16dp"
+        tools:layout_conversion_absoluteY="82dp"/>
 
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_column="1"
-            android:layout_margin="5dp"
-            android:layout_row="1"
-            android:layout_rowSpan="4"
-            app:srcCompat="@mipmap/logo"/>
-
-        <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_column="2"
             android:layout_margin="5dp"
             android:layout_row="2"
-            app:srcCompat="@drawable/ic_toggle_temp_on"/>
+            android:background="@drawable/ic_ubicacion"/>
 
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView5"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_column="2"
             android:layout_margin="5dp"
             android:layout_row="3"
-            app:srcCompat="@drawable/ic_toggle_temp_on"/>
-
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="344dp"
-            android:layout_height="wrap_content"
-            android:layout_column="2"
-            android:layout_columnSpan="2"
-            android:layout_margin="5dp"
-            android:layout_row="1"
-            android:text=""
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="-30dp"/>
+            android:background="@drawable/ic_bomberos"/>
 
 
         <ImageView
@@ -135,22 +61,22 @@
             android:layout_column="2"
             android:layout_margin="5dp"
             android:layout_row="4"
-            app:srcCompat="@drawable/ic_toggle_temp_on"/>
+            android:background="@drawable/ic_agua"/>
 
-        <Button
+        <TextView
             android:id="@+id/route_current_location_button"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_column="3"
             android:layout_margin="5dp"
-            android:background="@null"
-            android:textAllCaps="false"
             android:layout_row="2"
+            android:background="@null"
             android:gravity="center_vertical"
             android:text="Su ubicación"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"/>
 
-        <Button
+        <TextView
             android:id="@+id/route_firestation_location_button"
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -161,9 +87,9 @@
             android:gravity="center_vertical"
             android:text="No se encontraron bomberos"
             android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"/>
 
-        <Button
+        <TextView
             android:id="@+id/route_water_location_button"
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -174,36 +100,69 @@
             android:gravity="center_vertical"
             android:text="No se encontraron recursos hídricos"
             android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"/>
     </GridLayout>
 
     <GridLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorDarkGray"
         android:orientation="vertical"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/gridLayout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/linearLayout2"
         app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginBottom="0dp">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView9"
+
+        <LinearLayout
+            android:id="@+id/danger_bar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_column="1"
+            android:layout_gravity="left"
             android:layout_margin="5dp"
             android:layout_row="1"
-            android:layout_rowSpan="3"
-            app:srcCompat="@drawable/ic_toggle_temp_on"/>
+            android:layout_rowSpan="4"
+            android:orientation="vertical"
+            android:weightSum="3">
+
+            <ImageView
+                android:id="@+id/danger_3"
+                android:layout_width="25dp"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_my_location_black_24dp"/>
+
+            <ImageView
+                android:id="@+id/danger_2"
+                android:layout_width="25dp"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_linear_scale_24dp"
+                android:rotation="90"/>
+
+            <ImageView
+                android:id="@+id/danger_1"
+                android:layout_width="25dp"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_ubicacion"/>
+
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/textView12"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
+            android:layout_gravity="left"
             android:layout_margin="5dp"
             android:layout_marginBottom="20dp"
             android:layout_row="1"
@@ -212,24 +171,26 @@
 
         <TextView
             android:id="@+id/wildfire_location_name_label"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
+            android:layout_gravity="left"
             android:layout_margin="5dp"
             android:layout_row="2"
             android:text="Bagaces, Guanacaste, CR"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/wildfire_coordinates_label"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
+            android:layout_gravity="left"
             android:layout_margin="5dp"
             android:layout_row="3"
             android:text="37.3382° N, 121.8863° W"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"/>
     </GridLayout>
 
 

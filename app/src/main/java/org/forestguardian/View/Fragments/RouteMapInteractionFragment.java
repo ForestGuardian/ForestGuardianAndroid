@@ -48,12 +48,11 @@ public class RouteMapInteractionFragment extends Fragment {
     private Location mCurrentLocation;
     private Location mEndPlace;
 
-    @BindView(R.id.route_current_location_button) Button mCurrentLocationButton;
-    @BindView(R.id.route_firestation_location_button) Button mFirestationLocationButton;
-    @BindView(R.id.route_water_location_button) Button mWaterLocationButton;
+    @BindView(R.id.route_current_location_button) TextView mCurrentLocationButton;
+    @BindView(R.id.route_firestation_location_button) TextView mFirestationLocationButton;
+    @BindView(R.id.route_water_location_button) TextView mWaterLocationButton;
     @BindView(R.id.wildfire_location_name_label) TextView mWildfireLocationNameLabel;
     @BindView(R.id.wildfire_coordinates_label) TextView mWildfireCoordinatesLabel;
-    @BindView(R.id.fab_route) FloatingActionButton mFabRoute;
 
     public RouteMapInteractionFragment() {
         // Required empty public constructor
