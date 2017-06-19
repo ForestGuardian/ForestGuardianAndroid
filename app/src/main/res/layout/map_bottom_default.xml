@@ -59,32 +59,29 @@
             tools:layout_editor_absoluteY="80dp"/>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/center_location_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:background="@color/colorPrimary"
-        app:backgroundTint="@color/colorGray"
+        android:background="@drawable/ic_ubicar"
         app:layout_constraintBottom_toTopOf="@+id/add_report_btn"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="@+id/add_report_btn"
-        app:layout_constraintRight_toRightOf="@+id/add_report_btn"
-        app:srcCompat="@drawable/ic_my_location_black_24dp"/>
+        app:layout_constraintRight_toRightOf="@+id/add_report_btn"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/add_report_btn"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginEnd="30dp"
+        android:background="@drawable/ic_next"
         android:scaleType="centerInside"
-        app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/gridLayout"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/gridLayout"
-        app:srcCompat="@mipmap/icon_add"
         tools:layout_conversion_absoluteHeight="70dp"
         tools:layout_conversion_absoluteWidth="70dp"
         tools:layout_conversion_absoluteX="16dp"

@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.forestguardian.R;
 
@@ -23,7 +24,7 @@ public class ReportLocalizationFragment extends Fragment {
         void reportLocationReady();
     }
 
-    @BindView(R.id.next_btn) FloatingActionButton mNextButton;
+    @BindView(R.id.next_btn) Button mNextButton;
 
     private OnReportLocalizationListener mListener;
 

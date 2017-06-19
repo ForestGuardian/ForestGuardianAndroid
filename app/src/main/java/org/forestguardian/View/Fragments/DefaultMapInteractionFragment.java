@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -38,8 +39,8 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
 
     private OnDefaultInteractionListener mListener;
 
-    @BindView(R.id.add_report_btn) FloatingActionButton mAddReportBtn;
-    @BindView(R.id.center_location_btn) FloatingActionButton mCenterLocationBtn;
+    @BindView(R.id.add_report_btn) Button mAddReportBtn;
+    @BindView(R.id.center_location_btn) Button mCenterLocationBtn;
     @BindView(R.id.currentLocationTextView) TextView mCurrentLocationText;
     @BindView(R.id.fab_temperature) ImageButton mTemperatureMapButton;
     @BindView(R.id.fab_wind) ImageButton mWindMapButton;
