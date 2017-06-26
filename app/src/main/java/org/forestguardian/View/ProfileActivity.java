@@ -17,6 +17,7 @@ import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.ForestGuardianApplication;
+import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.R;
 
 import java.net.MalformedURLException;
@@ -61,7 +62,7 @@ public class ProfileActivity extends Activity {
 
     private void loadProfileAvatar(){
         Observable.create(e -> {
-            User currentUser = ((ForestGuardianApplication)getApplicationContext()).getCurrentUser();
+            User currentUser = AuthenticationController.shared().getCurrentUser();
 
             mProfileNameView.setText(currentUser.getName());
 

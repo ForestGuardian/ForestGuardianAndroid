@@ -24,6 +24,7 @@ import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.ForestGuardianApplication;
+import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.HeadersHelper;
 import org.forestguardian.Helpers.UserValidations;
 import org.forestguardian.R;
@@ -149,7 +150,7 @@ public class SignUpActivity  extends AppCompatActivity {
 
             User authenticatedUser = pSessionDataResult.response().body().getUser();
             authenticatedUser.setAuth( authData );
-            ((ForestGuardianApplication)getApplication()).setCurrentUser(authenticatedUser);
+            AuthenticationController.shared().setCurrentUser(authenticatedUser);
 
             // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
             // ForestGuardianService.global().addApiAuthorizationHeader();

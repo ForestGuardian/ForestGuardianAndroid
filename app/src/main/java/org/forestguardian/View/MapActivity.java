@@ -45,6 +45,7 @@ import org.forestguardian.DataAccess.OSM.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
 import org.forestguardian.ForestGuardianApplication;
+import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
@@ -112,7 +113,7 @@ public class MapActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
 
         navHolder = new NavigationHolder(mNavView);
-        navHolder.header.email.setText(((ForestGuardianApplication) getApplication()).getCurrentUser().getEmail());
+        navHolder.header.email.setText(AuthenticationController.shared().getCurrentUser().getEmail());
         navHolder.header.name.setText("Welcome random citizen!");
         // TODO: navHolder.header.name.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getName() );
         // TODO: same but with avatar. Is this required?
@@ -201,7 +202,7 @@ public class MapActivity extends AppCompatActivity
                 switch (option) {
                     case DialogInterface.BUTTON_POSITIVE:
                         // destroy session and go to SignInActivity
-                        ((ForestGuardianApplication) getApplication()).logout();
+                        AuthenticationController.shared().logout();
                         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                         startActivity(intent);
                         finish();
