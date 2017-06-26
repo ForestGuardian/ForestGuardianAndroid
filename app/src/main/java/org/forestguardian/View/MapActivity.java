@@ -35,6 +35,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +48,6 @@ import org.forestguardian.DataAccess.Weather.OpenWeatherWrapper;
 import org.forestguardian.DataAccess.OSM.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
-import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
@@ -67,7 +67,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
@@ -150,6 +149,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private void loadProfileAvatar(){
+        navHolder.header.progress.setVisibility(View.VISIBLE);
         Observable.create(e -> {
             User currentUser = AuthenticationController.shared().getCurrentUser();
 
@@ -169,7 +169,10 @@ public class MapActivity extends AppCompatActivity
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( bitmap -> navHolder.header.avatar.setImageBitmap((Bitmap)bitmap) );
+                .subscribe( bitmap -> {
+                    navHolder.header.progress.setVisibility(View.GONE);
+                    navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
+                });
     }
 
     @Override
@@ -668,6 +671,7 @@ public class MapActivity extends AppCompatActivity
         @BindView(R.id.nav_user_name) TextView name;
         @BindView(R.id.nav_user_email) TextView email;
         @BindView(R.id.nav_user_pic) ImageView avatar;
+        @BindView(R.id.nav_user_pic_progress) ProgressBar progress;
 
         public NavigationHeaderHolder(View view){
             ButterKnife.bind(this,view);

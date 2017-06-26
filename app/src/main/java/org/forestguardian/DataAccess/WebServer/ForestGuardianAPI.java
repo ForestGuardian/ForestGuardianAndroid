@@ -68,7 +68,7 @@ public interface ForestGuardianAPI {
      * @return
      */
     @PUT("api/v1/users.json")
-    Observable<Result<SessionData>> updateAccount(@Body User pUser);
+    Observable<SessionData> updateAccount(@Body User pUser);
 
     /**
      * Creates a new report.
