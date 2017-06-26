@@ -7,6 +7,8 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
 import org.forestguardian.DataAccess.OSM.WaterResource;
@@ -54,10 +57,15 @@ import org.forestguardian.View.Fragments.RouteMapInteractionFragment;
 import org.forestguardian.View.Fragments.WildfireResourcesMapInteractionFragment;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
@@ -84,20 +92,14 @@ public class MapActivity extends AppCompatActivity
     private OpenWeatherWrapper mWeather;
     private MODIS mMODIS;
 
-    @BindView(R.id.nav_view)
-    NavigationView mNavView;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.map_container)
-    RelativeLayout mMapContainer;
-    @BindView(R.id.map_web_view)
-    WebView mMapWebView;
-    @BindView(R.id.map_interaction_layout)
-    FrameLayout mInteractionLayout;
-    private NavigationHolder navHolder;
+    @BindView(R.id.nav_view) NavigationView mNavView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.map_container) RelativeLayout mMapContainer;
+    @BindView(R.id.map_web_view) WebView mMapWebView;
+    @BindView(R.id.map_interaction_layout) FrameLayout mInteractionLayout;
 
+    private NavigationHolder navHolder;
     private Fragment mMapInteractionFragment;
     private Fragment mMapGeneralInteractionFragment;
     private Fragment mMapRouteInteractionFragment;
@@ -114,7 +116,7 @@ public class MapActivity extends AppCompatActivity
 
         navHolder = new NavigationHolder(mNavView);
         navHolder.header.email.setText(AuthenticationController.shared().getCurrentUser().getEmail());
-        navHolder.header.name.setText("Welcome random citizen!");
+        navHolder.header.name.setText(AuthenticationController.shared().getCurrentUser().getName());
         // TODO: navHolder.header.name.setText( ((ForestGuardianApplication)getApplication()).getCurrentUser().getName() );
         // TODO: same but with avatar. Is this required?
 
@@ -142,6 +144,32 @@ public class MapActivity extends AppCompatActivity
 
         //Load Fragment
         loadDefaultInteraction();
+
+        //Load image
+        loadProfileAvatar();
+    }
+
+    private void loadProfileAvatar(){
+        Observable.create(e -> {
+            User currentUser = AuthenticationController.shared().getCurrentUser();
+
+            String avatar = currentUser.getAvatar();
+            if (avatar == null){
+                return;
+            }
+            try {
+                Bitmap picture = BitmapFactory.decodeStream(new URL(avatar).openConnection().getInputStream());
+                if (!e.isDisposed()){
+                    e.onNext(picture);
+                    e.onComplete();
+                }
+            }catch(MalformedURLException error){
+                error.printStackTrace();
+                return;
+            }
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( bitmap -> navHolder.header.avatar.setImageBitmap((Bitmap)bitmap) );
     }
 
     @Override
