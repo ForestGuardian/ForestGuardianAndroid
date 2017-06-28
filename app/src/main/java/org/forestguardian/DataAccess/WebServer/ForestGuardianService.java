@@ -91,7 +91,7 @@ public class ForestGuardianService {
 
             Request request = requestBuilder.build();
 
-            Log.e("Request", request.toString() );
+            Log.e("AuthenticationHeaders", request.toString() );
             return chain.proceed(request);
         });
 

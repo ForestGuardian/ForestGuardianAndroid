@@ -13,6 +13,7 @@ import retrofit2.adapter.rxjava2.Result;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 /**
  * Created by emma on 19/03/17.
@@ -31,7 +32,7 @@ public interface ForestGuardianAPI {
     * running docker-compose up or docker-compose start commands.
     * */
     String DEVELOPMENT_DOCKER_ENDPOINT = "http://192.168.99.100:3000";
-    String DEVELOPMENT_EMMA_ENDPOINT = "http://192.168.9.104:3000";
+    String DEVELOPMENT_EMMA_ENDPOINT = "http://192.168.1.104:3000";
     String DEVELOPMENT_LUIS_ENDPOINT = "http://your-lan-ip-here:3000";
 
     /* For normal runs and automated tests. */
@@ -61,6 +62,13 @@ public interface ForestGuardianAPI {
     @POST("api/v1/users.json")
     Observable<Result<SessionData>> signUp(@Body User pUser);
 
+    /**
+     * Updates an user information.
+     * @param pUser
+     * @return
+     */
+    @PUT("api/v1/users.json")
+    Observable<SessionData> updateAccount(@Body User pUser);
 
     /**
      * Creates a new report.
