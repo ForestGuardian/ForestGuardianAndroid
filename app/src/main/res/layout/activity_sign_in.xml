@@ -51,6 +51,7 @@
         android:maxLines="1"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
+        android:imeOptions="actionNext"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
