@@ -17,7 +17,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -68,6 +70,9 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     @BindView(R.id.link_to_signup) TextView mSignUp;
     @BindView(R.id.email_sign_in_button) Button mEmailSignInButton;
 
+    private boolean mEmailEntered;
+    private boolean mPasswordEntered;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,59 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             Intent activityIntent = new Intent( SignInActivity.this, SignUpActivity.class );
             startActivity(activityIntent);
         });
+
+        //TextChangeListeners
+        mEmailView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().contentEquals("")) {
+                    mEmailEntered = true;
+                } else {
+                    mEmailEntered = false;
+                }
+                checkEntries();
+            }
+        });
+
+        mPasswordView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().contentEquals("")) {
+                    mPasswordEntered = true;
+                } else {
+                    mPasswordEntered = false;
+                }
+                checkEntries();
+            }
+        });
+    }
+
+    private void checkEntries() {
+        if (mEmailEntered && mPasswordEntered) {
+            mEmailSignInButton.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_green));
+        } else {
+            mEmailSignInButton.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_dark_gray));
+        }
     }
 
     private void populateAutoComplete() {
