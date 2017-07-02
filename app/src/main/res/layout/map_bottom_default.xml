@@ -112,7 +112,8 @@
             android:textSize="14sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="-30dp"/>
+            tools:layout_editor_absoluteY="-30dp"
+            android:fontFamily="sans-serif"/>
 
 
     </LinearLayout>

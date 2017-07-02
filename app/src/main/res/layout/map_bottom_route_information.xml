@@ -74,7 +74,8 @@
             android:gravity="center_vertical"
             android:text="Su ubicación"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif"/>
 
         <TextView
             android:id="@+id/route_firestation_location_button"
@@ -87,7 +88,8 @@
             android:gravity="center_vertical"
             android:text="No se encontraron bomberos"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif"/>
 
         <TextView
             android:id="@+id/route_water_location_button"
@@ -100,7 +102,8 @@
             android:gravity="center_vertical"
             android:text="No se encontraron recursos hídricos"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif"/>
     </GridLayout>
 
     <GridLayout
@@ -167,7 +170,8 @@
             android:layout_marginBottom="20dp"
             android:layout_row="1"
             android:text="Desde"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif"/>
 
         <TextView
             android:id="@+id/wildfire_location_name_label"
@@ -179,7 +183,8 @@
             android:layout_row="2"
             android:text="Bagaces, Guanacaste, CR"
             android:textColor="@android:color/white"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:fontFamily="sans-serif"/>
 
         <TextView
             android:id="@+id/wildfire_coordinates_label"
@@ -190,7 +195,8 @@
             android:layout_margin="5dp"
             android:layout_row="3"
             android:text="37.3382° N, 121.8863° W"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif"/>
     </GridLayout>
 
 

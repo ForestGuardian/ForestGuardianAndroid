@@ -20,7 +20,9 @@
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"/>
+        android:textColorHint="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <EditText
         android:id="@+id/new_report_description"
@@ -35,7 +37,9 @@
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"/>
+        android:textColorHint="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <Spinner
         android:id="@+id/spinner"
@@ -59,7 +63,9 @@
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"/>
+        android:textColorHint="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,7 +121,8 @@
                         android:layout_weight="1"
                         android:padding="5dp"
                         android:text="37.3382° N"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white"
+                        android:fontFamily="sans-serif"/>
 
                     <TextView
                         android:id="@+id/longitude_label"
@@ -124,7 +131,8 @@
                         android:layout_weight="1"
                         android:padding="5dp"
                         android:text="121.8863° W"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white"
+                        android:fontFamily="sans-serif"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
