@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -146,6 +147,41 @@ public class MapActivity extends AppCompatActivity
 
         //Load image
         loadProfileAvatar();
+
+        //Check for search queries
+        checkSearchIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        checkSearchIntent(intent);
+    }
+
+    private void checkSearchIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            processSearchQuery(query);
+        }
+    }
+
+    private void processSearchQuery(String query) {
+        Log.i(TAG, "Searching for: " + query);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Location searchPoint = null;
+                try {
+                    searchPoint = GeoHelper.getPointFromAddressName(MapActivity.this, query);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (searchPoint != null) {
+                    setMapLocation(searchPoint);
+                }
+            }
+        }).start();
     }
 
     private void loadProfileAvatar(){
@@ -193,6 +229,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.search, menu);
         getMenuInflater().inflate(R.menu.map, menu);
         return true;
     }
@@ -206,6 +243,10 @@ public class MapActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_search) {
+            onSearchRequested();
             return true;
         }
 
@@ -523,7 +564,18 @@ public class MapActivity extends AppCompatActivity
         MapActivity.this.mMapWebView.post(() ->
             MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" +
             String.valueOf(mCurrentLocation.getLatitude()) + ", " +
-            String.valueOf(mCurrentLocation.getLongitude()) + ")"));;
+            String.valueOf(mCurrentLocation.getLongitude()) + ")"));
+    }
+
+    private void setMapLocation(Location point) {
+        if (point == null) {
+            return;
+        }
+
+        MapActivity.this.mMapWebView.post(() ->
+                MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" +
+                        String.valueOf(point.getLatitude()) + ", " +
+                        String.valueOf(point.getLongitude()) + ")"));
     }
 
     @Override
