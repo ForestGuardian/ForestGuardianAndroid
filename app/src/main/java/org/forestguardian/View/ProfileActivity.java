@@ -93,6 +93,7 @@ public class ProfileActivity extends Activity {
             String avatar = currentUser.getAvatar();
             if (avatar == null){
                 if (!e.isDisposed()){
+                    e.onError(null);
                     e.onComplete();
                 }
                 return;
@@ -106,20 +107,19 @@ public class ProfileActivity extends Activity {
             }catch(MalformedURLException error){
                 error.printStackTrace();
                 if (!e.isDisposed()){
+                    e.onError(error);
                     e.onComplete();
                 }
                 return;
             }
         }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( bitmap -> {
-                    if (bitmap != null) {
-                        mProfileAvatar.setImageBitmap((Bitmap) bitmap);
-                    }else{
-                        Toast.makeText(this,"bitmap is null",Toast.LENGTH_SHORT).show();
-                    }
-                    mAvatarProgress.setVisibility(View.GONE);
-                });
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe( bitmap -> {
+                if (bitmap != null) {
+                    mProfileAvatar.setImageBitmap((Bitmap) bitmap);
+                }
+                mAvatarProgress.setVisibility(View.GONE);
+            }, e -> mAvatarProgress.setVisibility(View.GONE) );
     }
 
     private void loadReportList(){

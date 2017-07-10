@@ -171,19 +171,16 @@ public class MapActivity extends AppCompatActivity
 
     private void processSearchQuery(String query) {
         Log.i(TAG, "Searching for: " + query);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Location searchPoint = null;
-                try {
-                    searchPoint = GeoHelper.getPointFromAddressName(MapActivity.this, query);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            Location searchPoint = null;
+            try {
+                searchPoint = GeoHelper.getPointFromAddressName(MapActivity.this, query);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                if (searchPoint != null) {
-                    setMapLocation(searchPoint);
-                }
+            if (searchPoint != null) {
+                setMapLocation(searchPoint);
             }
         }).start();
     }
@@ -196,6 +193,7 @@ public class MapActivity extends AppCompatActivity
             String avatar = currentUser.getAvatar();
             if (avatar == null){
                 if (!e.isDisposed()){
+                    e.onError(null);
                     e.onComplete();
                 }
                 return;
@@ -209,9 +207,9 @@ public class MapActivity extends AppCompatActivity
             }catch(MalformedURLException error){
                 error.printStackTrace();
                 if (!e.isDisposed()){
+                    e.onError(error);
                     e.onComplete();
                 }
-                return;
             }
 
         }).subscribeOn(Schedulers.newThread())
@@ -219,11 +217,9 @@ public class MapActivity extends AppCompatActivity
                 .subscribe( bitmap -> {
                     if ( bitmap != null ){
                         navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
-                    }else{
-                        Toast.makeText(this,"bitmap is null",Toast.LENGTH_SHORT).show();
                     }
                     navHolder.header.progress.setVisibility(View.GONE);
-                });
+                }, e -> navHolder.header.progress.setVisibility(View.GONE));
     }
 
     @Override
