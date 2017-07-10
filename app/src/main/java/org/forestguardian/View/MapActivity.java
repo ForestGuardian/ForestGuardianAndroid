@@ -51,6 +51,7 @@ import org.forestguardian.DataAccess.WebMapInterface;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.GeoHelper;
+import org.forestguardian.Helpers.IContants;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
 import org.forestguardian.View.Fragments.ReportLocalizationFragment;
@@ -305,7 +306,7 @@ public class MapActivity extends AppCompatActivity
     private void initWebMap() {
         //Load the default map
         // TODO: Improve path assignation.
-        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + getResources().getString(R.string.web_view_map_1_url));
+        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + IContants.WIND_BASEMAP);
         //Getting the webview settings
         WebSettings webSettings = this.mMapWebView.getSettings();
         //Enable javascript
@@ -580,7 +581,7 @@ public class MapActivity extends AppCompatActivity
 
     @Override
     public void changeBasemap(String basemapURL) {
-        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + basemapURL);
+        this.mMapWebView.loadUrl(basemapURL);
     }
 
     @Override
