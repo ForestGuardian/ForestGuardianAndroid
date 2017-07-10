@@ -72,6 +72,24 @@ public class GeoHelper implements IContants{
         }
     }
 
+    public static Location getPointFromAddressName(Context context, String placeName) throws IOException {
+        if (context == null || placeName == null) {
+            return null;
+        }
+
+        AndroidGeocoder geocoder = new AndroidGeocoder(context, Locale.getDefault());
+        geocoder.setAccessToken(context.getResources().getString(R.string.mapbox_geocodign_token));
+        List<Address> address = geocoder.getFromLocationName(placeName, 1);
+        if (address.size() > 0) {
+            Location addressPoint = new Location("");
+            addressPoint.setLatitude(address.get(0).getLatitude());
+            addressPoint.setLongitude(address.get(0).getLongitude());
+            return addressPoint;
+        } else {
+            return null;
+        }
+    }
+
     public static String formatCoordinates(Location location) {
         if (location == null) {
             return null;

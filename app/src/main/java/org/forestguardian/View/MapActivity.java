@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -50,6 +51,7 @@ import org.forestguardian.DataAccess.WebMapInterface;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.GeoHelper;
+import org.forestguardian.Helpers.IContants;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
 import org.forestguardian.View.Fragments.ReportLocalizationFragment;
@@ -149,6 +151,41 @@ public class MapActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         loadProfileAvatar();
+
+        //Check for search queries
+        checkSearchIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        checkSearchIntent(intent);
+    }
+
+    private void checkSearchIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            processSearchQuery(query);
+        }
+    }
+
+    private void processSearchQuery(String query) {
+        Log.i(TAG, "Searching for: " + query);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Location searchPoint = null;
+                try {
+                    searchPoint = GeoHelper.getPointFromAddressName(MapActivity.this, query);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (searchPoint != null) {
+                    setMapLocation(searchPoint);
+                }
+            }
+        }).start();
     }
 
     private void loadProfileAvatar(){
@@ -207,6 +244,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.search, menu);
         getMenuInflater().inflate(R.menu.map, menu);
         return true;
     }
@@ -220,6 +258,10 @@ public class MapActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_search) {
+            onSearchRequested();
             return true;
         }
 
@@ -278,7 +320,7 @@ public class MapActivity extends AppCompatActivity
     private void initWebMap() {
         //Load the default map
         // TODO: Improve path assignation.
-        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + getResources().getString(R.string.web_view_map_1_url));
+        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + IContants.WIND_BASEMAP);
         //Getting the webview settings
         WebSettings webSettings = this.mMapWebView.getSettings();
         //Enable javascript
@@ -537,12 +579,23 @@ public class MapActivity extends AppCompatActivity
         MapActivity.this.mMapWebView.post(() ->
             MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" +
             String.valueOf(mCurrentLocation.getLatitude()) + ", " +
-            String.valueOf(mCurrentLocation.getLongitude()) + ")"));;
+            String.valueOf(mCurrentLocation.getLongitude()) + ")"));
+    }
+
+    private void setMapLocation(Location point) {
+        if (point == null) {
+            return;
+        }
+
+        MapActivity.this.mMapWebView.post(() ->
+                MapActivity.this.mMapWebView.loadUrl("javascript:setUserCurrentLocation(" +
+                        String.valueOf(point.getLatitude()) + ", " +
+                        String.valueOf(point.getLongitude()) + ")"));
     }
 
     @Override
     public void changeBasemap(String basemapURL) {
-        this.mMapWebView.loadUrl(ForestGuardianAPI.FOREST_GUARDIAN_WEB_SERVICE_ENDPOINT + basemapURL);
+        this.mMapWebView.loadUrl(basemapURL);
     }
 
     @Override

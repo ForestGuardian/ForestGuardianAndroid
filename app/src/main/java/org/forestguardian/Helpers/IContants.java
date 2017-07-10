@@ -31,5 +31,13 @@ public interface IContants {
     public static final String WIND_BASEMAP = "/maps/windy";
     public static final String FOREST_BASEMAP = "/maps/forests";
     public static final String PRECIPITATION_BASEMAP = "/maps/protected_area";
+    public static final String ADD_FIRE_BASEMAP = "javascript:showFiresLayer()";
+    public static final String REMOVE_FIRE_BASEMAP = "javascript:hideFiresLayer()";
+    public static final String ADD_TEMPERATURE_BASEMAP = "javascript:showWeatherLayer()";
+    public static final String REMOVE_TEMPERATURE_BASEMAP = "javascript:hideWeatherLayer()";
+    public static final String ADD_WIND_BASEMAPP = "javascript:showWindsLayer()";
+    public static final String REMOVE_WIND_BASEMAP = "javascript:hideWindsLayer()";
+    public static final String ADD_FOREST_BASEMAP = "javascript:showForestLayer()";
+    public static final String REMOVE_FOREST_BASEMAP = "javascript:hideForestLayer()";
 
 }

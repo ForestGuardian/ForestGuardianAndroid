@@ -58,7 +58,8 @@
         android:gravity="center_horizontal"
         android:text="Unknown"
         android:textColor="@android:color/white"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        android:fontFamily="sans-serif"/>
 
     <TextView
         android:id="@+id/profile_city"
@@ -66,7 +67,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="Heredia"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:fontFamily="sans-serif"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -89,7 +91,8 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:fontFamily="sans-serif"/>
 
             <TextView
                 android:id="@+id/textView18"
@@ -99,7 +102,8 @@
                 android:gravity="center_horizontal"
                 android:text="Reportes"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:fontFamily="sans-serif"/>
         </LinearLayout>
 
         <LinearLayout
@@ -116,7 +120,8 @@
                 android:layout_weight="1"
                 android:text="Bagaces"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:fontFamily="sans-serif"/>
 
             <TextView
                 android:id="@+id/profile_work"
@@ -125,7 +130,8 @@
                 android:layout_weight="1"
                 android:text="Institución de voluntariado"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:fontFamily="sans-serif"/>
         </LinearLayout>
     </LinearLayout>
 

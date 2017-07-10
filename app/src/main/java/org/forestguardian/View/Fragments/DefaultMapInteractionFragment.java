@@ -58,6 +58,11 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.map_bottom_default, container, false);
         ButterKnife.bind(this, view);
+        //Set default basemap flags
+        this.mTemperatureState = false;
+        this.mWindState = true;
+        this.mForestState = false;
+        //Update the basemap layer UI
         updateLayersUI(getActivity());
         return view;
     }
@@ -84,57 +89,39 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     @OnClick(R.id.fab_temperature)
     public void onTemperatureMapClick() {
         //check the layer state
-        if (mTemperatureState) {
-            mTemperatureState = false;
-        } else {
-            mTemperatureState = true;
-            mWindState = false;
-            mForestState = false;
-        }
+        mTemperatureState = !mTemperatureState;
         updateLayersUI(getActivity());
         //notify the change
         if ( mListener != null && mTemperatureState ) {
-            mListener.changeBasemap(TEMPERATURE_BASEMAP);
+            mListener.changeBasemap(ADD_TEMPERATURE_BASEMAP);
         } else if ( mListener != null && !mTemperatureState) {
-            mListener.changeBasemap(FIRE_BASEMAP);
+            mListener.changeBasemap(REMOVE_TEMPERATURE_BASEMAP);
         }
     }
 
     @OnClick(R.id.fab_wind)
     public void onWindMapClick() {
         //check the layer state
-        if (mWindState) {
-            mWindState = false;
-        } else {
-            mWindState = true;
-            mTemperatureState = false;
-            mForestState = false;
-        }
+        mWindState = !mWindState;
         updateLayersUI(getActivity());
         //notify the change
         if ( mListener != null && mWindState ) {
-            mListener.changeBasemap(WIND_BASEMAP);
+            mListener.changeBasemap(ADD_WIND_BASEMAPP);
         } else if ( mListener != null && !mWindState ) {
-            mListener.changeBasemap(FIRE_BASEMAP);
+            mListener.changeBasemap(REMOVE_WIND_BASEMAP);
         }
     }
 
     @OnClick(R.id.fab_precipitation)
     public void onForestMapClick() {
         //check the layer state
-        if (mForestState) {
-            mForestState = false;
-        } else {
-            mForestState = true;
-            mTemperatureState = false;
-            mWindState = false;
-        }
+        mForestState = !mForestState;
         updateLayersUI(getActivity());
         //notify the change
         if ( mListener != null && mForestState ) {
-            mListener.changeBasemap(FOREST_BASEMAP);
+            mListener.changeBasemap(ADD_FOREST_BASEMAP);
         } else if ( mListener != null && !mForestState ) {
-            mListener.changeBasemap(FIRE_BASEMAP);
+            mListener.changeBasemap(REMOVE_FOREST_BASEMAP);
         }
     }
 

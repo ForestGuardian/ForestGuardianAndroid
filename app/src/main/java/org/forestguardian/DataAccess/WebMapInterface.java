@@ -3,6 +3,7 @@ package org.forestguardian.DataAccess;
 import android.content.Context;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.Helpers.GeoHelper;
@@ -57,5 +58,10 @@ public class WebMapInterface {
     public void reportLocation( String pLatitude, String pLongitude ){
         Log.d("ReportLocation",pLatitude+ " - " + pLongitude);
         ((MapActivity)mContext).openReportCreation(Double.valueOf(pLatitude),Double.valueOf(pLongitude));
+    }
+
+    @JavascriptInterface
+    public void notifyRouteError() {
+        Toast.makeText(mContext, "Error al trazar la ruta", Toast.LENGTH_LONG).show();
     }
 }

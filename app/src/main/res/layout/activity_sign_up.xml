@@ -39,7 +39,9 @@
         android:maxLines="1"
         android:textColor="@android:color/white"
         android:textColorHighlight="@android:color/white"
-        android:textColorHint="@android:color/white"/>
+        android:textColorHint="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <EditText
         android:id="@+id/signup_name"
@@ -55,7 +57,9 @@
         android:inputType="textPersonName"
         android:textColor="@android:color/white"
         android:textColorHighlight="@android:color/white"
-        android:textColorHint="@android:color/white"/>
+        android:textColorHint="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <EditText
         android:id="@+id/signup_user"
@@ -74,7 +78,9 @@
         android:textColor="@android:color/white"
         android:textColorHighlight="@android:color/white"
         android:textColorHint="@android:color/white"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <EditText
         android:id="@+id/signup_pass"
@@ -92,7 +98,9 @@
         android:maxLines="1"
         android:textColor="@android:color/white"
         android:textColorHighlight="@android:color/white"
-        android:textColorHint="@android:color/white"/>
+        android:textColorHint="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <EditText
         android:id="@+id/signup_pass_confirmation"
@@ -110,7 +118,9 @@
         android:maxLines="1"
         android:textColor="@android:color/white"
         android:textColorHighlight="@android:color/white"
-        android:textColorHint="@android:color/white"/>
+        android:textColorHint="@android:color/white"
+        android:fontFamily="sans-serif"
+        android:drawablePadding="20dp"/>
 
     <Space
         android:layout_width="match_parent"
