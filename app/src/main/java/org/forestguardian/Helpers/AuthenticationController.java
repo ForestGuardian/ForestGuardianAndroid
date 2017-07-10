@@ -71,4 +71,9 @@ public class AuthenticationController {
         Log.e("Authenticated User:", pCurrentUser.getEmail());
     }
 
+    public void updateCurrentUser(final User pCurrentUser){
+        logout();
+        setCurrentUser(pCurrentUser);
+    }
+
 }

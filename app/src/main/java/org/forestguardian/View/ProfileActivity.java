@@ -20,12 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.forestguardian.Adapters.ReportListAdapter;
+import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.AuthenticationController;
+import org.forestguardian.Helpers.HeadersHelper;
 import org.forestguardian.R;
 
 import java.io.ByteArrayOutputStream;
@@ -39,10 +41,13 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import okhttp3.Headers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
+import retrofit2.adapter.rxjava2.Result;
 
 /**
  * Created by emma on 21/05/17.
@@ -70,18 +75,26 @@ public class ProfileActivity extends Activity {
         ButterKnife.bind(this);
 
         loadReportList();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         loadProfileAvatar();
     }
 
     private void loadProfileAvatar(){
         mAvatarProgress.setVisibility(View.VISIBLE);
+        User user = AuthenticationController.shared().getCurrentUser();
+        mProfileNameView.setText(user.getName());
+
         Observable.create(e -> {
             User currentUser = AuthenticationController.shared().getCurrentUser();
-
-            mProfileNameView.setText(currentUser.getName());
-
             String avatar = currentUser.getAvatar();
             if (avatar == null){
+                if (!e.isDisposed()){
+                    e.onComplete();
+                }
                 return;
             }
             try {
@@ -92,12 +105,19 @@ public class ProfileActivity extends Activity {
                 }
             }catch(MalformedURLException error){
                 error.printStackTrace();
+                if (!e.isDisposed()){
+                    e.onComplete();
+                }
                 return;
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( bitmap -> {
-                    mProfileAvatar.setImageBitmap((Bitmap) bitmap);
+                    if (bitmap != null) {
+                        mProfileAvatar.setImageBitmap((Bitmap) bitmap);
+                    }else{
+                        Toast.makeText(this,"bitmap is null",Toast.LENGTH_SHORT).show();
+                    }
                     mAvatarProgress.setVisibility(View.GONE);
                 });
     }
@@ -114,7 +134,7 @@ public class ProfileActivity extends Activity {
                 mListView.setAdapter(adapter);
                 mProfileCountCreatedReports.setText( String.valueOf(pReportList.size()) );
 
-        });
+        }, e-> Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show() );
     }
 
     //region camera
@@ -164,7 +184,7 @@ public class ProfileActivity extends Activity {
             user.setAvatar( "data:image/png;base64," + encodedPicture );
 
             user.setEmail( AuthenticationController.shared().getCurrentUser().getEmail() );
-            Observable<SessionData> userService = ForestGuardianService.global().service().updateAccount(user);
+            Observable<Result<SessionData>> userService = ForestGuardianService.global().service().updateAccount(user);
 
             // spin animation
             ProgressDialog dialog = ProgressDialog.show(this, "", "Uploading. Please wait...", true);
@@ -172,10 +192,31 @@ public class ProfileActivity extends Activity {
 
             userService.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe( pUpdatedSession -> {
-                        Log.e("UpdatedSession", pUpdatedSession.toString());
-                        dialog.hide();
-                    });
+                    .subscribe( pSessionDataResult -> {
+                        dialog.dismiss();
+
+                        if( pSessionDataResult.isError() || pSessionDataResult.response().body() == null ){
+                            Toast.makeText(this,pSessionDataResult.response().message(),Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        User currentUser = pSessionDataResult.response().body().getUser();
+
+                        // Save authentication headers for future requests.
+                        Headers authHeaders = pSessionDataResult.response().headers();
+                        AuthData authData = HeadersHelper.parseHeaders(this, authHeaders );
+                        if ( authData == null ){
+                            /* Check for error messages are ready for user viewing. */
+                            Log.e( getLocalClassName(), "Auth headers are invalid." );
+                            Toast.makeText(this, "Auth headers are invalid.", Toast.LENGTH_LONG ).show();
+                            return;
+                        }
+
+                        currentUser.setAuth( authData );
+
+                        AuthenticationController.shared().updateCurrentUser( currentUser );
+                        loadProfileAvatar();
+                    }, e-> Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show() );
         }
     }
 

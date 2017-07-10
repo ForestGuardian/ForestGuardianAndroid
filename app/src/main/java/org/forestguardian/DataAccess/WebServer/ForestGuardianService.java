@@ -77,8 +77,13 @@ public class ForestGuardianService {
             AuthData authData = realm.where(AuthData.class).equalTo("uid",pUID).findFirst();
 
             // Request customization: add request headers
-            Request.Builder requestBuilder = original.newBuilder()
-                    .addHeader(pContext.getString(R.string.header_auth_uid),
+            Request.Builder requestBuilder = original.newBuilder();
+            requestBuilder.removeHeader("uid")
+                    .removeHeader("access-token")
+                    .removeHeader("client")
+                    .removeHeader("expiry")
+                    .removeHeader("token-type");
+            requestBuilder.addHeader(pContext.getString(R.string.header_auth_uid),
                             authData.getUid() )
                     .addHeader(pContext.getString(R.string.header_auth_access_token),
                             authData.getAccessToken() )

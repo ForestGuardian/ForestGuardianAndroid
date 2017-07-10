@@ -143,8 +143,11 @@ public class MapActivity extends AppCompatActivity
 
         //Load Fragment
         loadDefaultInteraction();
+    }
 
-        //Load image
+    @Override
+    protected void onStart() {
+        super.onStart();
         loadProfileAvatar();
     }
 
@@ -155,6 +158,9 @@ public class MapActivity extends AppCompatActivity
 
             String avatar = currentUser.getAvatar();
             if (avatar == null){
+                if (!e.isDisposed()){
+                    e.onComplete();
+                }
                 return;
             }
             try {
@@ -165,13 +171,21 @@ public class MapActivity extends AppCompatActivity
                 }
             }catch(MalformedURLException error){
                 error.printStackTrace();
+                if (!e.isDisposed()){
+                    e.onComplete();
+                }
                 return;
             }
+
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( bitmap -> {
+                    if ( bitmap != null ){
+                        navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
+                    }else{
+                        Toast.makeText(this,"bitmap is null",Toast.LENGTH_SHORT).show();
+                    }
                     navHolder.header.progress.setVisibility(View.GONE);
-                    navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
                 });
     }
 

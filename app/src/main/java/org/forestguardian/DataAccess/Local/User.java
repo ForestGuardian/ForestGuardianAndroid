@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 
 /**
  * Created by emma on 17/03/17.
