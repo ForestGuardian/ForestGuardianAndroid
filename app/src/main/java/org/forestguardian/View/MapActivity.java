@@ -8,6 +8,8 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,10 +35,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
 import org.forestguardian.DataAccess.OSM.OverpassWrapper;
@@ -49,16 +54,20 @@ import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.Helpers.IContants;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
-import org.forestguardian.View.Fragments.ProfileAvatarFragment;
 import org.forestguardian.View.Fragments.ReportLocalizationFragment;
 import org.forestguardian.View.Fragments.RouteMapInteractionFragment;
 import org.forestguardian.View.Fragments.WildfireResourcesMapInteractionFragment;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
@@ -97,7 +106,6 @@ public class MapActivity extends AppCompatActivity
     private Fragment                mMapRouteInteractionFragment;
     private Fragment                mReportLocalizationFragment;
     private Fragment                mCurrentFragment;
-    private ProfileAvatarFragment   mProfileAvatarFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -135,11 +143,9 @@ public class MapActivity extends AppCompatActivity
         this.mCurrentLocation = null;
         this.mIsCurrentLocation = false;
 
-//        mProfileAvatarFragment = new ProfileAvatarFragment();
-//        getFragmentManager().beginTransaction().add( R.id.profile_picture, mProfileAvatarFragment ).commit();
-
         //Load Fragment
         loadDefaultInteraction();
+        loadProfileAvatar();
     }
 
     @Override
@@ -296,6 +302,45 @@ public class MapActivity extends AppCompatActivity
             }
         });
     }
+
+    private void loadProfileAvatar(){
+        navHolder.header.progress.setVisibility(View.VISIBLE);
+        Observable.create(e -> {
+            User currentUser = AuthenticationController.shared().getCurrentUser();
+
+            String avatar = currentUser.getAvatar();
+            if (avatar == null){
+                if (!e.isDisposed()){
+                    e.onComplete();
+                }
+                return;
+            }
+            try {
+                Bitmap picture = BitmapFactory.decodeStream(new URL(avatar).openConnection().getInputStream());
+                if (!e.isDisposed()){
+                    e.onNext(picture);
+                    e.onComplete();
+                }
+            }catch(MalformedURLException error){
+                error.printStackTrace();
+                if (!e.isDisposed()){
+                    e.onComplete();
+                }
+                return;
+            }
+
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( bitmap -> {
+                    if ( bitmap != null ){
+                        navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
+                    }else{
+                        Toast.makeText(this,"bitmap is null",Toast.LENGTH_SHORT).show();
+                    }
+                    navHolder.header.progress.setVisibility(View.GONE);
+                });
+    }
+
 
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     void initLocation() {
@@ -689,6 +734,9 @@ public class MapActivity extends AppCompatActivity
     static class NavigationHeaderHolder {
         @BindView(R.id.nav_user_name) TextView name;
         @BindView(R.id.nav_user_email) TextView email;
+        @BindView(R.id.nav_user_pic) ImageView avatar;
+        @BindView(R.id.nav_user_pic_progress) ProgressBar progress;
+
 
         public NavigationHeaderHolder(View view){
             ButterKnife.bind(this,view);
