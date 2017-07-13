@@ -8,8 +8,6 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,36 +15,33 @@ import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
+import org.forestguardian.DataAccess.OSM.OverpassWrapper;
 import org.forestguardian.DataAccess.OSM.WaterResource;
 import org.forestguardian.DataAccess.Weather.OpenWeatherWrapper;
-import org.forestguardian.DataAccess.OSM.OverpassWrapper;
 import org.forestguardian.DataAccess.WebMapInterface;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
 import org.forestguardian.Helpers.AuthenticationController;
@@ -54,20 +49,16 @@ import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.Helpers.IContants;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
+import org.forestguardian.View.Fragments.ProfileAvatarFragment;
 import org.forestguardian.View.Fragments.ReportLocalizationFragment;
 import org.forestguardian.View.Fragments.RouteMapInteractionFragment;
 import org.forestguardian.View.Fragments.WildfireResourcesMapInteractionFragment;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
@@ -93,19 +84,20 @@ public class MapActivity extends AppCompatActivity
     private OpenWeatherWrapper mWeather;
     private MODIS mMODIS;
 
-    @BindView(R.id.nav_view) NavigationView mNavView;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.map_container) RelativeLayout mMapContainer;
-    @BindView(R.id.map_web_view) WebView mMapWebView;
-    @BindView(R.id.map_interaction_layout) FrameLayout mInteractionLayout;
+    @BindView(R.id.nav_view)                NavigationView    mNavView;
+    @BindView(R.id.drawer_layout)           DrawerLayout      mDrawerLayout;
+    @BindView(R.id.toolbar)                 Toolbar           mToolbar;
+    @BindView(R.id.map_container)           RelativeLayout    mMapContainer;
+    @BindView(R.id.map_web_view)            WebView           mMapWebView;
+    @BindView(R.id.map_interaction_layout)  FrameLayout       mInteractionLayout;
 
-    private NavigationHolder navHolder;
-    private Fragment mMapInteractionFragment;
-    private Fragment mMapGeneralInteractionFragment;
-    private Fragment mMapRouteInteractionFragment;
-    private Fragment mReportLocalizationFragment;
-    private Fragment mCurrentFragment;
+    private NavigationHolder        navHolder;
+    private Fragment                mMapInteractionFragment;
+    private Fragment                mMapGeneralInteractionFragment;
+    private Fragment                mMapRouteInteractionFragment;
+    private Fragment                mReportLocalizationFragment;
+    private Fragment                mCurrentFragment;
+    private ProfileAvatarFragment   mProfileAvatarFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -143,6 +135,9 @@ public class MapActivity extends AppCompatActivity
         this.mCurrentLocation = null;
         this.mIsCurrentLocation = false;
 
+//        mProfileAvatarFragment = new ProfileAvatarFragment();
+//        getFragmentManager().beginTransaction().add( R.id.profile_picture, mProfileAvatarFragment ).commit();
+
         //Load Fragment
         loadDefaultInteraction();
     }
@@ -150,8 +145,6 @@ public class MapActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        loadProfileAvatar();
-
         //Check for search queries
         checkSearchIntent(getIntent());
     }
@@ -183,43 +176,6 @@ public class MapActivity extends AppCompatActivity
                 setMapLocation(searchPoint);
             }
         }).start();
-    }
-
-    private void loadProfileAvatar(){
-        navHolder.header.progress.setVisibility(View.VISIBLE);
-        Observable.create(e -> {
-            User currentUser = AuthenticationController.shared().getCurrentUser();
-
-            String avatar = currentUser.getAvatar();
-            if (avatar == null){
-                if (!e.isDisposed()){
-                    e.onError(null);
-                    e.onComplete();
-                }
-                return;
-            }
-            try {
-                Bitmap picture = BitmapFactory.decodeStream(new URL(avatar).openConnection().getInputStream());
-                if (!e.isDisposed()){
-                    e.onNext(picture);
-                    e.onComplete();
-                }
-            }catch(MalformedURLException error){
-                error.printStackTrace();
-                if (!e.isDisposed()){
-                    e.onError(error);
-                    e.onComplete();
-                }
-            }
-
-        }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( bitmap -> {
-                    if ( bitmap != null ){
-                        navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
-                    }
-                    navHolder.header.progress.setVisibility(View.GONE);
-                }, e -> navHolder.header.progress.setVisibility(View.GONE));
     }
 
     @Override
@@ -733,8 +689,6 @@ public class MapActivity extends AppCompatActivity
     static class NavigationHeaderHolder {
         @BindView(R.id.nav_user_name) TextView name;
         @BindView(R.id.nav_user_email) TextView email;
-        @BindView(R.id.nav_user_pic) ImageView avatar;
-        @BindView(R.id.nav_user_pic_progress) ProgressBar progress;
 
         public NavigationHeaderHolder(View view){
             ButterKnife.bind(this,view);
