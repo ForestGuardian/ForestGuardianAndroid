@@ -47,9 +47,9 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     @BindView(R.id.fab_precipitation) ImageButton mForestMapButton;
 
     /* Map buttons flags */
-    private boolean mTemperatureState;
-    private boolean mWindState;
-    private boolean mForestState;
+    private boolean mTemperatureState = false;
+    private boolean mWindState = true;
+    private boolean mForestState = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,10 +58,6 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.map_bottom_default, container, false);
         ButterKnife.bind(this, view);
-        //Set default basemap flags
-        this.mTemperatureState = false;
-        this.mWindState = true;
-        this.mForestState = false;
         //Update the basemap layer UI
         updateLayersUI(getActivity());
         return view;

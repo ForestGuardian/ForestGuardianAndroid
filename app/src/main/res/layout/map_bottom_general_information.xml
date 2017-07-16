@@ -115,6 +115,7 @@
             android:layout_row="1"
             android:layout_rowSpan="4"
             android:orientation="vertical"
+            android:visibility="gone"
             android:weightSum="5">
 
             <ImageView
@@ -182,7 +183,7 @@
 
         <TextView
             android:id="@+id/wildfire_location_place_name"
-            android:layout_width="344dp"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_column="2"
             android:layout_columnSpan="2"

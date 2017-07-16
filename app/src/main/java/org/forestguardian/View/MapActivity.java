@@ -282,9 +282,9 @@ public class MapActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_share) {
+        } /*else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.logout) {
+        }*/ else if (id == R.id.logout) {
 
             /* Show confirmation dialog */
             DialogInterface.OnClickListener listener = (dialog, option) -> {
@@ -309,9 +309,9 @@ public class MapActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", listener)
                     .show();
 
-        } else if (id == R.id.nav_send) {
+        } /*else if (id == R.id.nav_send) {
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -710,7 +710,9 @@ public class MapActivity extends AppCompatActivity
         final Location fendPlace = endPlace;
         MapActivity.this.mMapWebView.post(() -> {
             if (fstartPlace != null && fendPlace != null) {
-                MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(fstartPlace.getLatitude()) + ", " + String.valueOf(fstartPlace.getLongitude()) + ", " + String.valueOf(fendPlace.getLatitude()) + ", " + String.valueOf(fendPlace.getLongitude()) + ")");
+                String newRouteURL = "javascript:setRouteFromTwoPoints(" + String.valueOf(fstartPlace.getLatitude()) + ", " + String.valueOf(fstartPlace.getLongitude()) + ", " + String.valueOf(fendPlace.getLatitude()) + ", " + String.valueOf(fendPlace.getLongitude()) + ")";
+                Log.i(TAG, "New route: " + newRouteURL);
+                MapActivity.this.mMapWebView.loadUrl(newRouteURL);
             } else {
                 Toast.makeText(this, "Error desplegando la ruta", Toast.LENGTH_LONG).show();
             }
