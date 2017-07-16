@@ -81,7 +81,7 @@ public class MapActivity extends AppCompatActivity
 
     public final static int REPORT_CREATION_REQUEST = 234;
 
-    private static String TAG = "MapActivity";
+    private static String TAG = MapActivity.class.getSimpleName();
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
     private Location mCurrentLocation;
@@ -166,6 +166,12 @@ public class MapActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             processSearchQuery(query);
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            String locationData = intent.getData().getLastPathSegment();
+            Location locationPoint = GeoHelper.convertStringToLocation(locationData);
+            if (locationPoint != null) {
+                setMapLocation(locationPoint);
+            }
         }
     }
 
