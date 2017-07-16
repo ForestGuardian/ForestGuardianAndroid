@@ -25,7 +25,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_map">REPORTAR INCENDIO</string>
+    <string name="title_activity_map">REPORTAR</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -42,7 +42,7 @@
 
     <!-- Wildfire details -->
     <string name="unknown_place">Lugar desconocido</string>
-    <string name="title_create_report_activity">REPORTAR INCENDIO</string>
+    <string name="title_create_report_activity">REPORTAR</string>
     <string name="new_report_comments">Comentarios sobre la ruta</string>
     <string name="new_report_description">Descripción</string>
     <string name="new_report_title">Título</string>
