@@ -16,7 +16,8 @@ public class FireStation implements Serializable {
     private String mStreet;
     private String mAddress;
     private String mOperator;
-    private Location mCoordinate;
+    private double mLatitude;
+    private double mLongitude;
 
     /* Constructor */
     public FireStation() {
@@ -25,7 +26,6 @@ public class FireStation implements Serializable {
         this.mCity = null;
         this.mStreet = null;
         this.mOperator = null;
-        this.mCoordinate = null;
     }
 
     /* Getters and setters */
@@ -63,14 +63,15 @@ public class FireStation implements Serializable {
     }
 
     public Location getCoordinate() {
-        return mCoordinate;
+        Location coordinatesLocation = new Location("");
+        coordinatesLocation.setLatitude(this.mLatitude);
+        coordinatesLocation.setLongitude(this.mLongitude);
+        return coordinatesLocation;
     }
 
     public void setCoordinate(double latitude, double longitude) {
-        Location location = new Location("");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        this.mCoordinate = location;
+        this.mLatitude = latitude;
+        this.mLongitude = longitude;
     }
 
     public String getAddress() {

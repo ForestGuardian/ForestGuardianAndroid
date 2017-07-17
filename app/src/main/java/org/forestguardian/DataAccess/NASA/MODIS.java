@@ -15,7 +15,8 @@ import java.io.Serializable;
 public class MODIS implements IContants, Serializable {
 
     /* Attribute */
-    private Location mCoordinate;
+    private double mLatitude;
+    private double mLongitude;
     private double mBrightness;
     private double mScan;
     private double mTrack;
@@ -46,14 +47,15 @@ public class MODIS implements IContants, Serializable {
     /* getter and setters */
 
     public Location getCoordinate() {
-        return mCoordinate;
+        Location coordinatesLocation = new Location("");
+        coordinatesLocation.setLatitude(this.mLatitude);
+        coordinatesLocation.setLongitude(this.mLongitude);
+        return coordinatesLocation;
     }
 
     public void setCoordinate(double latitude, double longitude) {
-        Location location = new Location("");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        this.mCoordinate = location;
+        this.mLatitude = latitude;
+        this.mLongitude = longitude;
     }
 
     public double getBrightness() {

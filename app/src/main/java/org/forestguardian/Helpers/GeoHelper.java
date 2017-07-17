@@ -90,6 +90,17 @@ public class GeoHelper implements IContants{
         }
     }
 
+    public static List<Address> getPointsFromAddressName(Context context, String placeName) throws IOException {
+        if (context == null || placeName == null) {
+            return null;
+        }
+
+        AndroidGeocoder geocoder = new AndroidGeocoder(context, Locale.getDefault());
+        geocoder.setAccessToken(context.getResources().getString(R.string.mapbox_geocodign_token));
+        List<Address> address = geocoder.getFromLocationName(placeName, 10);
+        return address;
+    }
+
     public static String formatCoordinates(Location location) {
         if (location == null) {
             return null;
@@ -109,5 +120,28 @@ public class GeoHelper implements IContants{
             coordinatesLabel += "° O";
         }
         return coordinatesLabel;
+    }
+
+    public static String convertLocationToString(Location point) {
+        if (point == null) {
+            return null;
+        }
+
+        String locationText = String.valueOf(point.getLatitude()) + "," + String.valueOf(point.getLongitude());
+        return locationText;
+    }
+
+    public static Location convertStringToLocation(String locationText) {
+        if (locationText == null) {
+            return null;
+        }
+
+        //Split the string
+        String[] locationList = locationText.split(",");
+        //Creating the location
+        Location point = new Location("");
+        point.setLatitude(Double.valueOf(locationList[0]));
+        point.setLongitude(Double.valueOf(locationList[1]));
+        return point;
     }
 }

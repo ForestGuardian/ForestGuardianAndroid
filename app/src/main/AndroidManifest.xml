@@ -72,6 +72,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b4bac8337e1f6536c03c7d79a3e1f3bec00ca7b8" />
+
+        <provider
+            android:authorities="org.forestguardian.DataAccess.Location.AddressContentProvider"
+            android:name="org.forestguardian.DataAccess.Location.AddressContentProvider" />
     </application>
 
 </manifest>

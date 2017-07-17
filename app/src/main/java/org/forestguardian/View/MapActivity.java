@@ -81,7 +81,7 @@ public class MapActivity extends AppCompatActivity
 
     public final static int REPORT_CREATION_REQUEST = 234;
 
-    private static String TAG = "MapActivity";
+    private static String TAG = MapActivity.class.getSimpleName();
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
     private Location mCurrentLocation;
@@ -165,6 +165,12 @@ public class MapActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             processSearchQuery(query);
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            String locationData = intent.getData().getLastPathSegment();
+            Location locationPoint = GeoHelper.convertStringToLocation(locationData);
+            if (locationPoint != null) {
+                setMapLocation(locationPoint);
+            }
         }
     }
 
@@ -203,7 +209,7 @@ public class MapActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.search, menu);
-        getMenuInflater().inflate(R.menu.map, menu);
+        //getMenuInflater().inflate(R.menu.map, menu);
         return true;
     }
 
@@ -238,9 +244,9 @@ public class MapActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_share) {
+        } /*else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.logout) {
+        }*/ else if (id == R.id.logout) {
 
             /* Show confirmation dialog */
             DialogInterface.OnClickListener listener = (dialog, option) -> {
@@ -265,9 +271,9 @@ public class MapActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", listener)
                     .show();
 
-        } else if (id == R.id.nav_send) {
+        } /*else if (id == R.id.nav_send) {
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -410,8 +416,12 @@ public class MapActivity extends AppCompatActivity
         };
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Location permission was granted");
-            this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-            this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+            if (this.mLocationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
+                this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            }
+            if (this.mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
+                this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+            }
         } else {
             Log.e(TAG, "Location permission was not granted");
         }
@@ -705,7 +715,8 @@ public class MapActivity extends AppCompatActivity
         final Location fendPlace = endPlace;
         MapActivity.this.mMapWebView.post(() -> {
             if (fstartPlace != null && fendPlace != null) {
-                MapActivity.this.mMapWebView.loadUrl("javascript:setRouteFromTwoPoints(" + String.valueOf(fstartPlace.getLatitude()) + ", " + String.valueOf(fstartPlace.getLongitude()) + ", " + String.valueOf(fendPlace.getLatitude()) + ", " + String.valueOf(fendPlace.getLongitude()) + ")");
+                String newRouteURL = "javascript:setRouteFromTwoPoints(" + String.valueOf(fstartPlace.getLatitude()) + ", " + String.valueOf(fstartPlace.getLongitude()) + ", " + String.valueOf(fendPlace.getLatitude()) + ", " + String.valueOf(fendPlace.getLongitude()) + ")";
+                MapActivity.this.mMapWebView.loadUrl(newRouteURL);
             } else {
                 Toast.makeText(this, "Error desplegando la ruta", Toast.LENGTH_LONG).show();
             }

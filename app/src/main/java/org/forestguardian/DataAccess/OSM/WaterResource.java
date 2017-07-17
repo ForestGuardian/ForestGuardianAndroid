@@ -13,14 +13,14 @@ public class WaterResource implements Serializable {
     /* Attributes */
     private String mType;
     private String mName;
-    private Location mCoordinate;
+    private double mLatitude;
+    private double mLongitude;
 
     /* Constructor */
     public WaterResource() {
         //initiating the attributes
         this.mType = null;
         this.mName = null;
-        this.mCoordinate = null;
     }
 
     /*Getters and setters*/
@@ -41,13 +41,14 @@ public class WaterResource implements Serializable {
     }
 
     public Location getCoordinate() {
-        return mCoordinate;
+        Location coordinatesLocation = new Location("");
+        coordinatesLocation.setLatitude(this.mLatitude);
+        coordinatesLocation.setLongitude(this.mLongitude);
+        return coordinatesLocation;
     }
 
     public void setCoordinate(double latitude, double longitude) {
-        Location location = new Location("");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        this.mCoordinate = location;
+        this.mLatitude = latitude;
+        this.mLongitude = longitude;
     }
 }
