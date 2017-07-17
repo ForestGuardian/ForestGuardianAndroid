@@ -415,8 +415,12 @@ public class MapActivity extends AppCompatActivity
         };
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Location permission was granted");
-            this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-            this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+            if (this.mLocationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
+                this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            }
+            if (this.mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
+                this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+            }
         } else {
             Log.e(TAG, "Location permission was not granted");
         }
@@ -711,7 +715,6 @@ public class MapActivity extends AppCompatActivity
         MapActivity.this.mMapWebView.post(() -> {
             if (fstartPlace != null && fendPlace != null) {
                 String newRouteURL = "javascript:setRouteFromTwoPoints(" + String.valueOf(fstartPlace.getLatitude()) + ", " + String.valueOf(fstartPlace.getLongitude()) + ", " + String.valueOf(fendPlace.getLatitude()) + ", " + String.valueOf(fendPlace.getLongitude()) + ")";
-                Log.i(TAG, "New route: " + newRouteURL);
                 MapActivity.this.mMapWebView.loadUrl(newRouteURL);
             } else {
                 Toast.makeText(this, "Error desplegando la ruta", Toast.LENGTH_LONG).show();
