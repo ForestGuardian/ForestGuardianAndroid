@@ -124,17 +124,15 @@ public class SignUpActivity  extends AppCompatActivity {
     private void onSignUpResult( Result<SessionData>  pSessionDataResult){
      /* Check web service response validations. */
 
-            if ( pSessionDataResult.isError() ){
-                                /* TODO: Handle authentication error case. */
-                Log.e( getLocalClassName(), pSessionDataResult.error().getMessage() );
-                Toast.makeText(this, "Problems with online service..." , Toast.LENGTH_LONG ).show();
-                return;
-            }
-
             if ( !pSessionDataResult.response().isSuccessful() ){
-                                /* Check for error messages are ready for user viewing. */
-                Log.e( getLocalClassName(), "Problem processing request." );
-                Toast.makeText(this, "Problem processing request.", Toast.LENGTH_LONG ).show();
+                                /* TODO: Handle authentication error case. */
+                Log.e( getLocalClassName(), pSessionDataResult.response().message() );
+
+                if ( pSessionDataResult.response().code() == 422 ){
+                    Toast.makeText(this, R.string.already_registered_account , Toast.LENGTH_LONG ).show();
+                } else {
+                    Toast.makeText(this, R.string.server_generic_error , Toast.LENGTH_LONG ).show();
+                }
                 return;
             }
 
@@ -144,7 +142,6 @@ public class SignUpActivity  extends AppCompatActivity {
             if ( authData == null ){
                             /* Check for error messages are ready for user viewing. */
                 Log.e( getLocalClassName(), "Auth headers are invalid." );
-                Toast.makeText(this, "Auth headers are invalid.", Toast.LENGTH_LONG ).show();
                 return;
             }
 
@@ -155,7 +152,7 @@ public class SignUpActivity  extends AppCompatActivity {
             // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
             // ForestGuardianService.global().addApiAuthorizationHeader();
 
-            Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Bienvenido!", Toast.LENGTH_SHORT).show();
 
             // Load MapActivity.
             Intent intent = new Intent(getApplicationContext(),MapActivity.class);
