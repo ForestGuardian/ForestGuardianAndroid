@@ -11,6 +11,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 25
@@ -19,7 +20,7 @@ android {
         applicationId "org.forestguardian"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 13
+        versionCode 14
         versionName "0.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -96,4 +97,5 @@ dependencies {
 
     compile('com.github.hotchemi:permissionsdispatcher:2.4.0')
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
+
 }
