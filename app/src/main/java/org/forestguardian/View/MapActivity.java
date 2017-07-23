@@ -73,6 +73,8 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
+import static android.view.View.GONE;
+
 @RuntimePermissions
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -317,6 +319,7 @@ public class MapActivity extends AppCompatActivity
             String avatar = currentUser.getAvatar();
             if (avatar == null){
                 if (!e.isDisposed()){
+                    e.onError(null);
                     e.onComplete();
                 }
                 return;
@@ -330,6 +333,7 @@ public class MapActivity extends AppCompatActivity
             }catch(MalformedURLException error){
                 error.printStackTrace();
                 if (!e.isDisposed()){
+                    e.onError(null);
                     e.onComplete();
                 }
                 return;
@@ -344,7 +348,7 @@ public class MapActivity extends AppCompatActivity
                         Toast.makeText(this,"bitmap is null",Toast.LENGTH_SHORT).show();
                     }
                     navHolder.header.progress.setVisibility(View.GONE);
-                });
+                }, e -> navHolder.header.progress.setVisibility(View.GONE) );
     }
 
 
