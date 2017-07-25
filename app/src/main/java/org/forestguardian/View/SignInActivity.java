@@ -247,19 +247,15 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
         showProgress(false);
 
-                    /* Check web service response validations. */
+        /* Check web service response validations. */
+        if ( !pSessionDataResult.response().isSuccessful() ) {
+            Log.e(getLocalClassName(), pSessionDataResult.response().message() );
 
-        if ( pSessionDataResult.isError() ){
-                        /* TODO: Handle authentication error case. */
-            Log.e( getLocalClassName(), pSessionDataResult.error().getMessage() );
-            Toast.makeText(this, "Problems with online service..." , Toast.LENGTH_LONG ).show();
-            return;
-        }
-
-        if ( !pSessionDataResult.response().isSuccessful() ){
-                        /* Check for error messages are ready for user viewing. */
-            Log.e( getLocalClassName(), "Problem processing request." );
-            Toast.makeText(this, "Problem processing request.", Toast.LENGTH_LONG ).show();
+            if (pSessionDataResult.response().code() == 401) {
+                Toast.makeText(this, R.string.wrong_credentials, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, R.string.server_generic_error, Toast.LENGTH_LONG).show();
+            }
             return;
         }
 
@@ -269,7 +265,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         if ( authData == null ){
                         /* Check for error messages are ready for user viewing. */
             Log.e( getLocalClassName(), "Auth headers are invalid." );
-            Toast.makeText(this, "Auth headers are invalid.", Toast.LENGTH_LONG ).show();
             return;
         }
 
@@ -280,7 +275,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
         // ForestGuardianService.global().addApiAuthorizationHeader();
 
-        Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Bienvenido!", Toast.LENGTH_SHORT).show();
 
         // Load MapActivity.
         Intent intent = new Intent(getApplicationContext(),MapActivity.class);

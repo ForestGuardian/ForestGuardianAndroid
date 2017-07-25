@@ -63,4 +63,7 @@
     <string name="name">Nombre</string>
     <string name="logo">logo</string>
     <string name="search_hint">Buscar lugar</string>
+    <string name="wrong_credentials">El correo o la contraseña son inválidos.</string>
+    <string name="server_generic_error">Problems with online service...</string>
+    <string name="already_registered_account">Esta cuenta ya existe.</string>
 </resources>
