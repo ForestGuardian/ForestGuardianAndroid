@@ -23,6 +23,18 @@
         android:supportsRtl="true"
         android:name="org.forestguardian.ForestGuardianApplication"
         android:theme="@style/AppTheme.NoActionBar">
+        <service
+            android:name=".Helpers.NotificationsIdManager">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Helpers.NotificationsMessageManager">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".View.SplashActivity"
             android:screenOrientation="portrait" >
