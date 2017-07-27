@@ -15,14 +15,14 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="70dp"
         android:backgroundTint="@android:color/white"
+        android:drawablePadding="20dp"
         android:ems="10"
+        android:fontFamily="sans-serif"
         android:hint="@string/new_report_title"
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:fontFamily="sans-serif"
-        android:drawablePadding="20dp"/>
+        android:textColorHint="@android:color/white"/>
 
     <EditText
         android:id="@+id/new_report_description"
@@ -41,14 +41,32 @@
         android:fontFamily="sans-serif"
         android:drawablePadding="20dp"/>
 
-    <Spinner
-        android:id="@+id/spinner"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:backgroundTint="@android:color/white"
-        android:padding="15dp"/>
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Interés en Voluntariado"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:backgroundTint="@android:color/white"
+            android:entries="@array/boolean_choice"
+            />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/new_report_comments"

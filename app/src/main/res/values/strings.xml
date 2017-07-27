@@ -25,7 +25,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_map">INCENDIOS</string>
+    <string name="title_activity_map">REPORTAR</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -66,4 +66,9 @@
     <string name="wrong_credentials">El correo o la contraseña son inválidos.</string>
     <string name="server_generic_error">Problems with online service...</string>
     <string name="already_registered_account">Esta cuenta ya existe.</string>
+
+    <string-array name="boolean_choice">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
 </resources>
