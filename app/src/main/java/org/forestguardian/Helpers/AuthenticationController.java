@@ -94,7 +94,7 @@ public class AuthenticationController {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         DeviceInfo info = realm.createObject(DeviceInfo.class);
-        info.setFirebase_registration_token(token);
+        info.setFirebaseRegistrationToken(token);
         realm.commitTransaction();
 
         if ( signedIn() ){
@@ -105,7 +105,7 @@ public class AuthenticationController {
     public boolean isFirebaseRegistrationTokenReady(){
         Realm realm = Realm.getDefaultInstance();
         RealmResults<DeviceInfo> results = realm.where(DeviceInfo.class).findAll();
-        if ( results.size() != 1 || results.first().getFirebase_registration_token() == null ){
+        if ( results.size() != 1 || results.first().getFirebaseRegistrationToken() == null ){
             Log.e("Firebase","DeviceInfo is ambiguous or not ready yet.");
             return false;
         }
@@ -115,11 +115,11 @@ public class AuthenticationController {
     public void updateFirebaseRegistrationTokenForUser(){
 
         RealmResults<DeviceInfo> results = Realm.getDefaultInstance().where(DeviceInfo.class).findAll();
-        String token = results.first().getFirebase_registration_token();
+        String token = results.first().getFirebaseRegistrationToken();
 
         User user = new User();
         user.setEmail(getCurrentUser().getEmail());
-        user.setFirebase_registration_token(token);
+        user.setFirebaseRegistrationToken(token);
 
         Observable<Result<SessionData>> service = ForestGuardianService.global().service().updateAccount(user);
         service.subscribeOn( Schedulers.newThread() )
@@ -129,7 +129,7 @@ public class AuthenticationController {
 
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
-                    getCurrentUser().setFirebase_registration_token(token);
+                    getCurrentUser().setFirebaseRegistrationToken(token);
                     realm.commitTransaction();
 
                 } );
@@ -139,7 +139,7 @@ public class AuthenticationController {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         User user = getCurrentUser();
-        user.setFirebase_registration_token(null);
+        user.setFirebaseRegistrationToken(null);
         realm.where(DeviceInfo.class).findAll().deleteAllFromRealm();
         realm.commitTransaction();
     }
