@@ -3,11 +3,17 @@ package org.forestguardian.Helpers;
 import android.content.Context;
 import android.util.Log;
 
+import org.forestguardian.DataAccess.Local.DeviceInfo;
+import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import retrofit2.adapter.rxjava2.Result;
 
 /**
  * Created by emma on 25/06/17.
@@ -62,18 +68,80 @@ public class AuthenticationController {
         ForestGuardianService.global().addAuthenticationHeaders( mContext, pCurrentUser.getAuth().getUid() );
         Log.e("headers",pCurrentUser.getAuth().toString());
 
-        // Persist in realm. TODO: We retrieve by calling the last object. Improve this.
         Realm realm = Realm.getDefaultInstance();
+
+        // Persist in realm. TODO: We retrieve by calling the last object. Improve this.
         realm.beginTransaction();
         realm.copyToRealm(pCurrentUser);
         realm.commitTransaction();
 
         Log.e("Authenticated User:", pCurrentUser.getEmail());
+
+        if ( isFirebaseRegistrationTokenReady() ){
+            updateFirebaseRegistrationTokenForUser();
+        }
     }
 
     public void updateCurrentUser(final User pCurrentUser){
         logout();
         setCurrentUser(pCurrentUser);
+    }
+
+    public void updateFirebaseRegistrationToken(String token){
+
+        invalidateFirebaseRegistrationToken();
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        DeviceInfo info = realm.createObject(DeviceInfo.class);
+        info.setFirebase_registration_token(token);
+        realm.commitTransaction();
+
+        if ( signedIn() ){
+            AuthenticationController.shared().updateFirebaseRegistrationTokenForUser();
+        }
+    }
+
+    public boolean isFirebaseRegistrationTokenReady(){
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<DeviceInfo> results = realm.where(DeviceInfo.class).findAll();
+        if ( results.size() != 1 || results.first().getFirebase_registration_token() == null ){
+            Log.e("Firebase","DeviceInfo is ambiguous or not ready yet.");
+            return false;
+        }
+        return true;
+    }
+
+    public void updateFirebaseRegistrationTokenForUser(){
+
+        RealmResults<DeviceInfo> results = Realm.getDefaultInstance().where(DeviceInfo.class).findAll();
+        String token = results.first().getFirebase_registration_token();
+
+        User user = new User();
+        user.setEmail(getCurrentUser().getEmail());
+        user.setFirebase_registration_token(token);
+
+        Observable<Result<SessionData>> service = ForestGuardianService.global().service().updateAccount(user);
+        service.subscribeOn( Schedulers.newThread() )
+                .observeOn( AndroidSchedulers.mainThread() )
+                .subscribe( pResult -> {
+                    Log.d("FirebaseToken", pResult.toString());
+
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    getCurrentUser().setFirebase_registration_token(token);
+                    realm.commitTransaction();
+
+                } );
+    }
+
+    private void invalidateFirebaseRegistrationToken(){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        User user = getCurrentUser();
+        user.setFirebase_registration_token(null);
+        realm.where(DeviceInfo.class).findAll().deleteAllFromRealm();
+        realm.commitTransaction();
     }
 
 }
