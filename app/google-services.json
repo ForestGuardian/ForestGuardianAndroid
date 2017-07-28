@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "694945175012",
-    "firebase_url": "https://forestguardianandroid.firebaseio.com",
-    "project_id": "forestguardianandroid",
-    "storage_bucket": "forestguardianandroid.appspot.com"
+    "project_number": "698765322156",
+    "firebase_url": "https://forest-guardian.firebaseio.com",
+    "project_id": "forest-guardian",
+    "storage_bucket": "forest-guardian.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:694945175012:android:49807cf65502ad3c",
+        "mobilesdk_app_id": "1:698765322156:android:49807cf65502ad3c",
         "android_client_info": {
           "package_name": "org.forestguardian"
         }
       },
       "oauth_client": [
         {
-          "client_id": "694945175012-u52dua9nmq6fmug1vfrgk72c3ejljqve.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "org.forestguardian",
-            "certificate_hash": "4c77d528d404e23089d85a367e9951b7b8fcbc8b"
-          }
-        },
-        {
-          "client_id": "694945175012-3ro141k6c13pl42ojlp3ttuqhv7693mm.apps.googleusercontent.com",
+          "client_id": "698765322156-ssjmnlt2j2j6v8oe5bsv0se9o742emqp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAGtwmbJc330NSvbECamKeh0e1b6aHHvUE"
+          "current_key": "AIzaSyAUw9ual6xeozTI2VuXWSfldys7lvN03cU"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "694945175012-3ro141k6c13pl42ojlp3ttuqhv7693mm.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
