@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.forestguardian">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,79 +15,81 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
+        android:name=".ForestGuardianApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="org.forestguardian.ForestGuardianApplication"
         android:theme="@style/AppTheme.NoActionBar">
-        <service
-            android:name=".Helpers.NotificationsIdManager">
+        <service android:name=".Helpers.NotificationsIdManager">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".Helpers.NotificationsMessageManager">
+        <service android:name=".Helpers.NotificationsMessageManager">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".View.SplashActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>>
+        </activity>
+        >
         <activity
             android:name=".View.SignInActivity"
             android:label="@string/title_signin_activity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".View.SignUpActivity"
             android:label="@string/title_signup_activity"
-            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
-            ></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".View.MapActivity"
             android:label="@string/title_activity_map"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".View.CreateReportActivity"
             android:label="@string/title_create_report_activity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            ></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".View.ProfileActivity"
             android:label="@string/profile_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            ></activity>
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b4bac8337e1f6536c03c7d79a3e1f3bec00ca7b8" />
 
         <provider
-            android:authorities="org.forestguardian.DataAccess.Location.AddressContentProvider"
-            android:name="org.forestguardian.DataAccess.Location.AddressContentProvider" />
+            android:name=".DataAccess.Location.AddressContentProvider"
+            android:authorities="org.forestguardian.DataAccess.Location.AddressContentProvider" />
+
+        <activity
+            android:name=".View.NotificationsActivity"
+            android:label="@string/title_activity_notifications"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

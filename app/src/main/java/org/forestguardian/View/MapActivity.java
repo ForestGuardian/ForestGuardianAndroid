@@ -41,6 +41,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
@@ -52,6 +54,7 @@ import org.forestguardian.DataAccess.WebServer.ForestGuardianAPI;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.Helpers.IContants;
+import org.forestguardian.Helpers.NotificationsIdManager;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.DefaultMapInteractionFragment;
 import org.forestguardian.View.Fragments.ReportLocalizationFragment;
@@ -210,6 +213,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.notification, menu);
         getMenuInflater().inflate(R.menu.search, menu);
         //getMenuInflater().inflate(R.menu.map, menu);
         return true;
@@ -229,6 +233,9 @@ public class MapActivity extends AppCompatActivity
         if (id == R.id.action_search) {
             onSearchRequested();
             return true;
+        }
+        if (id == R.id.action_notification) {
+            Log.i(TAG, "NOTIFICATION ICON PRESSED IN THE ACTION BAR!!");
         }
 
         return super.onOptionsItemSelected(item);
