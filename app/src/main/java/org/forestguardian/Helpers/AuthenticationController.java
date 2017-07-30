@@ -3,6 +3,8 @@ package org.forestguardian.Helpers;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.forestguardian.DataAccess.Local.DeviceInfo;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
@@ -77,9 +79,13 @@ public class AuthenticationController {
 
         Log.e("Authenticated User:", pCurrentUser.getEmail());
 
-        if ( isFirebaseRegistrationTokenReady() ){
+        /*if ( isFirebaseRegistrationTokenReady() ){
             updateFirebaseRegistrationTokenForUser();
-        }
+        }*/
+
+        //Test the token generation
+        updateFirebaseRegistrationToken(FirebaseInstanceId.getInstance().getToken());
+        updateFirebaseRegistrationTokenForUser();
     }
 
     public void updateCurrentUser(final User pCurrentUser){
