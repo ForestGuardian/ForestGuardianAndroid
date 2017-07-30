@@ -5,6 +5,10 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.forestguardian.DataAccess.Local.NotificationItem;
+
+import io.realm.Realm;
+
 /**
  * Created by luisalonsomurillorojas on 25/7/17.
  */
@@ -33,6 +37,15 @@ public class NotificationsMessageManager extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
+
+        // Save notification information
+        NotificationItem item = new NotificationItem();
+        item.setTitle(remoteMessage.getNotification().getTitle());
+        item.setDescription(remoteMessage.getNotification().getBody());
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealm(item);
+        realm.commitTransaction();
     }
 
 }
