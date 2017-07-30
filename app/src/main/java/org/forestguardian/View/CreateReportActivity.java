@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -19,9 +20,11 @@ import android.widget.Toast;
 
 import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
+import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -105,6 +108,15 @@ public class CreateReportActivity extends AppCompatActivity {
         report.setGeoLatitude( mLatitude );
         report.setGeoLongitude( mLongitude );
 
+        Location location = new Location("");
+        location.setLatitude(mLatitude);
+        location.setLongitude(mLongitude);
+        try {
+            report.setLocationName( GeoHelper.getAddressNameFromPoint(this,location) );
+        } catch (IOException pE) {
+            pE.printStackTrace();
+        }
+
         // Check for a valid title.
         if ( TextUtils.isEmpty(report.getTitle()) ) {
             mTitle.setError( getString(R.string.empty_report_title_error) );
@@ -152,6 +164,7 @@ public class CreateReportActivity extends AppCompatActivity {
                     Log.i("Created Report", "comments:" + pCreatedReport.getComments() );
                     Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeoLatitude()) );
                     Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeoLongitude()) );
+                    Log.i("Created Report", "location name:" + String.valueOf(pCreatedReport.getLocationName()) );
 
                     // Check that server answered successfully.
                     if ( pCreatedReport.getId() == null ) {

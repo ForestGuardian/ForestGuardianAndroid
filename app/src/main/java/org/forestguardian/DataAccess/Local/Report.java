@@ -40,6 +40,8 @@ public class Report extends RealmObject{
     private Double geo_longitude;
     @Expose
     private String picture;
+    @Expose
+    private String location_name;
 
     /** Getters and Setters **/
 
@@ -99,4 +101,11 @@ public class Report extends RealmObject{
         picture = pPicture;
     }
 
+    public String getLocationName() {
+        return location_name;
+    }
+
+    public void setLocationName(final String pLocation_name) {
+        location_name = pLocation_name;
+    }
 }

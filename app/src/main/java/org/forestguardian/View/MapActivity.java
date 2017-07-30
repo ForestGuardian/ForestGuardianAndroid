@@ -236,6 +236,8 @@ public class MapActivity extends AppCompatActivity
         }
         if (id == R.id.action_notification) {
             Log.i(TAG, "NOTIFICATION ICON PRESSED IN THE ACTION BAR!!");
+            Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
