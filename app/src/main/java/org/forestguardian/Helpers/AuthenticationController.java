@@ -144,8 +144,10 @@ public class AuthenticationController {
     private void invalidateFirebaseRegistrationToken(){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        User user = getCurrentUser();
-        user.setFirebaseRegistrationToken(null);
+        if ( signedIn() ) {
+            User user = getCurrentUser();
+            user.setFirebaseRegistrationToken(null);
+        }
         realm.where(DeviceInfo.class).findAll().deleteAllFromRealm();
         realm.commitTransaction();
     }

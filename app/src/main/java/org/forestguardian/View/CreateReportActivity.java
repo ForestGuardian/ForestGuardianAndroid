@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -19,15 +20,20 @@ import android.widget.Toast;
 
 import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
+import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
@@ -139,33 +145,50 @@ public class CreateReportActivity extends AppCompatActivity {
         ProgressDialog dialog = ProgressDialog.show(this, "", "Uploading. Please wait...", true);
         dialog.show();
 
-        Observable<Report> reportService = ForestGuardianService.global().service().createReport(report);
-        reportService.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( pCreatedReport -> {
+        new Thread(){
+            public void run(){
 
-                    dialog.hide();
+                Location location = new Location("");
+                location.setLatitude(mLatitude);
+                location.setLongitude(mLongitude);
 
-                    Log.i("Created Report", "id:" + String.valueOf( pCreatedReport.getId() ) );
-                    Log.i("Created Report", "title:" + pCreatedReport.getTitle() );
-                    Log.i("Created Report", "description:" + pCreatedReport.getDescription() );
-                    Log.i("Created Report", "comments:" + pCreatedReport.getComments() );
-                    Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeoLatitude()) );
-                    Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeoLongitude()) );
+                try {
+                    report.setLocationName( GeoHelper.getAddressNameFromPoint(CreateReportActivity.this,location) );
+                } catch (IOException pE) {
+                    pE.printStackTrace();
+                }
 
-                    // Check that server answered successfully.
-                    if ( pCreatedReport.getId() == null ) {
+                Observable<Report> reportService = ForestGuardianService.global().service().createReport(report);
+                reportService.subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe( pCreatedReport -> {
 
-                        String error = "There was a problem uploading the report. Please, try again.";
-                        Log.e("ReportUploadError",error);
-                        Toast.makeText(this, error,Toast.LENGTH_LONG).show();
-                        return;
-                    }
+                            dialog.hide();
 
-                    // Success
-                    this.setResult(SUCCESS_RESULT);
-                    this.finish();
-                });
+                            Log.i("Created Report", "id:" + String.valueOf( pCreatedReport.getId() ) );
+                            Log.i("Created Report", "title:" + pCreatedReport.getTitle() );
+                            Log.i("Created Report", "description:" + pCreatedReport.getDescription() );
+                            Log.i("Created Report", "comments:" + pCreatedReport.getComments() );
+                            Log.i("Created Report", "latitude:" + String.valueOf(pCreatedReport.getGeoLatitude()) );
+                            Log.i("Created Report", "longitude:" + String.valueOf(pCreatedReport.getGeoLongitude()) );
+                            Log.i("Created Report", "location name:" + String.valueOf(pCreatedReport.getLocationName()) );
+
+                            // Check that server answered successfully.
+                            if ( pCreatedReport.getId() == null ) {
+
+                                String error = "There was a problem uploading the report. Please, try again.";
+                                Log.e("ReportUploadError",error);
+                                Toast.makeText(CreateReportActivity.this, error,Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                            // Success
+                            CreateReportActivity.this.setResult(SUCCESS_RESULT);
+                            CreateReportActivity.this.finish();
+                        });
+            }
+        }.start();
+
     }
 
     @Override
