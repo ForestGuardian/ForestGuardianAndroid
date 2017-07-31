@@ -29,12 +29,6 @@ public class DataMigration implements RealmMigration {
         if (oldVersion == 2){
 
             schema.get("Report").addField("location_name", String.class);
-
-            oldVersion++;
-        }
-
-        if (oldVersion == 3){
-
             schema.create("NotificationItem")
                     .addField("title", String.class)
                     .addField("description", String.class);

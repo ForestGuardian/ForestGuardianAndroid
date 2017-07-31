@@ -28,7 +28,7 @@ import io.realm.Realm;
 
 public class NotificationsActivity extends AppCompatActivity {
 
-    @BindView(R.id.report_list) ListView mListView;
+    @BindView(R.id.notifications_list) ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
