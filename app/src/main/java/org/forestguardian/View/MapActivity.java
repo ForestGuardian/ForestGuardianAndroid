@@ -98,6 +98,7 @@ public class MapActivity extends AppCompatActivity
     private OpenWeatherWrapper mWeather;
     private MODIS mMODIS;
 
+    @BindView(R.id.main_layout)             FrameLayout       mMainLayout;
     @BindView(R.id.nav_view)                NavigationView    mNavView;
     @BindView(R.id.drawer_layout)           DrawerLayout      mDrawerLayout;
     @BindView(R.id.toolbar)                 Toolbar           mToolbar;
@@ -255,9 +256,10 @@ public class MapActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
 
-        } /*else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_notifications) {
 
-        }*/ else if (id == R.id.logout) {
+
+        } else if (id == R.id.nav_logout) {
 
             /* Show confirmation dialog */
             DialogInterface.OnClickListener listener = (dialog, option) -> {
@@ -282,9 +284,9 @@ public class MapActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", listener)
                     .show();
 
-        } /*else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about) {
 
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
