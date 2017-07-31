@@ -256,9 +256,9 @@ public class MapActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_notifications) {
-
-
+//        } else if (id == R.id.nav_notifications) {
+//
+//
         } else if (id == R.id.nav_logout) {
 
             /* Show confirmation dialog */
@@ -284,8 +284,8 @@ public class MapActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", listener)
                     .show();
 
-        } else if (id == R.id.nav_about) {
-
+//        } else if (id == R.id.nav_about) {
+//
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -448,6 +448,20 @@ public class MapActivity extends AppCompatActivity
             ((DefaultMapInteractionFragment) MapActivity.this.mMapInteractionFragment).setLocationLabelText(message);
         }
     }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//        //REQUEST_INITLOCATION = 1
+//        if (requestCode == 1) {
+//            // Check if the only required permission has been granted
+//            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Log.i(TAG, "Location permission granted");
+//                initLocation();
+//            } else {
+//                Log.e(TAG, "Location permission not granted");
+//            }
+//        }
+//    }
 
     @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
     void showRationaleForCamera(final PermissionRequest request) {
