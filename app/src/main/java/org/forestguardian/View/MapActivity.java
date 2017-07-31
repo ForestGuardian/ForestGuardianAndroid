@@ -447,6 +447,20 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    @Override
+     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        //REQUEST_INITLOCATION = 1
+        if (requestCode == 1) {
+            // Check if the only required permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Location permission granted");
+                initLocation();
+            } else {
+                Log.e(TAG, "Location permission not granted");
+            }
+        }
+    }
+
     @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
     void showRationaleForCamera(final PermissionRequest request) {
         new AlertDialog.Builder(this)
