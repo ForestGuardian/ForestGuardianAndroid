@@ -19,11 +19,21 @@ import java.io.IOException;
 
 public class WebMapInterface {
 
+    public interface WebMapInterfaceListener {
+
+        void processWildfireData(MODIS modisData);
+        void setIsCurrentLocation(boolean mIsCurrentLocation);
+        void showWildfireDetails();
+        void openReportCreation(final Double pLatitude, final Double pLongitude);
+    }
+
     private static final String TAG = "WebMapInterface";
     private Context mContext;
+    private WebMapInterfaceListener mListener;
 
-    public WebMapInterface(Context context) {
+    public WebMapInterface(Context context, WebMapInterfaceListener pListener) {
         this.mContext = context;
+        this.mListener = pListener;
     }
 
     @JavascriptInterface
@@ -41,23 +51,23 @@ public class WebMapInterface {
             e.printStackTrace();
         }
 
-        ((MapActivity)mContext).processWildfireData(modis);
+        mListener.processWildfireData(modis);
     }
 
     @JavascriptInterface
     public void notifyCurrentLocation() {
-        ((MapActivity)mContext).setIsCurrentLocation(true);
+        mListener.setIsCurrentLocation(true);
     }
 
     @JavascriptInterface
     public void showWildfireDetails() {
-        ((MapActivity)mContext).showWildfireDetails();
+        mListener.showWildfireDetails();
     }
 
     @JavascriptInterface
     public void reportLocation( String pLatitude, String pLongitude ){
         Log.d("ReportLocation",pLatitude+ " - " + pLongitude);
-        ((MapActivity)mContext).openReportCreation(Double.valueOf(pLatitude),Double.valueOf(pLongitude));
+        mListener.openReportCreation(Double.valueOf(pLatitude),Double.valueOf(pLongitude));
     }
 
     @JavascriptInterface

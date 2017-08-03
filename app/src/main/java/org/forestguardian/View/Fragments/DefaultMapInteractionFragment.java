@@ -152,7 +152,6 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
         mListener = pListener;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void setCurrentLocation(String locationText) {
         final String tmpLocationText = locationText;
         if (getActivity() != null) {

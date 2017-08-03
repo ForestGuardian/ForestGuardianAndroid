@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/colorPrimary"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingTop="50dp">
 
     <FrameLayout
         android:id="@+id/profile_picture"
@@ -15,20 +16,20 @@
         android:id="@+id/profile_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
         android:gravity="center_horizontal"
         android:text="Unknown"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:fontFamily="sans-serif"/>
+        android:textSize="24sp"/>
 
     <TextView
         android:id="@+id/profile_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
         android:gravity="center_horizontal"
         android:text="Heredia"
-        android:textColor="@android:color/white"
-        android:fontFamily="sans-serif"/>
+        android:textColor="@android:color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,21 +50,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif"
                 android:gravity="center_horizontal"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/textView18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif"
                 android:gravity="center_horizontal"
                 android:text="Reportes"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif"/>
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -78,20 +79,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif"
                 android:text="Bagaces"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/profile_work"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif"
                 android:text="Institución de voluntariado"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif"/>
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 

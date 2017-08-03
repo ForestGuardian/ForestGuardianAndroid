@@ -86,10 +86,6 @@
             android:name=".DataAccess.Location.AddressContentProvider"
             android:authorities="org.forestguardian.DataAccess.Location.AddressContentProvider" />
 
-        <activity
-            android:name=".View.NotificationsActivity"
-            android:label="@string/title_activity_notifications"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
