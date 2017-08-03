@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.Helpers.GeoHelper;
-import org.forestguardian.View.MapActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 

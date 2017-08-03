@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 
-import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.R;
 
@@ -31,7 +30,7 @@ public class SplashActivity extends Activity {
         handler.postDelayed(() -> {
             Intent intent;
             if ( AuthenticationController.shared().signedIn()) {
-                intent = new Intent(getApplicationContext(), MapActivity.class);
+                intent = new Intent(getApplicationContext(), MainActivity.class);
             }else{
                 intent = new Intent(getApplicationContext(), SignInActivity.class);
             }

@@ -54,7 +54,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".View.MapActivity"
+            android:name=".View.MainActivity"
             android:label="@string/title_activity_map"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

@@ -1,6 +1,5 @@
 package org.forestguardian.View;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,11 +40,11 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class MapActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    public final static int REPORT_CREATION_REQUEST = 234;
+    public final static int REPORT_CREATION_REQUEST = 2;
 
-    private static String TAG = MapActivity.class.getSimpleName();
+    private static String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.main_layout)             FrameLayout       mMainLayout;
     @BindView(R.id.nav_view)                NavigationView    mNavView;
@@ -156,6 +154,9 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
             transaction.addToBackStack(null);
             transaction.commit();
 
+            mToolbar.setTitle("REPORTAR");
+
+
         } else if (id == R.id.nav_reports) {
 
             if (mProfileFragment == null){
@@ -166,6 +167,9 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
             transaction.addToBackStack(null);
             transaction.commit();
 
+            mToolbar.setTitle("PERFIL");
+
+
         } else if (id == R.id.nav_notifications) {
 
             if (mNotificationsFragment == null){
@@ -175,6 +179,9 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
             transaction.replace( R.id.main_layout, mNotificationsFragment );
             transaction.addToBackStack(null);
             transaction.commit();
+
+            mToolbar.setTitle("NOTIFICACIONES");
+
 
         } else if (id == R.id.nav_logout) {
 
@@ -202,7 +209,7 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
                     .show();
 
         } else if (id == R.id.nav_about) {
-
+            mToolbar.setTitle("¿QUIÉNES SÓMOS?");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

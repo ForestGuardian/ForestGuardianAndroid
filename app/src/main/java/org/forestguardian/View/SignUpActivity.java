@@ -3,7 +3,6 @@ package org.forestguardian.View;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
@@ -15,7 +14,6 @@ import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 import okhttp3.Headers;
 import retrofit2.adapter.rxjava2.Result;
 
@@ -23,7 +21,6 @@ import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
-import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.HeadersHelper;
 import org.forestguardian.Helpers.UserValidations;
@@ -154,8 +151,8 @@ public class SignUpActivity  extends AppCompatActivity {
 
             Toast.makeText(this, "Bienvenido!", Toast.LENGTH_SHORT).show();
 
-            // Load MapActivity.
-            Intent intent = new Intent(getApplicationContext(),MapActivity.class);
+            // Load MainActivity.
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
             startActivity(intent);
             finish();
 

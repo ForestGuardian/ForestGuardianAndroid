@@ -34,7 +34,6 @@ import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
-import org.forestguardian.ForestGuardianApplication;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.Helpers.HeadersHelper;
 import org.forestguardian.Helpers.UserValidations;
@@ -277,8 +276,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
         Toast.makeText(this, "Bienvenido!", Toast.LENGTH_SHORT).show();
 
-        // Load MapActivity.
-        Intent intent = new Intent(getApplicationContext(),MapActivity.class);
+        // Load MainActivity.
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
         finish();
     }
