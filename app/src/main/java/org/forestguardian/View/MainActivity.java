@@ -27,6 +27,7 @@ import android.widget.Toast;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.R;
+import org.forestguardian.View.Fragments.AboutFragment;
 import org.forestguardian.View.Fragments.MapFragment;
 import org.forestguardian.View.Fragments.NotificationsFragment;
 import org.forestguardian.View.Fragments.ProfileFragment;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ProfileFragment mProfileFragment;
     private MapFragment mMapFragment;
     private NotificationsFragment mNotificationsFragment;
+    private AboutFragment mAboutFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -209,6 +211,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .show();
 
         } else if (id == R.id.nav_about) {
+
+            if (mAboutFragment == null){
+                mAboutFragment = new AboutFragment();
+            }
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace( R.id.main_layout, mAboutFragment );
+            transaction.addToBackStack(null);
+            transaction.commit();
+
             mToolbar.setTitle("¿QUIÉNES SÓMOS?");
         }
 

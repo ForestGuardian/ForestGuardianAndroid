@@ -72,4 +72,5 @@
         <item>No</item>
     </string-array>
     <string name="title_activity_notifications">Notificaciones</string>
+    <string name="about_description">Forest Guardians helps to reduce the reaction time to attack and dissolve Forest Fires with data visualization, we took raw data and created relationships among them, allowing us to generate a approximate prediction of the fire behavior and factors that can help to terminate them.  Raw data itself doesn´t meand anything, but if you relate the fire location with its proximity to the closes populated area, you can help save lifes, assigning a level of emergency according to this factor and incident cases that need inmediate intervention, according to this level, authorities will be alerted. And the app will give all the information needed to have a possitive intervention.  Forest Guardian uses Costa Rica´s Atlas Data Base in congruency with NASA MODIS Data Base, to link an analyse posible reactions of the forest fire.</string>
 </resources>
