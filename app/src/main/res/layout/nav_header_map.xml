@@ -20,7 +20,8 @@
             android:id="@+id/nav_user_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"/>
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            app:srcCompat="@drawable/ic_person_white_24dp"/>
 
         <ProgressBar
             android:id="@+id/nav_user_pic_progress"
