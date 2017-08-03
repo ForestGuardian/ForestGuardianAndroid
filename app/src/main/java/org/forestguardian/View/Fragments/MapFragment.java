@@ -111,7 +111,11 @@ public class MapFragment extends Fragment implements
         this.mIsCurrentLocation = false;
         this.mCurrentLocation = null;
 
-        loadDefaultInteraction();
+        mMapInteractionFragment = new DefaultMapInteractionFragment();
+        ((DefaultMapInteractionFragment)mMapInteractionFragment).setListener(this);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.map_interaction_layout, mMapInteractionFragment);
+        transaction.commit();
 
         return view;
     }
@@ -119,7 +123,7 @@ public class MapFragment extends Fragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        clearInteractions();
+        // Clear
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -276,16 +280,16 @@ public class MapFragment extends Fragment implements
 
     private void clearInteractions(){
         Log.d(TAG,"Clearing Fragments");
-        if ( currentFragment() == null ){
-            return;
-        }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.remove( currentFragment() );
-        transaction.commit();
     }
 
 
     private void loadNewInteraction(Fragment fragment){
+
+        if ( currentFragment() == fragment ){
+            Log.d(TAG,"Replacing fragment with itself");
+            return;
+        }
 
         Log.d("Replacing Fragment",fragment.getClass().getCanonicalName());
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -643,11 +647,6 @@ public class MapFragment extends Fragment implements
         mMapWebView.post(() -> mMapWebView.loadUrl(
                 "javascript:clearReportLocation()") );
 
-        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-            return false;
-        }
         return false;
     }
 

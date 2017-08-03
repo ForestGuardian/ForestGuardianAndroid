@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mMapFragment = new MapFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace( R.id.main_layout, mMapFragment );
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -153,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mMapFragment );
-            transaction.addToBackStack(null);
             transaction.commit();
 
             mToolbar.setTitle("REPORTAR");
@@ -166,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mProfileFragment );
-            transaction.addToBackStack(null);
             transaction.commit();
 
             mToolbar.setTitle("PERFIL");
@@ -179,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mNotificationsFragment );
-            transaction.addToBackStack(null);
             transaction.commit();
 
             mToolbar.setTitle("NOTIFICACIONES");
@@ -217,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mAboutFragment );
-            transaction.addToBackStack(null);
             transaction.commit();
 
             mToolbar.setTitle("¿QUIÉNES SÓMOS?");
