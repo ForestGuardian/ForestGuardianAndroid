@@ -293,4 +293,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // Delegates onBackPressed to map fragment.
+        if ( mMapFragment.isVisible() && !mMapFragment.onBackPressed() ){
+            super.onBackPressed();
+        }
+    }
 }

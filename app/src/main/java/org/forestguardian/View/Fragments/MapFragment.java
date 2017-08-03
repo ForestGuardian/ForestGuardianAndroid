@@ -3,6 +3,7 @@ package org.forestguardian.View.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
@@ -16,6 +17,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,7 +74,6 @@ public class MapFragment extends Fragment implements
     private Fragment                mMapGeneralInteractionFragment;
     private Fragment                mMapRouteInteractionFragment;
     private Fragment                mReportLocalizationFragment;
-    private Fragment                mCurrentFragment;
     private Location                mCurrentLocation;
     private LocationManager         mLocationManager;
 
@@ -108,6 +110,7 @@ public class MapFragment extends Fragment implements
         //Variable default values
         this.mIsCurrentLocation = false;
         this.mCurrentLocation = null;
+
         loadDefaultInteraction();
 
         return view;
@@ -146,6 +149,7 @@ public class MapFragment extends Fragment implements
 
             }
         });
+        mMapWebView.post(() -> mMapWebView.loadUrl("javascript:overrideWindyMetrics()") );
     }
 
 
@@ -272,34 +276,21 @@ public class MapFragment extends Fragment implements
 
     private void clearInteractions(){
         Log.d(TAG,"Clearing Fragments");
-        if ( mCurrentFragment == null ){
+        if ( currentFragment() == null ){
             return;
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.remove( mCurrentFragment );
+        transaction.remove( currentFragment() );
         transaction.commit();
-        mCurrentFragment = null;
     }
 
 
     private void loadNewInteraction(Fragment fragment){
 
         Log.d("Replacing Fragment",fragment.getClass().getCanonicalName());
-
-        if ( fragment == mCurrentFragment ){
-            Log.d(TAG, "trying to replace same fragment");
-            return;
-        }
-
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        if ( mCurrentFragment != null ){
-            transaction.replace(R.id.map_interaction_layout, fragment);
-            transaction.addToBackStack(null);
-        }else{
-            transaction.add(R.id.map_interaction_layout, fragment);
-        }
-        mCurrentFragment = fragment;
+        transaction.replace(R.id.map_interaction_layout, fragment);
+        transaction.addToBackStack(fragment.getClass().getCanonicalName());
         transaction.commit();
     }
 
@@ -636,19 +627,28 @@ public class MapFragment extends Fragment implements
         }).start();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//
-//        // Remove marker.
-//        .mMapWebView.post(() -> mMapWebView.loadUrl(
-//                "javascript:clearReportLocation()") );
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
+    public Fragment currentFragment(){
+        int count = getActivity().getFragmentManager().getBackStackEntryCount();
+        if ( count == 0 ){
+            return null;
+        }
+        FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(count - 1);
+        String tag = backEntry.getName();
+        Log.d("currentFragment", tag);
+        return getFragmentManager().findFragmentByTag(tag);
+    }
+
+    public boolean onBackPressed() {
+        // Remove marker.
+        mMapWebView.post(() -> mMapWebView.loadUrl(
+                "javascript:clearReportLocation()") );
+
+        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
+        return false;
+    }
 
 }
