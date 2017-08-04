@@ -3,7 +3,6 @@ package org.forestguardian.View;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.Helpers.AuthenticationController;
@@ -32,16 +30,13 @@ import org.forestguardian.View.Fragments.MapFragment;
 import org.forestguardian.View.Fragments.NotificationsFragment;
 import org.forestguardian.View.Fragments.ProfileFragment;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.realm.ObjectChangeSet;
+import io.realm.RealmModel;
+import io.realm.RealmObjectChangeListener;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RealmObjectChangeListener<User> {
 
     public final static int REPORT_CREATION_REQUEST = 2;
 
@@ -58,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NotificationsFragment mNotificationsFragment;
     private AboutFragment mAboutFragment;
 
+    private RealmObjectChangeListener mRealmListener;
+    private User mCurrentUser;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navHolder.header.avatar.setImageBitmap( BitmapFactory.decodeResource(getResources(), R.drawable.ic_perfil2) );
         navHolder.header.avatar.setVisibility(View.VISIBLE);
 
+        mCurrentUser = AuthenticationController.shared().getCurrentUser();
+        mRealmListener = (RealmObjectChangeListener<User>) (pUser, changeSet) -> {
+            if ( changeSet.isFieldChanged("avatar") ){
+                navHolder.header.avatar.setImageBitmap(pUser.getUncompressedAvatar());
+            }
+        };
+        mCurrentUser.addChangeListener(this);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -83,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Load Fragment
         loadProfileAvatar();
+        mCurrentUser.updateAvatar();
 
         mMapFragment = new MapFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -228,40 +235,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void loadProfileAvatar(){
         navHolder.header.progress.setVisibility(View.VISIBLE);
-        Observable.create(e -> {
-            User currentUser = AuthenticationController.shared().getCurrentUser();
+        navHolder.header.avatar.setImageBitmap( AuthenticationController.shared().getCurrentUser().getUncompressedAvatar() );
+        navHolder.header.progress.setVisibility(View.GONE);
+    }
 
-            String avatar = currentUser.getAvatar();
-            if (avatar == null){
-                if (!e.isDisposed()){
-                    e.onError(null);
-                    e.onComplete();
-                }
-                return;
-            }
-            try {
-                Bitmap picture = BitmapFactory.decodeStream(new URL(avatar).openConnection().getInputStream());
-                if (!e.isDisposed()){
-                    e.onNext(picture);
-                    e.onComplete();
-                }
-            }catch(MalformedURLException error){
-                error.printStackTrace();
-                if (!e.isDisposed()){
-                    e.onError(null);
-                    e.onComplete();
-                }
-                return;
-            }
-
-        }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( bitmap -> {
-                    if ( bitmap != null ){
-                        navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
-                    }
-                    navHolder.header.progress.setVisibility(View.GONE);
-                }, e -> navHolder.header.progress.setVisibility(View.GONE) );
+    @Override
+    public void onChange(final User pCurrentUser, final ObjectChangeSet changeSet) {
+//        if ( changeSet.isFieldChanged("avatar") ){
+            navHolder.header.avatar.setImageBitmap(pCurrentUser.getUncompressedAvatar());
+//        }
     }
 
     // endregion

@@ -41,6 +41,22 @@ public class DataMigration implements RealmMigration {
             schema.get("NotificationItem")
                     .addField("avatar_data", byte[].class)
                     .addField("report_id", long.class);
+
+            oldVersion++;
+        }
+
+        if ( oldVersion == 4 ) {
+
+            schema.get("User").renameField("avatar", "avatar_url");
+
+            oldVersion++;
+        }
+
+        if ( oldVersion == 5 ) {
+
+            schema.get("User").addField("avatar", String.class)
+                    .addField("id", long.class);
+
             oldVersion++;
         }
 

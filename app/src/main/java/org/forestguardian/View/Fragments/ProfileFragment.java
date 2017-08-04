@@ -35,13 +35,10 @@ public class ProfileFragment extends Fragment {
     private static final int CAMERA_IMAGE_REQUEST = 101;
     private static final int GALLERY_IMAGE_REQUEST = 102;
 
-    @BindView(R.id.report_list)
-    ListView mListView;
-    @BindView(R.id.profile_name)
-    TextView mProfileNameView;
+    @BindView(R.id.report_list)                 ListView    mListView;
+    @BindView(R.id.profile_name)                TextView    mProfileNameView;
     @BindView(R.id.profile_city)                TextView    mProfileCity;
     @BindView(R.id.profile_created_reports)     TextView    mProfileCountCreatedReports;
-
     @BindView(R.id.profile_picture)             FrameLayout mProfilePictureContainer;
 
     private ProfileAvatarFragment mProfileAvatarFragment;

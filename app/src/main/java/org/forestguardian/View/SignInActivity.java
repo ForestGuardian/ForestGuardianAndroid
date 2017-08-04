@@ -231,7 +231,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         user.setEmail(email);
         user.setPassword(password);
 
-        // Send SignUp Request
+        // Send SignIn Request
         Observable<Result<SessionData>> sessionService = ForestGuardianService.global().service().signIn(user);
         sessionService.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

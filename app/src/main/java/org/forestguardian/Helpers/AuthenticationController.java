@@ -57,14 +57,15 @@ public class AuthenticationController {
         return getCurrentUser() != null;
     }
 
-    public User getCurrentUser() {
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<User> results = realm.where(User.class).findAll();
-        if ( results.size() > 0 ){
-            return results.first();
-        }
-        return null;
+    public User getCurrentUser(Realm realm) {
+        return realm.where(User.class).findFirst();
     }
+
+    public User getCurrentUser(){
+        Realm realm = Realm.getDefaultInstance();
+        return getCurrentUser(realm);
+    }
+
 
     public void setCurrentUser(final User pCurrentUser) {
         ForestGuardianService.global().addAuthenticationHeaders( mContext, pCurrentUser.getAuth().getUid() );

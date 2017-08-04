@@ -19,17 +19,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.Helpers.AuthenticationController;
-import org.forestguardian.Helpers.HeadersHelper;
 import org.forestguardian.R;
 
 import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +36,10 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Headers;
+import io.realm.ObjectChangeSet;
+import io.realm.Realm;
+import io.realm.RealmModel;
+import io.realm.RealmObjectChangeListener;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
@@ -65,55 +67,37 @@ public class ProfileAvatarFragment extends Fragment{
 
     private int mEditableVisibility = GONE;
 
+    private RealmObjectChangeListener mRealmListener;
+    private User mCurrentUser;
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_picture_view,container,false);
         ButterKnife.bind(this,view);
         mChangeProfilePicture.setVisibility(mEditableVisibility);
+        loadProfilePicture();
+
+        mCurrentUser = AuthenticationController.shared().getCurrentUser();
+        mRealmListener = (RealmObjectChangeListener<User>) (pUser, changeSet) -> {
+            if ( changeSet.isFieldChanged("avatar") ){
+                mPictureView.setImageBitmap(pUser.getUncompressedAvatar());
+            }
+        };
+        mCurrentUser.addChangeListener(mRealmListener);
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadProfilePicture();
     }
 
     private void loadProfilePicture(){
         mAvatarProgress.setVisibility(View.VISIBLE);
-        Observable.create(e -> {
-            User currentUser = AuthenticationController.shared().getCurrentUser();
-            String avatar = currentUser.getAvatar();
-            if (avatar == null){
-                if (!e.isDisposed()){
-                    e.onError(null);
-                    e.onComplete();
-                }
-                return;
-            }
-            try {
-                Bitmap picture = BitmapFactory.decodeStream(new URL(avatar).openConnection().getInputStream());
-                if (!e.isDisposed()){
-                    e.onNext(picture);
-                    e.onComplete();
-                }
-            }catch(MalformedURLException error){
-                error.printStackTrace();
-                if (!e.isDisposed()){
-                    e.onError(error);
-                    e.onComplete();
-                }
-                return;
-            }
-        }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( bitmap -> {
-                    if (bitmap != null) {
-                        mPictureView.setImageBitmap((Bitmap) bitmap);
-                    }
-                    mAvatarProgress.setVisibility(GONE);
-                }, e -> mAvatarProgress.setVisibility(GONE) );
+        mPictureView.setImageBitmap(AuthenticationController.shared().getCurrentUser().getUncompressedAvatar());
+        mAvatarProgress.setVisibility(GONE);
     }
 
     public void enableEdit(){
@@ -150,7 +134,6 @@ public class ProfileAvatarFragment extends Fragment{
 
             Bundle extras = data.getExtras();
             Bitmap profileBitmap = (Bitmap) extras.get("data");
-            mPictureView.setImageBitmap(profileBitmap);
 
             User user = new User();
 
@@ -180,22 +163,20 @@ public class ProfileAvatarFragment extends Fragment{
                             return;
                         }
 
-                        User currentUser = pSessionDataResult.response().body().getUser();
+                        User newUserInfo = pSessionDataResult.response().body().getUser();
 
-                        // Save authentication headers for future requests.
-                        Headers authHeaders = pSessionDataResult.response().headers();
-                        AuthData authData = HeadersHelper.parseHeaders(getActivity(), authHeaders );
-                        if ( authData == null ){
-                            /* Check for error messages are ready for user viewing. */
-                            Log.e( getClass().getSimpleName(), "Auth headers are invalid." );
-                            Toast.makeText(getActivity(), "Auth headers are invalid.", Toast.LENGTH_LONG ).show();
-                            return;
-                        }
+                        Log.d("CurrentUserUpdateA", AuthenticationController.shared().getCurrentUser().toString());
 
-                        currentUser.setAuth( authData );
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        User currentUser = AuthenticationController.shared().getCurrentUser(realm);
+                        currentUser.setAvatarUrl(newUserInfo.getAvatarUrl());
+                        currentUser.updateAvatar();
+                        realm.commitTransaction();
 
-                        AuthenticationController.shared().updateCurrentUser( currentUser );
-                        loadProfilePicture();
+                        Log.d("NewUserUpdate", newUserInfo.getAvatarUrl());
+                        Log.d("CurrentUserUpdateB", AuthenticationController.shared().getCurrentUser().toString());
+
                     }, e-> Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_LONG).show() );
         }
     }
