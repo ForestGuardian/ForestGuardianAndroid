@@ -36,6 +36,14 @@ public class DataMigration implements RealmMigration {
             oldVersion++;
         }
 
+        if ( oldVersion == 3 ) {
+
+            schema.get("NotificationItem")
+                    .addField("avatar_data", byte[].class)
+                    .addField("report_id", long.class);
+            oldVersion++;
+        }
+
         if ( oldVersion < newVersion ){
             throw new IllegalStateException(String.format(Locale.US,"Migration missing from v%d to v&d", oldVersion, newVersion));
         }

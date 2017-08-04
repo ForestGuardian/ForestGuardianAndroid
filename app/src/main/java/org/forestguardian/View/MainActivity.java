@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navHolder = new NavigationHolder(mNavView);
         navHolder.header.email.setText(AuthenticationController.shared().getCurrentUser().getEmail());
         navHolder.header.name.setText(AuthenticationController.shared().getCurrentUser().getName());
+        navHolder.header.avatar.setImageBitmap( BitmapFactory.decodeResource(getResources(), R.drawable.ic_perfil2) );
+        navHolder.header.avatar.setVisibility(View.VISIBLE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -257,8 +259,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .subscribe( bitmap -> {
                     if ( bitmap != null ){
                         navHolder.header.avatar.setImageBitmap((Bitmap) bitmap);
-                    }else{
-                        Toast.makeText(this,"bitmap is null",Toast.LENGTH_SHORT).show();
                     }
                     navHolder.header.progress.setVisibility(View.GONE);
                 }, e -> navHolder.header.progress.setVisibility(View.GONE) );

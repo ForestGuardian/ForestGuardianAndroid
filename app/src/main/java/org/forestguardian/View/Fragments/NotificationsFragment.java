@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.forestguardian.Adapters.NotificationListAdapter;
 import org.forestguardian.DataAccess.Local.NotificationItem;
@@ -25,6 +26,7 @@ import io.realm.Realm;
 public class NotificationsFragment extends Fragment {
 
     @BindView(R.id.notifications_list) ListView mListView;
+    @BindView(R.id.warning_notifications_text) TextView mWarningView;
 
     @Nullable
     @Override
@@ -46,6 +48,11 @@ public class NotificationsFragment extends Fragment {
         NotificationListAdapter adapter = new NotificationListAdapter(getActivity(), reportList);
         mListView.setAdapter(adapter);
 
+        if ( reportList.size() == 0 ){
+            mWarningView.setVisibility(View.VISIBLE);
+        }else{
+            mWarningView.setVisibility(View.GONE);
+        }
     }
 
 

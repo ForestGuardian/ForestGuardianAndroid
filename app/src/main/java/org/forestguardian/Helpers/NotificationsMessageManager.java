@@ -47,10 +47,12 @@ public class NotificationsMessageManager extends FirebaseMessagingService {
         NotificationItem item = new NotificationItem();
         item.setTitle(remoteMessage.getNotification().getTitle());
         item.setDescription(remoteMessage.getNotification().getBody());
+        item.setAvatar(remoteMessage.getData().get("avatar"));
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.copyToRealm(item);
         realm.commitTransaction();
+        item.downloadAvatarData();
     }
     private void sendNotification(String title, String body) {
         NotificationCompat.Builder mBuilder =
