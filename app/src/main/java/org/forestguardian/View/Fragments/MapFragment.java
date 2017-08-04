@@ -55,8 +55,6 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
-import org.forestguardian.View.Fragments.MapFragmentPermissionsDispatcher;
-
 /**
  * Created by emma on 02/08/17.
  */

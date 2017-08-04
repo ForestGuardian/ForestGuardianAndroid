@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mNotificationsFragment );
-            transaction.addToBackStack(null);
             transaction.commit();
+            mToolbar.setTitle("NOTIFICACIONES");
 
         }
 
