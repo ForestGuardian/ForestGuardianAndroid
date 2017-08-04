@@ -4,23 +4,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_map"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_location_material_default"
             android:title="Mapa" />
         <item
             android:id="@+id/nav_reports"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_side_menu_reportes_fuego"
             android:title="Reportes" />
         <item
             android:id="@+id/nav_notifications"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_side_menu_notificacion"
             android:title="Notificaciones" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_side_menu_log_out"
             android:title="Cerrar sessión" />
         <item
             android:id="@+id/nav_about"
-            android:icon="@mipmap/ic_exit_to_app_black_24dp"
+            android:icon="@drawable/ic_side_menu_info"
             android:title="Acerca de" />
     </group>
 

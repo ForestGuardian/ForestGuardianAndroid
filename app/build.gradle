@@ -98,5 +98,8 @@ dependencies {
 
     //Firebase
     compile 'com.google.firebase:firebase-messaging:10.0.1'
+
+    //Circular image view
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -6,4 +6,6 @@
     <color name="colorGray">#d8d8d8</color>
     <color name="colorDarkGray">#555555</color>
     <color name="colorDarkGrayTranslucent">#55555555</color>
+    <color name="colorDarkGrayBackground">#1d1e1d</color>
+
 </resources>
