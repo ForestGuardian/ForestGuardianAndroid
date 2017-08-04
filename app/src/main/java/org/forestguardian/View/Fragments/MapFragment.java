@@ -63,7 +63,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class MapFragment extends Fragment implements
         DefaultMapInteractionFragment.OnDefaultInteractionListener, ReportLocalizationFragment.OnReportLocalizationListener,
         WildfireResourcesMapInteractionFragment.OnGeneralInteractionListener, RouteMapInteractionFragment.OnRouteInteractionListener,
-        WebMapInterface.WebMapInterfaceListener{
+        WebMapInterface.WebMapInterfaceListener, LocationListener{
 
     private static final int REPORT_CREATION_REQUEST = 23432;
     public static String TAG = "MapFragment";
@@ -155,87 +155,80 @@ public class MapFragment extends Fragment implements
     }
 
 
-    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void initLocation() {
 
         /* init the location manager */
         this.mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        LocationListener locationListener = new LocationListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onLocationChanged(Location location) {
-
-                if (mCurrentLocation == null) {
-                    //TODO: Move this string to the string.xml file
-                    Toast.makeText(getActivity(), "Información de GPS lista.", Toast.LENGTH_LONG).show();
-                }
-
-                mCurrentLocation = location;
-                Log.i("Location", "Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-                setLocationText();
-                if (!mIsCurrentLocation) {
-                    mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
-                }
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                /* Check the status of the location signal */
-                String toastMessage = "";
-                switch (status) {
-                    case LocationProvider.OUT_OF_SERVICE:
-                        //TODO: Move this string to the string.xml file
-                        toastMessage = "Señal de GPS no disponible";
-                        //TODO: Move this string to the string.xml file
-                        changeGPSLabel("GPS no disponible");
-                        break;
-                    case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                        //TODO: Move this string to the string.xml file
-                        toastMessage = "La señal de GPS presenta problemas";
-                        //TODO: Move this string to the string.xml file
-                        changeGPSLabel("Cargando ubicación...");
-                        break;
-                    case LocationProvider.AVAILABLE:
-                        //TODO: Move this string to the string.xml file
-                        toastMessage = "Señal de GPS disponible";
-                        break;
-                }
-                /* Show the toast message */
-                Log.w("Location", toastMessage);
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-                /* Update the message text */
-                //TODO: Move this string to the string.xml file
-                changeGPSLabel("Cargando ubicación...");
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                /* Update the message text */
-                //TODO: Move this string to the string.xml file
-                changeGPSLabel("GPS no disponible");
-            }
-        };
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Location permission was granted");
             if (this.mLocationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
-                this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+                this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, this);
             }
             if (this.mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
-                this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+                this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, this);
             }
         } else {
             Log.e(TAG, "Location permission was not granted");
         }
     }
 
-    @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+    @Override
+    public void onLocationChanged(Location location) {
+
+        mCurrentLocation = location;
+        Log.i("Location", "Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+        setLocationText();
+        if (!mIsCurrentLocation) {
+            mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                /* Check the status of the location signal */
+        String toastMessage = "";
+        switch (status) {
+            case LocationProvider.OUT_OF_SERVICE:
+                //TODO: Move this string to the string.xml file
+                toastMessage = "Señal de GPS no disponible";
+                //TODO: Move this string to the string.xml file
+                changeGPSLabel("GPS no disponible");
+                break;
+            case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                //TODO: Move this string to the string.xml file
+                toastMessage = "La señal de GPS presenta problemas";
+                //TODO: Move this string to the string.xml file
+                changeGPSLabel("Cargando ubicación...");
+                break;
+            case LocationProvider.AVAILABLE:
+                //TODO: Move this string to the string.xml file
+                toastMessage = "Señal de GPS disponible";
+                break;
+        }
+                /* Show the toast message */
+        Log.w("Location", toastMessage);
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+                /* Update the message text */
+        //TODO: Move this string to the string.xml file
+        changeGPSLabel("Cargando ubicación...");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+                /* Update the message text */
+        //TODO: Move this string to the string.xml file
+        changeGPSLabel("GPS no disponible");
+    }
+
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void showRationaleForCamera(final PermissionRequest request) {
         new AlertDialog.Builder(getActivity())
                 .setMessage("Necesitamos averiguar tu localizacion para poder crear un reporte.")

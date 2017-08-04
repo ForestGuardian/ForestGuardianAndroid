@@ -80,7 +80,10 @@ public class ProfileFragment extends Fragment {
                     mListView.setAdapter(adapter);
                     mProfileCountCreatedReports.setText( String.valueOf(pReportList.size()) );
 
-                }, e-> Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_LONG).show() );
+                }, e -> {
+                    if (isVisible())
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                });
     }
 
 }
