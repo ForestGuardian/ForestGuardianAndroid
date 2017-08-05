@@ -275,9 +275,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onChange(final User pCurrentUser, final ObjectChangeSet changeSet) {
-//        if ( changeSet.isFieldChanged("avatar") ){
+        if ( changeSet.isFieldChanged("avatar") ){
             navHolder.header.avatar.setImageBitmap(pCurrentUser.getUncompressedAvatar());
-//        }
+        }
     }
 
     @Override
