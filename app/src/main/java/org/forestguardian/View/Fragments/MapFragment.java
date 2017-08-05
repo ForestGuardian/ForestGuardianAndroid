@@ -62,6 +62,11 @@ public class MapFragment extends Fragment implements
     private Location                mCurrentLocation = null;
     private String                  mCurrentLocationText = null;
 
+    private enum WebViewState {
+        CREATED, LOADED, READY
+    }
+    private WebViewState mWebViewState;
+
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
     private WebMapInterface mMapInterface;
@@ -101,6 +106,8 @@ public class MapFragment extends Fragment implements
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.map_interaction_layout, mMapInteractionFragment);
         transaction.commit();
+
+        this.mWebViewState = WebViewState.CREATED;
 
         return view;
     }
@@ -149,6 +156,7 @@ public class MapFragment extends Fragment implements
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                mWebViewState = WebViewState.LOADED;
                 if ( mCurrentLocation != null ){
                     onGPSChanged(mCurrentLocation,mCurrentLocationText);
                 }
@@ -385,9 +393,7 @@ public class MapFragment extends Fragment implements
             return;
         }
 
-        mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" +
-                        String.valueOf(mCurrentLocation.getLatitude()) + ", " +
-                        String.valueOf(mCurrentLocation.getLongitude()) + ")"));
+        mMapWebView.post(() -> mMapWebView.loadUrl("javascript:moveToUserCurrentLocation()"));
     }
 
     private void setMapLocation(Location point) {
@@ -551,11 +557,19 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void onGPSChanged(final Location pLocation, final String pLocationName) {
+
         mCurrentLocation = pLocation;
         mCurrentLocationText = pLocationName;
+        if ( mMapWebView == null ){
+            return;
+        }
+
         setLocationText(pLocationName);
-        if (mCurrentLocation != null && mMapWebView != null) {
-            mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(pLocation.getLatitude()) + ", " + String.valueOf(pLocation.getLongitude()) + ")"));
+        mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(pLocation.getLatitude()) + ", " + String.valueOf(pLocation.getLongitude()) + ")"));
+
+        if( mWebViewState == WebViewState.LOADED ){
+            centerOnLocation();
+            mWebViewState = WebViewState.READY;
         }
     }
 

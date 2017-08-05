@@ -155,12 +155,7 @@ public class DefaultMapInteractionFragment extends Fragment implements IContants
     public void setCurrentLocation(String locationText) {
         final String tmpLocationText = locationText;
         if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                                setLocationLabelText(tmpLocationText);
-                            }
-            });
+            getActivity().runOnUiThread(() -> setLocationLabelText(tmpLocationText));
         }
     }
 
