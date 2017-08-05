@@ -1,19 +1,27 @@
 package org.forestguardian.View;
 
+import android.Manifest;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.forestguardian.DataAccess.Local.User;
+import org.forestguardian.DataAccess.Location.LocationController;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.AboutFragment;
@@ -35,8 +44,13 @@ import butterknife.ButterKnife;
 import io.realm.ObjectChangeSet;
 import io.realm.RealmModel;
 import io.realm.RealmObjectChangeListener;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RealmObjectChangeListener<User> {
+@RuntimePermissions
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RealmObjectChangeListener<User>, LocationController.SimpleLocationListener {
 
     public final static int REPORT_CREATION_REQUEST = 2;
 
@@ -55,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private RealmObjectChangeListener mRealmListener;
     private User mCurrentUser;
+    private LocationController mLocationController;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -86,15 +101,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mNavView.setNavigationItemSelectedListener(this);
 
-
         //Load Fragment
         loadProfileAvatar();
         mCurrentUser.updateAvatar();
 
         mMapFragment = new MapFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace( R.id.main_layout, mMapFragment );
+        transaction.replace( R.id.main_layout, mMapFragment);
         transaction.commit();
+
+        MainActivityPermissionsDispatcher.initLocationWithCheck(this);
+    }
+
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void initLocation() {
+        mLocationController = new LocationController(this);
+        mLocationController.listeners().add(this);
+        mLocationController.listeners().add(mMapFragment);
+    }
+
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage("Necesitamos averiguar tu localizacion para poder crear un reporte.")
+                .setPositiveButton("Aceptar", (dialog, button) -> request.proceed())
+                .setNegativeButton("Cancelar", (dialog, button) -> request.cancel())
+                .show();
     }
 
     @Override
@@ -160,6 +192,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_map){
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            Bundle mapBundle = new Bundle();
+            mapBundle.putParcelable("location", mLocationController.getCurrentLocation());
+            mMapFragment.setArguments(mapBundle);
             transaction.replace( R.id.main_layout, mMapFragment );
             transaction.commit();
 
@@ -246,6 +281,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        }
     }
 
+    @Override
+    public void onGPSChanged(final Location pLocation) {
+
+    }
+
+    @Override
+    public void onUnavailable() {
+
+    }
+
     // endregion
 
     static class NavigationHolder {
@@ -277,4 +322,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
+
+
+
 }

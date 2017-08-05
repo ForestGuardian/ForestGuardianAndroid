@@ -1,25 +1,16 @@
 package org.forestguardian.View.Fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.forestguardian.DataAccess.Location.LocationController;
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
 import org.forestguardian.DataAccess.OSM.OverpassWrapper;
@@ -50,20 +42,15 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Created by emma on 02/08/17.
  */
 
-@RuntimePermissions
 public class MapFragment extends Fragment implements
         DefaultMapInteractionFragment.OnDefaultInteractionListener, ReportLocalizationFragment.OnReportLocalizationListener,
         WildfireResourcesMapInteractionFragment.OnGeneralInteractionListener, RouteMapInteractionFragment.OnRouteInteractionListener,
-        WebMapInterface.WebMapInterfaceListener, LocationListener{
+        WebMapInterface.WebMapInterfaceListener, LocationController.SimpleLocationListener{
 
     private static final int REPORT_CREATION_REQUEST = 23432;
     public static String TAG = "MapFragment";
@@ -72,8 +59,7 @@ public class MapFragment extends Fragment implements
     private Fragment                mMapGeneralInteractionFragment;
     private Fragment                mMapRouteInteractionFragment;
     private Fragment                mReportLocalizationFragment;
-    private Location                mCurrentLocation;
-    private LocationManager         mLocationManager;
+    private Location                mCurrentLocation = null;
 
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
@@ -89,31 +75,38 @@ public class MapFragment extends Fragment implements
     @BindView(R.id.map_interaction_layout) FrameLayout mInteractionLayout;
 
     @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.mFireStations = new ArrayList<FireStation>();
+        this.mNearestFireStation = null;
+        this.mWaterResources = new ArrayList<WaterResource>();
+        this.mWeather = null;
+        this.mMODIS = null;
+        this.mIsCurrentLocation = false;
+        if (savedInstanceState != null) {
+            this.mCurrentLocation = savedInstanceState.getParcelable("location");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         View view = inflater.inflate(R.layout.map_fragment_layout, container, false);
         ButterKnife.bind(this, view);
 
-        //Init some attributes
-        this.mFireStations = new ArrayList<FireStation>();
-        this.mNearestFireStation = null;
-        this.mWaterResources = new ArrayList<WaterResource>();
-        this.mWeather = null;
-        this.mMODIS = null;
         //Init the map
         initWebMap();
-        //Init the GPS location
-        MapFragmentPermissionsDispatcher.initLocationWithCheck(this);
-        //Variable default values
-        this.mIsCurrentLocation = false;
-        this.mCurrentLocation = null;
 
         mMapInteractionFragment = new DefaultMapInteractionFragment();
         ((DefaultMapInteractionFragment)mMapInteractionFragment).setListener(this);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.map_interaction_layout, mMapInteractionFragment);
         transaction.commit();
+
+        if ( mCurrentLocation != null ){
+            centerOnLocation();
+        }
 
         return view;
     }
@@ -123,6 +116,13 @@ public class MapFragment extends Fragment implements
         super.onDestroyView();
         // Clear
     }
+
+//    @Override
+//    public void onSaveInstanceState(final Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putParcelable("currentLocation",mCurrentLocation);
+//        outState.putBoolean("isCurrentLocation", mIsCurrentLocation);
+//    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebMap() {
@@ -152,89 +152,6 @@ public class MapFragment extends Fragment implements
             }
         });
         mMapWebView.post(() -> mMapWebView.loadUrl("javascript:overrideWindyMetrics()") );
-    }
-
-
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    void initLocation() {
-
-        /* init the location manager */
-        this.mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "Location permission was granted");
-            if (this.mLocationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
-                this.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, this);
-            }
-            if (this.mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
-                this.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, this);
-            }
-        } else {
-            Log.e(TAG, "Location permission was not granted");
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-        mCurrentLocation = location;
-        Log.i("Location", "Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-        setLocationText();
-        if (!mIsCurrentLocation) {
-            mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()) + ")"));
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                /* Check the status of the location signal */
-        String toastMessage = "";
-        switch (status) {
-            case LocationProvider.OUT_OF_SERVICE:
-                //TODO: Move this string to the string.xml file
-                toastMessage = "Señal de GPS no disponible";
-                //TODO: Move this string to the string.xml file
-                changeGPSLabel("GPS no disponible");
-                break;
-            case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                //TODO: Move this string to the string.xml file
-                toastMessage = "La señal de GPS presenta problemas";
-                //TODO: Move this string to the string.xml file
-                changeGPSLabel("Cargando ubicación...");
-                break;
-            case LocationProvider.AVAILABLE:
-                //TODO: Move this string to the string.xml file
-                toastMessage = "Señal de GPS disponible";
-                break;
-        }
-                /* Show the toast message */
-        Log.w("Location", toastMessage);
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-                /* Update the message text */
-        //TODO: Move this string to the string.xml file
-        changeGPSLabel("Cargando ubicación...");
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-                /* Update the message text */
-        //TODO: Move this string to the string.xml file
-        changeGPSLabel("GPS no disponible");
-    }
-
-    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    void showRationaleForCamera(final PermissionRequest request) {
-        new AlertDialog.Builder(getActivity())
-                .setMessage("Necesitamos averiguar tu localizacion para poder crear un reporte.")
-                .setPositiveButton("Aceptar", (dialog, button) -> request.proceed())
-                .setNegativeButton("Cancelar", (dialog, button) -> request.cancel())
-                .show();
     }
 
     private void resetAttributes(){
@@ -641,4 +558,17 @@ public class MapFragment extends Fragment implements
         return false;
     }
 
+    @Override
+    public void onGPSChanged(final Location pLocation) {
+        mCurrentLocation = pLocation;
+        setLocationText();
+        if (mCurrentLocation != null) {
+            mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(pLocation.getLatitude()) + ", " + String.valueOf(pLocation.getLongitude()) + ")"));
+        }
+    }
+
+    @Override
+    public void onUnavailable() {
+        changeGPSLabel("Cargando su ubicación...");
+    }
 }
