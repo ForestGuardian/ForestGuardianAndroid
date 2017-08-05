@@ -439,8 +439,7 @@ public class MapFragment extends Fragment implements
         }
 
         mMapWebView.post(() -> mMapWebView.loadUrl(
-                "javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) +
-                        ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")") );
+                "javascript:addReportLocation()") );
         loadReportLocalizationInteraction();
     }
 
