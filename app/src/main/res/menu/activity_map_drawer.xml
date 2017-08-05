@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_map"
-            android:icon="@drawable/ic_location_material_default"
+            android:icon="@drawable/ic_gomap"
             android:title="Mapa" />
         <item
             android:id="@+id/nav_reports"
