@@ -6,10 +6,7 @@ import android.util.Log;
 import com.google.gson.GsonBuilder;
 
 import org.forestguardian.DataAccess.Local.AuthData;
-import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.R;
-
-import java.util.HashMap;
 
 import io.realm.Realm;
 import okhttp3.OkHttpClient;

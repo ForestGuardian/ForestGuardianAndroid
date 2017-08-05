@@ -2,9 +2,9 @@ package org.forestguardian.Helpers;
 
 import android.content.Context;
 import android.location.Address;
-import com.mapbox.geocoder.android.AndroidGeocoder;
 import android.location.Location;
-import android.util.Log;
+
+import com.mapbox.geocoder.android.AndroidGeocoder;
 
 import org.forestguardian.R;
 

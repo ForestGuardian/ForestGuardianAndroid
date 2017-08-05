@@ -2,13 +2,7 @@ package org.forestguardian.View.Fragments;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +10,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.Helpers.IContants;
 import org.forestguardian.R;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -9,14 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.Headers;
-import retrofit2.adapter.rxjava2.Result;
-
 import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
@@ -26,7 +18,13 @@ import org.forestguardian.Helpers.HeadersHelper;
 import org.forestguardian.Helpers.UserValidations;
 import org.forestguardian.R;
 
-import static junit.framework.Assert.assertEquals;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.Headers;
+import retrofit2.adapter.rxjava2.Result;
 
 /**
  * Created by emma on 08/04/17.
