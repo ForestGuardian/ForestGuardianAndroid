@@ -31,15 +31,15 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:backgroundTint="@android:color/white"
-        android:drawableStart="@drawable/ic_email_black_24dp"
+        android:drawablePadding="20dp"
+        android:drawableStart="@drawable/ic_mail"
         android:ems="10"
+        android:fontFamily="sans-serif"
         android:hint="@string/new_report_description"
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:fontFamily="sans-serif"
-        android:drawablePadding="20dp"/>
+        android:textColorHint="@android:color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,25 +47,31 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:orientation="horizontal"
-        android:padding="15dp">
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Interés en Voluntariado"
-            android:textColor="@android:color/white"
+            android:drawablePadding="20dp"
+            android:drawableStart="@drawable/ic_perfil"
+            android:padding="15dp"
+            android:text="Voluntariado"
             android:textSize="18sp"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
-            android:layout_marginStart="30dp"
+            android:layout_gravity="center_vertical|end"
             android:backgroundTint="@android:color/white"
             android:entries="@array/boolean_choice"
-            />
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <EditText
@@ -75,15 +81,15 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:backgroundTint="@android:color/white"
-        android:drawableStart="@drawable/ic_subdirectory_arrow_right_black_24dp"
+        android:drawablePadding="20dp"
+        android:drawableStart="@drawable/ic_direccion"
         android:ems="10"
+        android:fontFamily="sans-serif"
         android:hint="@string/new_report_comments"
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:fontFamily="sans-serif"
-        android:drawablePadding="20dp"/>
+        android:textColorHint="@android:color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,9 +108,9 @@
                 android:layout_width="100dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/colorDarkGray"
+                android:background="@drawable/very_rounded_rectangle_dark_gray"
                 android:padding="10dp"
-                app:srcCompat="@drawable/ic_photo_camera_black_24dp"/>
+                app:srcCompat="@drawable/ic_camara"/>
         </FrameLayout>
 
         <FrameLayout
@@ -137,20 +143,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="sans-serif"
                         android:padding="5dp"
                         android:text="37.3382° N"
-                        android:textColor="@android:color/white"
-                        android:fontFamily="sans-serif"/>
+                        android:textColor="@android:color/white"/>
 
                     <TextView
                         android:id="@+id/longitude_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="sans-serif"
                         android:padding="5dp"
                         android:text="121.8863° W"
-                        android:textColor="@android:color/white"
-                        android:fontFamily="sans-serif"/>
+                        android:textColor="@android:color/white"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
