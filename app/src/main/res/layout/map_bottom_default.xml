@@ -110,7 +110,7 @@
             android:fontFamily="sans-serif"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:text="GPS no disponible"
+            android:text="Cargando localización..."
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:textStyle="bold"

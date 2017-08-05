@@ -9,8 +9,12 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.util.Pair;
 import android.util.Log;
 
+import org.forestguardian.Helpers.GeoHelper;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -22,12 +26,13 @@ public class LocationController implements LocationListener{
     private static final String TAG = "LocationController";
 
     public interface SimpleLocationListener{
-        void onGPSChanged(Location pLocation);
+        void onGPSChanged(Location pLocation, String pLocationName);
         void onUnavailable();
     }
 
-    private final Context mContext;
-    private Location mCurrentLocation;
+    private final Context   mContext;
+    private Location        mCurrentLocation;
+    private String          mCurrentLocationName;
     private LocationManager mLocationManager;
     private ArrayList<SimpleLocationListener> mListeners;
 
@@ -51,17 +56,12 @@ public class LocationController implements LocationListener{
         }
     }
 
-    public ArrayList<SimpleLocationListener> listeners() {
-        return mListeners;
-    }
-
     @Override
     public void onLocationChanged(Location location) {
 
         mCurrentLocation = location;
         Log.i(TAG, "Changed to: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-
-        mListeners.forEach( listener -> listener.onGPSChanged(location) );
+        updateLocalization(location);
     }
 
     @Override
@@ -98,5 +98,37 @@ public class LocationController implements LocationListener{
 
     public Location getCurrentLocation() {
         return mCurrentLocation;
+    }
+
+    public String getCurrentLocationName() {
+        return mCurrentLocationName;
+    }
+
+    public void notifyGPS(){
+        if ( mCurrentLocation != null ){
+            updateLocalization( mCurrentLocation );
+        }
+    }
+
+    public void updateLocalization(Location pLocation) {
+        new Thread(() -> {
+            try {
+                String locationText = GeoHelper.getAddressNameFromPoint(mContext, mCurrentLocation);
+                mListeners.forEach( listener -> listener.onGPSChanged(pLocation, locationText) );
+            } catch (IOException e) {
+                e.printStackTrace();
+                mListeners.forEach( listener -> listener.onGPSChanged(pLocation, null) );
+
+            }
+        }).start();
+    }
+
+    public void addListener( SimpleLocationListener pSimpleLocationListener){
+        mListeners.add(pSimpleLocationListener);
+        notifyGPS();
+    }
+
+    public void removeListener( SimpleLocationListener pSimpleLocationListener){
+        mListeners.remove(pSimpleLocationListener);
     }
 }

@@ -60,6 +60,7 @@ public class MapFragment extends Fragment implements
     private Fragment                mMapRouteInteractionFragment;
     private Fragment                mReportLocalizationFragment;
     private Location                mCurrentLocation = null;
+    private String                  mCurrentLocationText = null;
 
     private boolean mInDefaultMap;
     private boolean mIsCurrentLocation;
@@ -83,9 +84,6 @@ public class MapFragment extends Fragment implements
         this.mWeather = null;
         this.mMODIS = null;
         this.mIsCurrentLocation = false;
-        if (savedInstanceState != null) {
-            this.mCurrentLocation = savedInstanceState.getParcelable("location");
-        }
     }
 
     @Override
@@ -103,10 +101,6 @@ public class MapFragment extends Fragment implements
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.map_interaction_layout, mMapInteractionFragment);
         transaction.commit();
-
-        if ( mCurrentLocation != null ){
-            centerOnLocation();
-        }
 
         return view;
     }
@@ -144,14 +138,23 @@ public class MapFragment extends Fragment implements
         this.mMapWebView.addJavascriptInterface(this.mMapInterface, "mobile");
         //Capture load errors
         this.mMapWebView.setWebViewClient(new WebViewClient() {
+
+            @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 Log.e(TAG, "Error loading the URL");
                 //TODO: set an error page
                 //this.mMapWebView.loadUrl("file:///android_asset/myerrorpage.html");
 
             }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                if ( mCurrentLocation != null ){
+                    onGPSChanged(mCurrentLocation,mCurrentLocationText);
+                }
+            }
         });
-        mMapWebView.post(() -> mMapWebView.loadUrl("javascript:overrideWindyMetrics()") );
+
     }
 
     private void resetAttributes(){
@@ -216,7 +219,6 @@ public class MapFragment extends Fragment implements
 
         //TODO: Move this string to the string.xml file
         changeGPSLabel("Cargando ubicación...");
-        setLocationText();
     }
 
     private void loadReportLocalizationInteraction(){
@@ -253,23 +255,12 @@ public class MapFragment extends Fragment implements
         loadNewInteraction(mMapRouteInteractionFragment);
     }
 
-    private void setLocationText() {
-        if (mCurrentLocation == null) {
-            return;
+    private void setLocationText(String locationText) {
+        if (mMapInteractionFragment != null && mCurrentLocation != null) {
+            Log.i(TAG, "Resetting the location information");
+            locationText = locationText == null ? "" :  locationText;
+            ((DefaultMapInteractionFragment) mMapInteractionFragment).setCurrentLocation(locationText);
         }
-
-        new Thread(() -> {
-            String locationText = "";
-            try {
-                locationText = GeoHelper.getAddressNameFromPoint(getActivity(), mCurrentLocation);
-                if (mMapInteractionFragment != null && mCurrentLocation != null) {
-                    Log.i(TAG, "Resetting the location information");
-                    ((DefaultMapInteractionFragment) mMapInteractionFragment).setCurrentLocation(locationText);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
     public void processWildfireData(MODIS modisData) {
@@ -559,10 +550,11 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onGPSChanged(final Location pLocation) {
+    public void onGPSChanged(final Location pLocation, final String pLocationName) {
         mCurrentLocation = pLocation;
-        setLocationText();
-        if (mCurrentLocation != null) {
+        mCurrentLocationText = pLocationName;
+        setLocationText(pLocationName);
+        if (mCurrentLocation != null && mMapWebView != null) {
             mMapWebView.post(() -> mMapWebView.loadUrl("javascript:setUserCurrentLocation(" + String.valueOf(pLocation.getLatitude()) + ", " + String.valueOf(pLocation.getLongitude()) + ")"));
         }
     }

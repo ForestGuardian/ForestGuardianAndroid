@@ -116,8 +116,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void initLocation() {
         mLocationController = new LocationController(this);
-        mLocationController.listeners().add(this);
-        mLocationController.listeners().add(mMapFragment);
+        mLocationController.addListener(this);
+        mLocationController.addListener(mMapFragment);
+        mLocationController.notifyGPS();
     }
 
     @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -192,11 +193,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_map){
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            Bundle mapBundle = new Bundle();
-            mapBundle.putParcelable("location", mLocationController.getCurrentLocation());
-            mMapFragment.setArguments(mapBundle);
             transaction.replace( R.id.main_layout, mMapFragment );
             transaction.commit();
+            mLocationController.notifyGPS();
 
             mToolbar.setTitle("REPORTAR");
 
@@ -282,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onGPSChanged(final Location pLocation) {
+    public void onGPSChanged(final Location pLocation, final String pLocationName) {
 
     }
 
