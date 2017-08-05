@@ -29,7 +29,8 @@ public class SplashActivity extends Activity {
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
             Intent intent;
-            if ( AuthenticationController.shared().signedIn()) {
+            if ( AuthenticationController.shared().signedIn() ) {
+                AuthenticationController.shared().refreshUserData();
                 intent = new Intent(getApplicationContext(), MainActivity.class);
             }else{
                 intent = new Intent(getApplicationContext(), SignInActivity.class);

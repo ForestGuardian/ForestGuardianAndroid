@@ -14,6 +14,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 /**
  * Created by emma on 19/03/17.
@@ -69,6 +70,9 @@ public interface ForestGuardianAPI {
      */
     @PUT("api/v1/users.json")
     Observable<Result<SessionData>> updateAccount(@Body User pUser);
+
+    @GET("users/{id}.json")
+    Observable<User> showUser(@Path("id") long pUserId);
 
     /**
      * Creates a new report.

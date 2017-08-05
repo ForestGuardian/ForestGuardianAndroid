@@ -1,20 +1,26 @@
 package org.forestguardian.Helpers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.DeviceInfo;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
+import org.forestguardian.R;
+import org.forestguardian.View.MainActivity;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import okhttp3.Headers;
 import retrofit2.adapter.rxjava2.Result;
 
 /**
@@ -23,6 +29,7 @@ import retrofit2.adapter.rxjava2.Result;
 
 public class AuthenticationController {
 
+    private static final String TAG = "AuthenticationContr";
     private static AuthenticationController mInstance;
     private static Context mContext;
 
@@ -55,6 +62,15 @@ public class AuthenticationController {
 
     public boolean signedIn(){
         return getCurrentUser() != null;
+    }
+
+    public boolean forcedLogoutOldVersionData(){
+        User user = getCurrentUser();
+        if (user != null && user.getId() == 0){
+            logout();
+            return true;
+        }
+        return false;
     }
 
     public User getCurrentUser(Realm realm) {
@@ -151,6 +167,22 @@ public class AuthenticationController {
         }
         realm.where(DeviceInfo.class).findAll().deleteAllFromRealm();
         realm.commitTransaction();
+    }
+
+
+    public void refreshUserData(){
+        // Send SignIn Request
+        Observable<User> sessionService = ForestGuardianService.global().service().showUser(getCurrentUser().getId());
+        sessionService.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( pUser -> {
+                    Realm realm = Realm.getDefaultInstance();
+                    User user = getCurrentUser(realm);
+                    realm.beginTransaction();
+                    user.setAvatarUrl( pUser.getAvatarUrl() );
+                    realm.commitTransaction();
+                    user.updateAvatar();
+                });
     }
 
 }

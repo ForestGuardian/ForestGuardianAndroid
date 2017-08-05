@@ -189,7 +189,7 @@ public class User extends RealmObject {
                     obj.setUsername(UUID.randomUUID().toString());
                     realm.commitTransaction();
                 }
-            });
+            }, e -> {});
     }
 
     public void setId(final long pId) {
