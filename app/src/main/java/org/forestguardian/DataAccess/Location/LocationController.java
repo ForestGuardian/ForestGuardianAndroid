@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.util.Pair;
 import android.util.Log;
 
 import org.forestguardian.Helpers.GeoHelper;

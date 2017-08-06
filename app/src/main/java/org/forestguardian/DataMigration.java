@@ -3,7 +3,6 @@ package org.forestguardian;
 import java.util.Locale;
 
 import io.realm.DynamicRealm;
-import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
 

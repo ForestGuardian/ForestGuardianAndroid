@@ -1,26 +1,20 @@
 package org.forestguardian.Helpers;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.DeviceInfo;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
-import org.forestguardian.R;
-import org.forestguardian.View.MainActivity;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import okhttp3.Headers;
 import retrofit2.adapter.rxjava2.Result;
 
 /**

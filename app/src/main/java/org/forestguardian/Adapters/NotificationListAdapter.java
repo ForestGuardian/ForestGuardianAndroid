@@ -6,9 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.forestguardian.DataAccess.Local.NotificationItem;
-import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.View.CustomViews.NotificationsItemView;
-import org.forestguardian.View.CustomViews.ReportItemView;
 
 import java.util.List;
 

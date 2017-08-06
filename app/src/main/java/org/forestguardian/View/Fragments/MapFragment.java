@@ -439,8 +439,7 @@ public class MapFragment extends Fragment implements
         }
 
         mMapWebView.post(() -> mMapWebView.loadUrl(
-                "javascript:addReportLocation(" + String.valueOf(mCurrentLocation.getLatitude()) +
-                        ", " + String.valueOf(mCurrentLocation.getLongitude()) + ")") );
+                "javascript:addReportLocation()") );
         loadReportLocalizationInteraction();
     }
 
@@ -520,8 +519,8 @@ public class MapFragment extends Fragment implements
 
     public boolean onBackPressed() {
         // Remove marker.
-        mMapWebView.post(() -> mMapWebView.loadUrl(
-                "javascript:clearReportLocation()") );
+        mMapWebView.post(() -> mMapWebView.loadUrl("javascript:clearReportLocation()") );
+        setLocationText(mCurrentLocationText);
 
         return false;
     }

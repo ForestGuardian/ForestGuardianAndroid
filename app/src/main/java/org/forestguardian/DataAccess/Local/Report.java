@@ -1,23 +1,7 @@
 package org.forestguardian.DataAccess.Local;
 
-import android.os.Environment;
-import android.util.Log;
-
 import com.google.gson.annotations.Expose;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.UUID;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.realm.RealmObject;
 
 /**

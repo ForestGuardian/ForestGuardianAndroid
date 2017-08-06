@@ -1,17 +1,14 @@
 package org.forestguardian;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
-import org.forestguardian.DataAccess.Local.User;
-import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
+
 import org.forestguardian.Helpers.AuthenticationController;
 
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
 
 /**
  * Created by emma on 09/04/17.

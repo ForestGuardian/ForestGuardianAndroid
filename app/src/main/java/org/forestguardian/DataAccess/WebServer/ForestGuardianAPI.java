@@ -4,11 +4,9 @@ import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
 
-import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
-
 import retrofit2.adapter.rxjava2.Result;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

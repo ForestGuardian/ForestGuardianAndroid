@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -26,9 +25,6 @@ import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.R;
 
 import java.io.ByteArrayOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,9 +32,7 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.ObjectChangeSet;
 import io.realm.Realm;
-import io.realm.RealmModel;
 import io.realm.RealmObjectChangeListener;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
