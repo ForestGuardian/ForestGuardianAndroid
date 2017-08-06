@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.SignUpEvent;
+
 import org.forestguardian.DataAccess.Local.AuthData;
 import org.forestguardian.DataAccess.Local.SessionData;
 import org.forestguardian.DataAccess.Local.User;
@@ -148,6 +151,8 @@ public class SignUpActivity  extends AppCompatActivity {
             // ForestGuardianService.global().addApiAuthorizationHeader();
 
             Toast.makeText(this, "Bienvenido!", Toast.LENGTH_SHORT).show();
+
+            Answers.getInstance().logSignUp(new SignUpEvent());
 
             // Load MainActivity.
             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
