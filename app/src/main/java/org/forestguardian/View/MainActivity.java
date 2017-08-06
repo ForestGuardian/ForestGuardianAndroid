@@ -2,6 +2,7 @@ package org.forestguardian.View;
 
 import android.Manifest;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,11 +34,14 @@ import android.widget.TextView;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.Location.LocationController;
 import org.forestguardian.Helpers.AuthenticationController;
+import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 import org.forestguardian.View.Fragments.AboutFragment;
 import org.forestguardian.View.Fragments.MapFragment;
 import org.forestguardian.View.Fragments.NotificationsFragment;
 import org.forestguardian.View.Fragments.ProfileFragment;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -134,16 +138,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         //Check for search queries
-//        checkSearchIntent(getIntent());
+        checkSearchIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        Log.i(TAG, "New intent in the MainActivity");
         setIntent(intent);
-//        checkSearchIntent(intent);
+        checkSearchIntent(intent);
     }
 
+    private void checkSearchIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.i(TAG, "QUERY: " + query);
+            processSearchQuery(query);
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            String locationData = intent.getData().getLastPathSegment();
+            Location locationPoint = GeoHelper.convertStringToLocation(locationData);
+            if (locationPoint != null && mMapFragment != null) {
+                mMapFragment.setMapLocation(locationPoint);
+                mMapFragment.centerOnLocation();
+            }
+        }
+    }
 
+    private void processSearchQuery(String query) {
+        Log.i(TAG, "Searching for: " + query);
+        new Thread(() -> {
+            Location searchPoint = null;
+            try {
+                searchPoint = GeoHelper.getPointFromAddressName(this, query);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (searchPoint != null && mMapFragment != null) {
+                mMapFragment.setMapLocation(searchPoint);
+                mMapFragment.centerOnLocation();
+            }
+        }).start();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
