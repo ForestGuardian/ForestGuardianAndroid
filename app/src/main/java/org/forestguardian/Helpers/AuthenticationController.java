@@ -3,6 +3,7 @@ package org.forestguardian.Helpers;
 import android.content.Context;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.forestguardian.DataAccess.Local.DeviceInfo;
@@ -90,9 +91,10 @@ public class AuthenticationController {
 
         Log.e("Authenticated User:", pCurrentUser.getEmail());
 
-        /*if ( isFirebaseRegistrationTokenReady() ){
-            updateFirebaseRegistrationTokenForUser();
-        }*/
+        // Fabric
+        Crashlytics.setUserIdentifier(pCurrentUser.getEmail());
+        Crashlytics.setUserEmail(pCurrentUser.getEmail());
+        Crashlytics.setUserName(pCurrentUser.getName());
 
         //Test the token generation
         updateFirebaseRegistrationToken(FirebaseInstanceId.getInstance().getToken());
