@@ -47,7 +47,7 @@ public class AddressContentProvider extends ContentProvider {
                 Location addressPoint = new Location("");
                 addressPoint.setLatitude(addressList.get(0).getLatitude());
                 addressPoint.setLongitude(addressList.get(0).getLongitude());
-                String[] newRow = new String[] {Integer.toString(index), addressList.get(index).getFeatureName(), GeoHelper.convertLocationToString(addressPoint)};
+                String[] newRow = new String[] {Integer.toString(index), addressList.get(index).getAddressLine(0), GeoHelper.convertLocationToString(addressPoint)};
                 cursor.addRow(newRow);
             }
         } catch (IOException e) {

@@ -396,7 +396,7 @@ public class MapFragment extends Fragment implements
         mMapWebView.post(() -> mMapWebView.loadUrl("javascript:moveToUserCurrentLocation()"));
     }
 
-    private void setMapLocation(Location point) {
+    public void setMapLocation(Location point) {
         if (point == null) {
             return;
         }
@@ -504,35 +504,6 @@ public class MapFragment extends Fragment implements
             }
         });
         loadDefaultInteraction();
-    }
-
-    private void checkSearchIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            processSearchQuery(query);
-        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            String locationData = intent.getData().getLastPathSegment();
-            Location locationPoint = GeoHelper.convertStringToLocation(locationData);
-            if (locationPoint != null) {
-                setMapLocation(locationPoint);
-            }
-        }
-    }
-
-    private void processSearchQuery(String query) {
-        Log.i(TAG, "Searching for: " + query);
-        new Thread(() -> {
-            Location searchPoint = null;
-            try {
-                searchPoint = GeoHelper.getPointFromAddressName(getActivity(), query);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (searchPoint != null) {
-                setMapLocation(searchPoint);
-            }
-        }).start();
     }
 
     public Fragment currentFragment(){
