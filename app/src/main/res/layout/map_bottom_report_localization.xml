@@ -11,7 +11,7 @@
         android:layout_height="70dp"
         android:layout_marginBottom="60dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/ic_goto"
+        android:background="@drawable/ic_next"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>

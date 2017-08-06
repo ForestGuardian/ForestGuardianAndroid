@@ -548,8 +548,8 @@ public class MapFragment extends Fragment implements
 
     public boolean onBackPressed() {
         // Remove marker.
-        mMapWebView.post(() -> mMapWebView.loadUrl(
-                "javascript:clearReportLocation()") );
+        mMapWebView.post(() -> mMapWebView.loadUrl("javascript:clearReportLocation()") );
+        setLocationText(mCurrentLocationText);
 
         return false;
     }
