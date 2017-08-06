@@ -68,7 +68,7 @@ public class RouteMapInteractionFragment extends Fragment {
         WaterResource waterResource = (WaterResource) getArguments().getSerializable(WATER_KEY);
         this.mWaterResource = waterResource;
         Double currentLatitude = Math.round(getArguments().getDouble(LATITUDE_KEY) * 1000.0) / 1000.0;
-        Double currentLongitude = Math.round(getArguments().getDouble(LONGITUDE_KEY) * 100.0) / 1000.0;
+        Double currentLongitude = Math.round(getArguments().getDouble(LONGITUDE_KEY) * 1000.0) / 1000.0;
         this.mCurrentLocation = new Location("");
         this.mCurrentLocation.setLatitude(currentLatitude);
         this.mCurrentLocation.setLongitude(currentLongitude);
