@@ -57,6 +57,7 @@
             android:drawableStart="@drawable/ic_perfil"
             android:padding="15dp"
             android:text="Voluntariado"
+            android:textColor="@android:color/white"
             android:textSize="18sp"/>
 
         <Space
