@@ -71,7 +71,9 @@ public class LocationController implements LocationListener{
         switch (status) {
             case LocationProvider.OUT_OF_SERVICE:
                 Log.w(TAG, "OUT_OF_SERVICE");
-                mListeners.forEach(SimpleLocationListener::onUnavailable);
+                for (SimpleLocationListener listener: mListeners){
+                    listener.onUnavailable();
+                }
                 break;
             case LocationProvider.TEMPORARILY_UNAVAILABLE:
                 Log.w(TAG, "TEMPORARILY_UNAVAILABLE");
@@ -92,7 +94,9 @@ public class LocationController implements LocationListener{
     @Override
     public void onProviderDisabled(String provider) {
         Log.w(TAG, "onProviderDisabled");
-        mListeners.forEach(SimpleLocationListener::onUnavailable);
+        for (SimpleLocationListener listener: mListeners){
+            listener.onUnavailable();
+        }
     }
 
     public Location getCurrentLocation() {
@@ -113,11 +117,14 @@ public class LocationController implements LocationListener{
         new Thread(() -> {
             try {
                 String locationText = GeoHelper.getAddressNameFromPoint(mContext, mCurrentLocation);
-                mListeners.forEach( listener -> listener.onGPSChanged(pLocation, locationText) );
+                for( SimpleLocationListener listener : mListeners ){
+                    listener.onGPSChanged(pLocation, locationText);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-                mListeners.forEach( listener -> listener.onGPSChanged(pLocation, null) );
-
+                for( SimpleLocationListener listener : mListeners ){
+                    listener.onGPSChanged(pLocation, null);
+                }
             }
         }).start();
     }
