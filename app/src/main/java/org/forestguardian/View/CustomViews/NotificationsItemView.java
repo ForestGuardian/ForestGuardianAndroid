@@ -32,8 +32,8 @@ public class NotificationsItemView extends LinearLayout {
         ButterKnife.bind(this);
 
         mNotificationItem = pNotification;
-        titleView.setText(mNotificationItem.getTitle());
-        descriptionView.setText(mNotificationItem.getDescription());
+        titleView.setText( mNotificationItem.getTitle() );
+        descriptionView.setText( mNotificationItem.getDescription() );
 
         if ( mNotificationItem.getAvatarData() != null ){
             pictureView.setImageBitmap( decodeBitmap( mNotificationItem.getAvatarData() ) );

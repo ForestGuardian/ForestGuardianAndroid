@@ -32,6 +32,8 @@ public class ReportListAdapter extends ArrayAdapter<Report> {
         // Recycling
         if (convertView == null) {
             convertView = new ReportItemView(mContext,report);
+        }else{
+            ((ReportItemView)convertView).recycle(report);
         }
 
         return convertView;

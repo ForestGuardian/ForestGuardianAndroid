@@ -37,6 +37,15 @@ public class ReportItemView extends LinearLayout {
         ButterKnife.bind(this);
 
         mReport = pReport;
+        updateView();
+    }
+
+    public void recycle(Report pReport) {
+        mReport = pReport;
+        updateView();
+    }
+
+    private void updateView(){
         titleView.setText(mReport.getTitle());
         descriptionView.setText(mReport.getDescription());
         Observable.create(e -> {
@@ -46,8 +55,8 @@ public class ReportItemView extends LinearLayout {
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe( bitmap -> pictureView.setImageBitmap((Bitmap)bitmap) );
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( bitmap -> pictureView.setImageBitmap((Bitmap)bitmap) );
     }
 
 }

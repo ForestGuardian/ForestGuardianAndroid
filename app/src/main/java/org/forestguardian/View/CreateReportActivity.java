@@ -179,6 +179,7 @@ public class CreateReportActivity extends AppCompatActivity {
                             }
 
                             // Success
+                            dialog.dismiss();
                             CreateReportActivity.this.setResult(SUCCESS_RESULT);
                             CreateReportActivity.this.finish();
                         });
