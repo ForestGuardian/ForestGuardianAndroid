@@ -23,14 +23,14 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
-            android:background="@drawable/ic_agua_layer_off"
+            android:background="@drawable/ic_lluvia_layer_rain_off"
             android:clickable="true"
             tools:layout_conversion_absoluteHeight="40dp"
             tools:layout_conversion_absoluteWidth="40dp"
             tools:layout_conversion_absoluteX="0dp"
             tools:layout_conversion_absoluteY="40dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="40dp"/>
+            tools:layout_editor_absoluteY="40dp" />
 
         <ImageButton
             android:id="@+id/fab_wind"
