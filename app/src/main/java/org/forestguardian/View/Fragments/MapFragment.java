@@ -59,6 +59,7 @@ public class MapFragment extends Fragment implements
     private Fragment                mMapGeneralInteractionFragment;
     private Fragment                mMapRouteInteractionFragment;
     private Fragment                mReportLocalizationFragment;
+    private NoInternetFragment      mNoInternetFragment;
     private Location                mCurrentLocation = null;
     private String                  mCurrentLocationText = null;
 
@@ -148,10 +149,7 @@ public class MapFragment extends Fragment implements
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                Log.e(TAG, "Error loading the URL");
-                //TODO: set an error page
-                //this.mMapWebView.loadUrl("file:///android_asset/myerrorpage.html");
-
+                loadNoInternetInteraction();
             }
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -227,6 +225,14 @@ public class MapFragment extends Fragment implements
 
         //TODO: Move this string to the string.xml file
         changeGPSLabel("Cargando ubicación...");
+    }
+
+    private void loadNoInternetInteraction() {
+
+        if (mNoInternetFragment == null) {
+            mNoInternetFragment = new NoInternetFragment();
+        }
+        loadNewInteraction(mNoInternetFragment);
     }
 
     private void loadReportLocalizationInteraction(){
