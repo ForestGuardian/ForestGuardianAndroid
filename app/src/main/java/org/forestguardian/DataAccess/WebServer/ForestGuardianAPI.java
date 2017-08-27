@@ -85,4 +85,12 @@ public interface ForestGuardianAPI {
      */
     @GET("reports.json")
     Observable<List<Report>> listReports();
+
+    /**
+     *
+     * @param pReportId
+     * @return
+     */
+    @GET("reports/{id}.json")
+    Observable<Report> getReport(@Path("id") long pReportId);
 }

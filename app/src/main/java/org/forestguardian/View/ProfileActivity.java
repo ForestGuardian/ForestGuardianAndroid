@@ -3,6 +3,9 @@ package org.forestguardian.View;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ProfileActivity extends Activity {
 
+    private static final String TAG = ProfileActivity.class.getSimpleName();
     private static final int CAMERA_IMAGE_REQUEST = 101;
     private static final int GALLERY_IMAGE_REQUEST = 102;
 
@@ -51,6 +55,7 @@ public class ProfileActivity extends Activity {
         loadReportList();
         loadProfileName();
         loadProfileAvatarFragment();
+        handleListViewEvents();
     }
 
     private void loadProfileAvatarFragment(){
@@ -77,6 +82,24 @@ public class ProfileActivity extends Activity {
                 mProfileCountCreatedReports.setText( String.valueOf(pReportList.size()) );
 
         }, e-> Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show() );
+    }
+
+    private void handleListViewEvents() {
+        if (mListView != null) {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Observable<Report> reportService = ForestGuardianService.global().service().getReport(id);
+
+                    reportService.subscribeOn(Schedulers.newThread())
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .subscribe( pReport -> {
+                                // Load the wildfire detail screen
+                                // TODO implement the intent here
+                            }, e-> Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_LONG).show() );
+                }
+            });
+        }
     }
 
 }

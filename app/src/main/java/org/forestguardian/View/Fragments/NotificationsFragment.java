@@ -6,17 +6,25 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.forestguardian.Adapters.NotificationListAdapter;
 import org.forestguardian.DataAccess.Local.NotificationItem;
+import org.forestguardian.DataAccess.Local.Report;
+import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.R;
+import org.forestguardian.View.ProfileActivity;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 /**
@@ -37,6 +45,8 @@ public class NotificationsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         loadReportList();
+        handleListViewEvents();
+
         return view;
     }
 
@@ -52,6 +62,24 @@ public class NotificationsFragment extends Fragment {
             mWarningView.setVisibility(View.VISIBLE);
         }else{
             mWarningView.setVisibility(View.GONE);
+        }
+    }
+
+    private void handleListViewEvents() {
+        if (mListView != null) {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Observable<Report> reportService = ForestGuardianService.global().service().getReport(id);
+
+                    reportService.subscribeOn(Schedulers.newThread())
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .subscribe( pReport -> {
+                                // Load the wildfire detail screen
+                                // TODO implement the intent here
+                            }, e-> Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show() );
+                }
+            });
         }
     }
 
