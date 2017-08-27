@@ -59,6 +59,7 @@ public class MapFragment extends Fragment implements
     private Fragment                mMapGeneralInteractionFragment;
     private Fragment                mMapRouteInteractionFragment;
     private Fragment                mReportLocalizationFragment;
+    private Fragment                mWildfireReportFragment;
     private NoInternetFragment      mNoInternetFragment;
     private Location                mCurrentLocation = null;
     private String                  mCurrentLocationText = null;
@@ -267,6 +268,11 @@ public class MapFragment extends Fragment implements
         }
         ((RouteMapInteractionFragment) mMapRouteInteractionFragment).setListener(this);
         loadNewInteraction(mMapRouteInteractionFragment);
+    }
+
+    private void loadWildfireReport(double latitud, double longitude) {
+        mWildfireReportFragment = WildfireFragment.setFireLocation(latitud, longitude);
+        loadNewInteraction(mWildfireReportFragment);
     }
 
     private void setLocationText(String locationText) {
