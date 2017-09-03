@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.OSM.FireStation;
 import org.forestguardian.DataAccess.OSM.OverpassWrapper;
 import org.forestguardian.DataAccess.OSM.WaterResource;
@@ -29,13 +30,17 @@ public class WildfireFragment extends Fragment {
     private static String TAG = WildfireFragment.class.getSimpleName();
     private static String LONGITUDE_KEY = "wildfireLongitude";
     private static String LATITUDE_KEY = "wildfireLatitude";
+    private static String TITLE_KEY = "wildfireTitle";
+    private static String DESCRIPTION_KEY = "wildfireDescription";
 
     private double mLatitude;
     private double mLongitude;
+    private String mTitle;
+    private String mDescription;
 
     @BindView(R.id.wildfire_image) ImageView mReportImage;
-    @BindView(R.id.wildfire_title) TextView mTitle;
-    @BindView(R.id.wildfire_description) TextView mDescription;
+    @BindView(R.id.wildfire_title) TextView mTitleView;
+    @BindView(R.id.wildfire_description) TextView mDescriptionView;
     @BindView(R.id.wildfire_report_location) TextView mReportPlace;
     @BindView(R.id.wildfire_firefigthers) TextView mFirefighters;
     @BindView(R.id.wildfire_water) TextView mWaterResource;
@@ -45,12 +50,15 @@ public class WildfireFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static WildfireFragment setFireLocation(double latitude, double longitud) {
+    public static WildfireFragment setFireLocation(Report report) {
         WildfireFragment wildfireFragment = new WildfireFragment();
 
         Bundle fragmentBundle = new Bundle();
-        fragmentBundle.putDouble(LONGITUDE_KEY, longitud);
-        fragmentBundle.putDouble(LATITUDE_KEY, latitude);
+
+        fragmentBundle.putString(TITLE_KEY, report.getTitle());
+        fragmentBundle.putString(DESCRIPTION_KEY, report.getDescription());
+        fragmentBundle.putDouble(LONGITUDE_KEY, report.getGeoLongitude());
+        fragmentBundle.putDouble(LATITUDE_KEY, report.getGeoLatitude());
 
         wildfireFragment.setArguments(fragmentBundle);
         return wildfireFragment;
@@ -66,6 +74,8 @@ public class WildfireFragment extends Fragment {
         // Set the attributes
         mLatitude = getArguments().getDouble(LATITUDE_KEY, -1);
         mLongitude = getArguments().getDouble(LONGITUDE_KEY, -1);
+        mTitle = getArguments().getString(TITLE_KEY, "Sin título");
+        mDescription = getArguments().getString(DESCRIPTION_KEY, "Sin descripción");
 
         setWildfireData();
 
@@ -73,6 +83,14 @@ public class WildfireFragment extends Fragment {
     }
 
     private void setWildfireData() {
+        // Set the title and description
+        if (mTitleView != null) {
+            mTitleView.setText(mTitle);
+        }
+        if (mDescriptionView != null) {
+            mDescriptionView.setText(mDescription);
+        }
+
         if (mLatitude != -1 && mLongitude != -1) {
             // Create the wildfire location
             Location wildfireLocation = new Location("");

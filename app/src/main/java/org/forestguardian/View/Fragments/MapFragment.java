@@ -24,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.Location.LocationController;
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
@@ -59,7 +60,6 @@ public class MapFragment extends Fragment implements
     private Fragment                mMapGeneralInteractionFragment;
     private Fragment                mMapRouteInteractionFragment;
     private Fragment                mReportLocalizationFragment;
-    private Fragment                mWildfireReportFragment;
     private NoInternetFragment      mNoInternetFragment;
     private Location                mCurrentLocation = null;
     private String                  mCurrentLocationText = null;
@@ -268,11 +268,6 @@ public class MapFragment extends Fragment implements
         }
         ((RouteMapInteractionFragment) mMapRouteInteractionFragment).setListener(this);
         loadNewInteraction(mMapRouteInteractionFragment);
-    }
-
-    private void loadWildfireReport(double latitud, double longitude) {
-        mWildfireReportFragment = WildfireFragment.setFireLocation(latitud, longitude);
-        loadNewInteraction(mWildfireReportFragment);
     }
 
     private void setLocationText(String locationText) {

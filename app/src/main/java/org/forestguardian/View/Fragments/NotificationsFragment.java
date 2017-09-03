@@ -16,6 +16,7 @@ import org.forestguardian.DataAccess.Local.NotificationItem;
 import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.R;
+import org.forestguardian.View.Interfaces.IWildfire;
 import org.forestguardian.View.ProfileActivity;
 
 import java.util.List;
@@ -32,6 +33,8 @@ import io.realm.Realm;
  */
 
 public class NotificationsFragment extends Fragment {
+
+    private IWildfire listener;
 
     @BindView(R.id.notifications_list) ListView mListView;
     @BindView(R.id.warning_notifications_text) TextView mWarningView;
@@ -65,6 +68,10 @@ public class NotificationsFragment extends Fragment {
         }
     }
 
+    public void setListener(IWildfire pListener) {
+        listener = pListener;
+    }
+
     private void handleListViewEvents() {
         if (mListView != null) {
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -76,7 +83,9 @@ public class NotificationsFragment extends Fragment {
                             .subscribeOn(AndroidSchedulers.mainThread())
                             .subscribe( pReport -> {
                                 // Load the wildfire detail screen
-                                // TODO implement the intent here
+                                if (listener != null) {
+                                    listener.showWildfireScreen(pReport);
+                                }
                             }, e-> Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show() );
                 }
             });

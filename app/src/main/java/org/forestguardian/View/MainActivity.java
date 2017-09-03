@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.forestguardian.DataAccess.Local.Report;
 import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.Location.LocationController;
 import org.forestguardian.Helpers.AuthenticationController;
@@ -37,6 +38,8 @@ import org.forestguardian.View.Fragments.AboutFragment;
 import org.forestguardian.View.Fragments.MapFragment;
 import org.forestguardian.View.Fragments.NotificationsFragment;
 import org.forestguardian.View.Fragments.ProfileFragment;
+import org.forestguardian.View.Fragments.WildfireFragment;
+import org.forestguardian.View.Interfaces.IWildfire;
 
 import java.io.IOException;
 
@@ -50,7 +53,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RealmObjectChangeListener<User>, LocationController.SimpleLocationListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RealmObjectChangeListener<User>, LocationController.SimpleLocationListener, IWildfire {
 
     public final static int REPORT_CREATION_REQUEST = 2;
 
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MapFragment mMapFragment;
     private NotificationsFragment mNotificationsFragment;
     private AboutFragment mAboutFragment;
+    private WildfireFragment mWildfireFragment;
 
     private RealmObjectChangeListener mRealmListener;
     private User mCurrentUser;
@@ -235,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if (mProfileFragment == null){
                 mProfileFragment = new ProfileFragment();
+                mProfileFragment.setListener(this);
             }
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mProfileFragment );
@@ -247,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if (mNotificationsFragment == null){
                 mNotificationsFragment = new NotificationsFragment();
+                mNotificationsFragment.setListener(this);
             }
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mNotificationsFragment );
@@ -304,6 +310,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navHolder.header.progress.setVisibility(View.GONE);
     }
 
+    private void loadWildfireReport(Report report) {
+        mWildfireFragment = WildfireFragment.setFireLocation(report);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace( R.id.main_layout, mWildfireFragment );
+        transaction.commit();
+    }
+
     @Override
     public void onChange(final User pCurrentUser, final ObjectChangeSet changeSet) {
         if ( changeSet.isFieldChanged("avatar") ){
@@ -319,6 +332,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onUnavailable() {
 
+    }
+
+    @Override
+    public void showWildfireScreen(Report report) {
+        loadWildfireReport(report);
     }
 
     // endregion

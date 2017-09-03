@@ -2,9 +2,11 @@ package org.forestguardian.View.Fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +18,8 @@ import org.forestguardian.DataAccess.Local.User;
 import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.R;
+import org.forestguardian.View.Interfaces.IWildfire;
+import org.forestguardian.View.ProfileActivity;
 
 import java.util.List;
 
@@ -31,6 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ProfileFragment extends Fragment {
 
+    private static final String TAG = ProfileFragment.class.getSimpleName();
     private static final int CAMERA_IMAGE_REQUEST = 101;
     private static final int GALLERY_IMAGE_REQUEST = 102;
 
@@ -41,6 +46,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_picture)             FrameLayout mProfilePictureContainer;
 
     private ProfileAvatarFragment mProfileAvatarFragment;
+    private IWildfire listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +58,7 @@ public class ProfileFragment extends Fragment {
         loadReportList();
         loadProfileName();
         loadProfileAvatarFragment();
+        handleListViewEvents();
 
         return view;
     }
@@ -83,6 +90,30 @@ public class ProfileFragment extends Fragment {
                     if (isVisible())
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                 });
+    }
+
+    public void setListener(IWildfire pListener) {
+        listener = pListener;
+    }
+
+    private void handleListViewEvents() {
+        if (mListView != null) {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Observable<Report> reportService = ForestGuardianService.global().service().getReport(id);
+
+                    reportService.subscribeOn(Schedulers.newThread())
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .subscribe( pReport -> {
+                                // Load the wildfire detail screen
+                                if (listener != null) {
+                                    listener.showWildfireScreen(pReport);
+                                }
+                            }, e-> Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show() );
+                }
+            });
+        }
     }
 
 }
