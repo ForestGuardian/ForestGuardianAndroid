@@ -140,7 +140,11 @@ public class WildfireFragment extends Fragment {
                     //Print the nearest fire station information
                     if (nearestFireStation != null) {
                         final FireStation tmpNearestFireStation = nearestFireStation;
-                        getActivity().runOnUiThread(() -> mFirefighters.setText(tmpNearestFireStation.getAddress()));
+                        getActivity().runOnUiThread(() -> {
+                            if (mFirefighters != null){
+                                mFirefighters.setText(tmpNearestFireStation.getAddress());
+                            }
+                        });
                     }
                 } else {
                     Log.e(TAG, "Error getting the wildfires data!!");
@@ -153,7 +157,10 @@ public class WildfireFragment extends Fragment {
                     if (result.elements.size() > 0) {
                         final String waterName = result.elements.get(0).tags.name;
 
-                        getActivity().runOnUiThread(() -> mWaterResource.setText(waterName));
+                        getActivity().runOnUiThread(() -> {
+                            if (mWaterResource != null)
+                                mWaterResource.setText(waterName);
+                        });
                     }
                 } else {
                     Log.e(TAG, "Error getting the rivers data!!");
@@ -161,7 +168,11 @@ public class WildfireFragment extends Fragment {
             });
 
             // Set the wildfire coordinates
-            getActivity().runOnUiThread(() -> mPosition.setText(GeoHelper.formatCoordinates(wildfireLocation)));
+            getActivity().runOnUiThread(() -> {
+                if (mPosition != null){
+                    mPosition.setText(GeoHelper.formatCoordinates(wildfireLocation));
+                }
+            });
         }
     }
 
