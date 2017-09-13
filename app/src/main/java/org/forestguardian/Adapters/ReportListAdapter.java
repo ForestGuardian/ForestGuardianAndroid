@@ -1,6 +1,7 @@
 package org.forestguardian.Adapters;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -39,5 +40,8 @@ public class ReportListAdapter extends ArrayAdapter<Report> {
         return convertView;
     }
 
-
+    @Override
+    public long getItemId(final int position) {
+        return super.getItem(position).getId();
+    }
 }

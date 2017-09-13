@@ -140,12 +140,7 @@ public class WildfireFragment extends Fragment {
                     //Print the nearest fire station information
                     if (nearestFireStation != null) {
                         final FireStation tmpNearestFireStation = nearestFireStation;
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mFirefighters.setText(tmpNearestFireStation.getAddress());
-                            }
-                        });
+                        getActivity().runOnUiThread(() -> mFirefighters.setText(tmpNearestFireStation.getAddress()));
                     }
                 } else {
                     Log.e(TAG, "Error getting the wildfires data!!");
@@ -158,12 +153,7 @@ public class WildfireFragment extends Fragment {
                     if (result.elements.size() > 0) {
                         final String waterName = result.elements.get(0).tags.name;
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mWaterResource.setText(waterName);
-                            }
-                        });
+                        getActivity().runOnUiThread(() -> mWaterResource.setText(waterName));
                     }
                 } else {
                     Log.e(TAG, "Error getting the rivers data!!");
@@ -171,12 +161,7 @@ public class WildfireFragment extends Fragment {
             });
 
             // Set the wildfire coordinates
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mPosition.setText(GeoHelper.formatCoordinates(wildfireLocation));
-                }
-            });
+            getActivity().runOnUiThread(() -> mPosition.setText(GeoHelper.formatCoordinates(wildfireLocation)));
         }
     }
 

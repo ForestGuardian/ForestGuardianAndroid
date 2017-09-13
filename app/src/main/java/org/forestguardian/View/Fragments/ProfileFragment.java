@@ -2,11 +2,9 @@ package org.forestguardian.View.Fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,7 +17,6 @@ import org.forestguardian.DataAccess.WebServer.ForestGuardianService;
 import org.forestguardian.Helpers.AuthenticationController;
 import org.forestguardian.R;
 import org.forestguardian.View.Interfaces.IWildfire;
-import org.forestguardian.View.ProfileActivity;
 
 import java.util.List;
 
@@ -88,7 +85,7 @@ public class ProfileFragment extends Fragment {
 
                 }, e -> {
                     if (isVisible())
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -98,20 +95,17 @@ public class ProfileFragment extends Fragment {
 
     private void handleListViewEvents() {
         if (mListView != null) {
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Observable<Report> reportService = ForestGuardianService.global().service().getReport(id);
+            mListView.setOnItemClickListener((parent, view, position, id) -> {
+                Observable<Report> reportService = ForestGuardianService.global().service().getReport(id);
 
-                    reportService.subscribeOn(Schedulers.newThread())
-                            .subscribeOn(AndroidSchedulers.mainThread())
-                            .subscribe( pReport -> {
-                                // Load the wildfire detail screen
-                                if (listener != null) {
-                                    listener.showWildfireScreen(pReport);
-                                }
-                            }, e-> Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show() );
-                }
+                reportService.subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe( pReport -> {
+                            // Load the wildfire detail screen
+                            if (listener != null) {
+                                listener.showWildfireScreen(pReport);
+                            }
+                        }, e-> Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show());
             });
         }
     }
