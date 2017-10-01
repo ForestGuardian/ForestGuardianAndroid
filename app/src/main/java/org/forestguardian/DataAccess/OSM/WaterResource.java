@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class WaterResource implements Serializable {
 
     /* Attributes */
+    private long mID;
     private String mType;
     private String mName;
     private double mLatitude;
@@ -24,6 +25,14 @@ public class WaterResource implements Serializable {
     }
 
     /*Getters and setters*/
+    public long getID() {
+        return mID;
+    }
+
+    public void setID(long mID) {
+        this.mID = mID;
+    }
+
     public String getType() {
         return mType;
     }

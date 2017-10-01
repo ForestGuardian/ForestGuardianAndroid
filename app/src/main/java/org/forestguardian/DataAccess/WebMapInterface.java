@@ -73,4 +73,13 @@ public class WebMapInterface {
     public void notifyRouteError() {
         Toast.makeText(mContext, "Error al trazar la ruta", Toast.LENGTH_LONG).show();
     }
+
+    @JavascriptInterface
+    public void onRouteGeoJson(String geoJson, String error_message) {
+        if (error_message != null) {
+            Log.i(TAG, "JSON: " + geoJson);
+        } else {
+            Log.i(TAG, "Error getting the river json data");
+        }
+    }
 }

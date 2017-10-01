@@ -230,7 +230,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace( R.id.main_layout, mMapFragment );
             transaction.commit();
-            mLocationController.notifyGPS();
+            if (mLocationController != null) {
+                mLocationController.notifyGPS();
+            }
 
             mToolbar.setTitle("REPORTAR");
 

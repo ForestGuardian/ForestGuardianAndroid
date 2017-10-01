@@ -262,6 +262,7 @@ public class MapFragment extends Fragment implements
         }
 
         if (mWaterResources.size() > 0) {
+            this.mMapWebView.post(() -> mMapWebView.loadUrl("javascript:drawRoute(" + String.valueOf(mWaterResources.get(0).getID()) + ")"));
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0), this.mCurrentLocation);
         } else {
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null, this.mCurrentLocation);
@@ -359,11 +360,12 @@ public class MapFragment extends Fragment implements
         });
 
         //Get the nearest rivers
-        overpassWrapper.getOSMDataForRivers(1000, result -> {
+        overpassWrapper.getOSMDataForRivers(50000, result -> {
             if (result != null) {
                 Log.i(TAG, "Water resources result: " + result.elements.size());
                 for (int index = 0; index < result.elements.size(); index++) {
                     WaterResource waterResource = new WaterResource();
+                    waterResource.setID(result.elements.get(index).id);
                     waterResource.setName(result.elements.get(index).tags.name);
                     waterResource.setType(result.elements.get(index).tags.type);
                     waterResource.setCoordinate(result.elements.get(index).lat, result.elements.get(index).lon);
