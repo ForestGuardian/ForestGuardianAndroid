@@ -150,7 +150,7 @@ public class MapFragment extends Fragment implements
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                loadNoInternetInteraction();
+//                loadNoInternetInteraction();
             }
             @Override
             public void onPageFinished(WebView view, String url) {

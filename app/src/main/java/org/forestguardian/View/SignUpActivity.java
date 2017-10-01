@@ -111,7 +111,7 @@ public class SignUpActivity  extends AppCompatActivity {
             Observable<Result<SessionData>> sessionService = ForestGuardianService.global().service().signUp(user);
             sessionService.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::onSignUpResult);
+                    .subscribe(this::onSignUpResult, e -> Log.e(this.getLocalClassName(),e.getMessage()));
         });
     }
 
@@ -122,42 +122,42 @@ public class SignUpActivity  extends AppCompatActivity {
     private void onSignUpResult( Result<SessionData>  pSessionDataResult){
      /* Check web service response validations. */
 
-            if ( !pSessionDataResult.response().isSuccessful() ){
-                                /* TODO: Handle authentication error case. */
-                Log.e( getLocalClassName(), pSessionDataResult.response().message() );
+        if ( !pSessionDataResult.response().isSuccessful() ){
+                            /* TODO: Handle authentication error case. */
+            Log.e( getLocalClassName(), pSessionDataResult.response().message() );
 
-                if ( pSessionDataResult.response().code() == 422 ){
-                    Toast.makeText(this, R.string.already_registered_account , Toast.LENGTH_LONG ).show();
-                } else {
-                    Toast.makeText(this, R.string.server_generic_error , Toast.LENGTH_LONG ).show();
-                }
-                return;
+            if ( pSessionDataResult.response().code() == 422 ){
+                Toast.makeText(this, R.string.already_registered_account , Toast.LENGTH_LONG ).show();
+            } else {
+                Toast.makeText(this, R.string.server_generic_error , Toast.LENGTH_LONG ).show();
             }
+            return;
+        }
 
-            // Save authentication headers for future requests.
-            Headers authHeaders = pSessionDataResult.response().headers();
-            AuthData authData = HeadersHelper.parseHeaders(this, authHeaders );
-            if ( authData == null ){
-                            /* Check for error messages are ready for user viewing. */
-                Log.e( getLocalClassName(), "Auth headers are invalid." );
-                return;
-            }
+        // Save authentication headers for future requests.
+        Headers authHeaders = pSessionDataResult.response().headers();
+        AuthData authData = HeadersHelper.parseHeaders(this, authHeaders );
+        if ( authData == null ){
+                        /* Check for error messages are ready for user viewing. */
+            Log.e( getLocalClassName(), "Auth headers are invalid." );
+            return;
+        }
 
-            User authenticatedUser = pSessionDataResult.response().body().getUser();
-            authenticatedUser.setAuth( authData );
-            AuthenticationController.shared().setCurrentUser(authenticatedUser);
+        User authenticatedUser = pSessionDataResult.response().body().getUser();
+        authenticatedUser.setAuth( authData );
+        AuthenticationController.shared().setCurrentUser(authenticatedUser);
 
-            // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
-            // ForestGuardianService.global().addApiAuthorizationHeader();
+        // Uncomment addApiAuthorizationHeader() when ApiAuthorization feature is enabled from backend.
+        // ForestGuardianService.global().addApiAuthorizationHeader();
 
-            Toast.makeText(this, "Bienvenido!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Bienvenido!", Toast.LENGTH_SHORT).show();
 
-            Answers.getInstance().logSignUp(new SignUpEvent());
+        Answers.getInstance().logSignUp(new SignUpEvent());
 
-            // Load MainActivity.
-            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(intent);
-            finish();
+        // Load MainActivity.
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(intent);
+        finish();
 
     }
 }
