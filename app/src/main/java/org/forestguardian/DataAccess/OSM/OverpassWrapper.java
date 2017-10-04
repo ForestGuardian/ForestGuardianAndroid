@@ -121,14 +121,6 @@ public class OverpassWrapper implements IContants {
                 try {
                     OverpassQueryResult result = OverpassServiceProvider.get().interpreter(query).execute().body();
 
-                    /*for (int index = 0; index < result.elements.size(); index++) {
-                        String riverQuery = "way(" + String.valueOf(result.elements.get(index).id) + "); (._; > ;);out;";
-                        OverpassQueryResult riverResult = OverpassServiceProvider.get().interpreter(riverQuery).execute().body();
-                        for (index = 0; index < riverResult.elements.size(); index++) {
-                            Log.i(TAG, "Latitude: " + riverResult.elements.get(index).lat + ", Longitude: " + riverResult.elements.get(index).lon);
-                        }
-                    }*/
-
                     if (iOverpassAPI != null) {
                         iOverpassAPI.overpassCallback(result);
                     }

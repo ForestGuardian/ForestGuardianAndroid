@@ -1,12 +1,14 @@
 package org.forestguardian.DataAccess;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.Helpers.GeoHelper;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ public class WebMapInterface {
         void setIsCurrentLocation(boolean mIsCurrentLocation);
         void showWildfireDetails();
         void openReportCreation(final Double pLatitude, final Double pLongitude);
+        void riverLocation(Location location);
     }
 
     private static final String TAG = "WebMapInterface";
@@ -76,10 +79,23 @@ public class WebMapInterface {
 
     @JavascriptInterface
     public void onRouteGeoJson(String geoJson, String error_message) {
-        if (error_message != null) {
-            Log.i(TAG, "JSON: " + geoJson);
+        if (error_message.contentEquals("")) {
+            try {
+                JSONObject root = new JSONObject(geoJson);
+                JSONArray featuresArray = root.getJSONArray("features");
+                JSONObject features = featuresArray.getJSONObject(0);
+                JSONObject geometry = features.getJSONObject("geometry");
+                JSONArray coordinates = geometry.getJSONArray("coordinates");
+                JSONArray firstCoordinate = coordinates.getJSONArray(0);
+                Location location = new Location("");
+                location.setLongitude(firstCoordinate.getDouble(0));
+                location.setLatitude(firstCoordinate.getDouble(1));
+                mListener.riverLocation(location);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else {
-            Log.i(TAG, "Error getting the river json data");
+            Toast.makeText(mContext, error_message, Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -246,6 +246,7 @@ public class MapFragment extends Fragment implements
 
     private void loadGeneralInfoInteraction() {
         if (mWaterResources.size() > 0) {
+            this.mMapWebView.post(() -> mMapWebView.loadUrl("javascript:drawRoute(" + String.valueOf(mWaterResources.get(0).getID()) + ")"));
             mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0));
         } else {
             mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null);
@@ -262,7 +263,6 @@ public class MapFragment extends Fragment implements
         }
 
         if (mWaterResources.size() > 0) {
-            this.mMapWebView.post(() -> mMapWebView.loadUrl("javascript:drawRoute(" + String.valueOf(mWaterResources.get(0).getID()) + ")"));
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mWaterResources.get(0), this.mCurrentLocation);
         } else {
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null, this.mCurrentLocation);
@@ -285,6 +285,7 @@ public class MapFragment extends Fragment implements
         //Reset route
         this.mMapWebView.post(() -> {
             mMapWebView.loadUrl("javascript:removeRoute()");
+            mMapWebView.loadUrl("javascript:clearRoute()");
             mMapWebView.loadUrl("javascript:removeFireStationMark()");
             mMapWebView.loadUrl("javascript:removeWildfireMessage()");
         });
@@ -458,6 +459,13 @@ public class MapFragment extends Fragment implements
         intent.putExtra("latitude",pLatitude);
         intent.putExtra("longitude",pLongitude);
         startActivityForResult(intent,REPORT_CREATION_REQUEST);
+    }
+
+    @Override
+    public void riverLocation(Location location) {
+        if (mWaterResources.size() > 0) {
+            mWaterResources.get(0).setCoordinate(location.getLatitude(), location.getLongitude());
+        }
     }
 
     private void handleReportCreation(int resultCode ){
