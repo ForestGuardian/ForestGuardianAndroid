@@ -74,20 +74,17 @@ public class NotificationsFragment extends Fragment {
 
     private void handleListViewEvents() {
         if (mListView != null) {
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Observable<Report> reportService = ForestGuardianService.global().service().getReport(id);
+            mListView.setOnItemClickListener((parent, view, position, id) -> {
+                Observable<Report> reportService = ForestGuardianService.global().service().getReport(id);
 
-                    reportService.subscribeOn(Schedulers.newThread())
-                            .subscribeOn(AndroidSchedulers.mainThread())
-                            .subscribe( pReport -> {
-                                // Load the wildfire detail screen
-                                if (listener != null) {
-                                    listener.showWildfireScreen(pReport);
-                                }
-                            }, e-> Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show() );
-                }
+                reportService.subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe( pReport -> {
+                            // Load the wildfire detail screen
+                            if (listener != null) {
+                                listener.showWildfireScreen(pReport);
+                            }
+                        }, e-> Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show());
             });
         }
     }
