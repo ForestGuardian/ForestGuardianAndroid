@@ -56,7 +56,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/wildfire_sample" />
+        app:srcCompat="@drawable/ic_side_menu_reportes_fuego" />
 
     <ImageView
         android:id="@+id/imageView7"

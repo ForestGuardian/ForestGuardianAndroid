@@ -141,20 +141,11 @@ public class WildfireFragment extends Fragment {
                     //Print the nearest fire station information
                     if (nearestFireStation != null) {
                         final FireStation tmpNearestFireStation = nearestFireStation;
-
-                        //Set the address of the firestation
-                        new Thread(() -> {
-                            try {
-                                String fireStationAddress = GeoHelper.getAddressNameFromPoint(getActivity(), tmpNearestFireStation.getCoordinate());
-                                getActivity().runOnUiThread(() -> {
-                                    if (mFirefighters != null){
-                                        mFirefighters.setText(fireStationAddress);
-                                    }
-                                });
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                        getActivity().runOnUiThread(() -> {
+                            if (mFirefighters != null){
+                                mFirefighters.setText(tmpNearestFireStation.getName());
                             }
-                        }).start();
+                        });
                     }
                 } else {
                     Log.e(TAG, "Error getting the wildfires data!!");
