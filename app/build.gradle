@@ -18,7 +18,7 @@ android {
         applicationId "org.forestguardian"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 19
+        versionCode 20
         versionName "0.2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

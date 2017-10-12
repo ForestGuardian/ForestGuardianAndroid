@@ -82,7 +82,8 @@
                 android:fontFamily="sans-serif"
                 android:text="Bagaces"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/profile_work"
@@ -92,7 +93,8 @@
                 android:fontFamily="sans-serif"
                 android:text="Institución de voluntariado"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

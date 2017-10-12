@@ -1,6 +1,8 @@
 package org.forestguardian.View.Fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -19,8 +21,11 @@ import org.forestguardian.Helpers.GeoHelper;
 import org.forestguardian.R;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,11 +37,13 @@ public class WildfireFragment extends Fragment {
     private static String LATITUDE_KEY = "wildfireLatitude";
     private static String TITLE_KEY = "wildfireTitle";
     private static String DESCRIPTION_KEY = "wildfireDescription";
+    private static String PICTURE_KEY = "wildfirePicture";
 
     private double mLatitude;
     private double mLongitude;
     private String mTitle;
     private String mDescription;
+    private String mPicture;
 
     @BindView(R.id.wildfire_image) ImageView mReportImage;
     @BindView(R.id.wildfire_title) TextView mTitleView;
@@ -57,6 +64,7 @@ public class WildfireFragment extends Fragment {
 
         fragmentBundle.putString(TITLE_KEY, report.getTitle());
         fragmentBundle.putString(DESCRIPTION_KEY, report.getDescription());
+        fragmentBundle.putString(PICTURE_KEY, report.getPicture());
         fragmentBundle.putDouble(LONGITUDE_KEY, report.getGeoLongitude());
         fragmentBundle.putDouble(LATITUDE_KEY, report.getGeoLatitude());
 
@@ -70,14 +78,17 @@ public class WildfireFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.wildfire_details,container,false);
+        ButterKnife.bind(this, view);
 
         // Set the attributes
         mLatitude = getArguments().getDouble(LATITUDE_KEY, -1);
         mLongitude = getArguments().getDouble(LONGITUDE_KEY, -1);
         mTitle = getArguments().getString(TITLE_KEY, "Sin título");
         mDescription = getArguments().getString(DESCRIPTION_KEY, "Sin descripción");
+        mPicture = getArguments().getString(PICTURE_KEY, "");
 
         setWildfireData();
+        loadImage();
 
         return view;
     }
@@ -91,9 +102,9 @@ public class WildfireFragment extends Fragment {
             mDescriptionView.setText(mDescription);
         }
 
+        Location wildfireLocation = new Location("");
         if (mLatitude != -1 && mLongitude != -1) {
             // Create the wildfire location
-            Location wildfireLocation = new Location("");
             wildfireLocation.setLatitude(mLatitude);
             wildfireLocation.setLongitude(mLongitude);
 
@@ -114,16 +125,6 @@ public class WildfireFragment extends Fragment {
                         fireStation.setOperator(result.elements.get(index).tags.operator);
                         fireStation.setCoordinate(result.elements.get(index).lat, result.elements.get(index).lon);
 
-                        //Set the address of the firestation
-                        new Thread(() -> {
-                            try {
-                                String fireStationAddress = GeoHelper.getAddressNameFromPoint(getActivity(), fireStation.getCoordinate());
-                                fireStation.setAddress(fireStationAddress);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }).start();
-
                         //Set initial conditions
                         if (nearestFireStation == null) {
                             nearestFireStation = fireStation;
@@ -140,11 +141,20 @@ public class WildfireFragment extends Fragment {
                     //Print the nearest fire station information
                     if (nearestFireStation != null) {
                         final FireStation tmpNearestFireStation = nearestFireStation;
-                        getActivity().runOnUiThread(() -> {
-                            if (mFirefighters != null){
-                                mFirefighters.setText(tmpNearestFireStation.getAddress());
+
+                        //Set the address of the firestation
+                        new Thread(() -> {
+                            try {
+                                String fireStationAddress = GeoHelper.getAddressNameFromPoint(getActivity(), tmpNearestFireStation.getCoordinate());
+                                getActivity().runOnUiThread(() -> {
+                                    if (mFirefighters != null){
+                                        mFirefighters.setText(fireStationAddress);
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        });
+                        }).start();
                     }
                 } else {
                     Log.e(TAG, "Error getting the wildfires data!!");
@@ -152,7 +162,7 @@ public class WildfireFragment extends Fragment {
             });
 
             // Search for water resources
-            overpassWrapper.getOSMDataForRivers(1000, result -> {
+            overpassWrapper.getOSMDataForRivers(50000, result -> {
                 if (result != null) {
                     if (result.elements.size() > 0) {
                         final String waterName = result.elements.get(0).tags.name;
@@ -174,6 +184,50 @@ public class WildfireFragment extends Fragment {
                 }
             });
         }
+
+        //set address of wildfire
+        final Location tmpWildfireLocation = wildfireLocation;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String wildfireAddress = GeoHelper.getAddressNameFromPoint(getActivity(), tmpWildfireLocation);
+                    getActivity().runOnUiThread(() -> {
+                        if (WildfireFragment.this.mReportPlace != null && WildfireFragment.this.mPosition != null) {
+                            mReportPlace.setText(wildfireAddress);
+                            mPosition.setText(GeoHelper.formatCoordinates(tmpWildfireLocation));
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void loadImage() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                URL url = null;
+                try {
+                    url = new URL(WildfireFragment.this.mPicture);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    getActivity().runOnUiThread(() -> {
+                        if (WildfireFragment.this.mReportImage != null) {
+                            WildfireFragment.this.mReportImage.setImageBitmap(bmp);
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 }
