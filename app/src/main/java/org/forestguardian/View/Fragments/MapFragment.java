@@ -248,7 +248,7 @@ public class MapFragment extends Fragment implements
 
     private void loadGeneralInfoInteraction() {
         if (mWaterResources.size() > 0) {
-            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? getNearestRiver() : this.mNearestWaterResource;
+            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? this.mWaterResources.get(this.mWaterResources.size() / 2) : this.mNearestWaterResource;
             this.mMapWebView.post(() -> mMapWebView.loadUrl("javascript:drawRoute(" + String.valueOf(this.mNearestWaterResource.getID()) + ")"));
             mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mNearestWaterResource);
         } else {
@@ -266,7 +266,7 @@ public class MapFragment extends Fragment implements
         }
 
         if (mWaterResources.size() > 0) {
-            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? getNearestRiver() : this.mNearestWaterResource;
+            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? this.mWaterResources.get(this.mWaterResources.size() / 2) : this.mNearestWaterResource;
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mNearestWaterResource, this.mCurrentLocation);
         } else {
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null, this.mCurrentLocation);
@@ -486,8 +486,8 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void riverLocation(Location location) {
-        if (mWaterResources.size() > 0) {
-            mWaterResources.get(0).setCoordinate(location.getLatitude(), location.getLongitude());
+        if (this.mNearestWaterResource != null) {
+            this.mNearestWaterResource.setCoordinate(location.getLatitude(), location.getLongitude());
         }
     }
 
