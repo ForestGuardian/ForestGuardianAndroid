@@ -18,8 +18,8 @@ public class NotificationListAdapter extends ArrayAdapter<NotificationItem> {
 
     private Context mContext;
 
-    public NotificationListAdapter(Context context, List<NotificationItem> reports) {
-        super(context, 0, reports);
+    public NotificationListAdapter(Context context, List<NotificationItem> pNotificationItems) {
+        super(context, 0, pNotificationItems);
         this.mContext = context;
     }
 
@@ -35,6 +35,11 @@ public class NotificationListAdapter extends ArrayAdapter<NotificationItem> {
         }
 
         return convertView;
+    }
+
+    @Override
+    public long getItemId(final int position) {
+        return super.getItem(position).getReportId();
     }
 
 }

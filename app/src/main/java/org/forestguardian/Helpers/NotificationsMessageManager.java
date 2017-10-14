@@ -48,6 +48,7 @@ public class NotificationsMessageManager extends FirebaseMessagingService {
         item.setTitle(remoteMessage.getNotification().getTitle());
         item.setDescription(remoteMessage.getNotification().getBody());
         item.setAvatar(remoteMessage.getData().get("avatar"));
+        item.setReportId(Long.valueOf(remoteMessage.getData().get("report_id")));
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.copyToRealm(item);
