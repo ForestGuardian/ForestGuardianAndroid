@@ -139,7 +139,7 @@ public class WildfireFragment extends Fragment {
                         }
                     }
                     //Print the nearest fire station information
-                    if (nearestFireStation != null) {
+                    if (nearestFireStation != null && getActivity() != null) {
                         final FireStation tmpNearestFireStation = nearestFireStation;
                         getActivity().runOnUiThread(() -> {
                             if (mFirefighters != null){
