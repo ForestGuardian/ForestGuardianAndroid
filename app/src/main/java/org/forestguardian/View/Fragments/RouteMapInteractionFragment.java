@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.forestguardian.DataAccess.NASA.MODIS;
 import org.forestguardian.DataAccess.OSM.FireStation;
@@ -134,6 +135,11 @@ public class RouteMapInteractionFragment extends Fragment {
 
     @OnClick(R.id.route_firestation_location_button)
     public void onFirestationLocationBtnClick() {
+        if (this.mFirestationLocationButton.getText().toString().contentEquals(getResources().getString(R.string.default_firestation_label))) {
+            Toast.makeText(getActivity(), "No se encontraron estaciones de bomberos", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (this.mFirestation != null) {
             this.mEndPlace = this.mFirestation.getCoordinate();
         }
@@ -147,6 +153,11 @@ public class RouteMapInteractionFragment extends Fragment {
 
     @OnClick(R.id.route_water_location_button)
     public void onWaterLocationBtn() {
+        if (this.mWaterLocationButton.getText().toString().contentEquals(getResources().getString(R.string.default_water_resources_label))) {
+            Toast.makeText(getActivity(), "No se encontraron recursos hídricos", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (this.mWaterResource != null) {
             this.mEndPlace = this.mWaterResource.getCoordinate();
         }
@@ -159,6 +170,11 @@ public class RouteMapInteractionFragment extends Fragment {
 
     @OnClick(R.id.fab_route)
     public void onFabRouteBtnClick() {
+        if (this.mEndPlace == null) {
+            Toast.makeText(getActivity(), "Seleccione un destino para trazar la ruta", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (this.mListener != null) {
             this.mListener.drawRoute(mMODIS.getCoordinate(), this.mEndPlace);
         }

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Guardian Forestal</string>
 
+    <string name="default_firestation_label">No se encontraron bomberos</string>
+    <string name="default_water_resources_label">No se encontraron recursos hídricos</string>
+
     <!-- Open Weater API -->
     <string name="open_weather_api_key">58287bee46d0b29681931fd98adfe0c5</string>
 
