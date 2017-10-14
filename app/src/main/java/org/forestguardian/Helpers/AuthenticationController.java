@@ -16,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 import retrofit2.adapter.rxjava2.Result;
 
 /**
@@ -86,7 +87,11 @@ public class AuthenticationController {
 
         // Persist in realm. TODO: We retrieve by calling the last object. Improve this.
         realm.beginTransaction();
-        realm.copyToRealm(pCurrentUser);
+        try {
+            realm.copyToRealm(pCurrentUser);
+        } catch (io.realm.exceptions.RealmPrimaryKeyConstraintException e) {
+            Log.e("Authenticated User", "RealmPrimaryKeyConstraintException");
+        }
         realm.commitTransaction();
 
         Log.e("Authenticated User:", pCurrentUser.getEmail());
