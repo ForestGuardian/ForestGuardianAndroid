@@ -112,6 +112,10 @@ public class WildfireFragment extends Fragment {
             OverpassWrapper overpassWrapper = new OverpassWrapper();
             overpassWrapper.setOSMPoint(wildfireLocation);
             overpassWrapper.getOSMDataForFireStations(100000, result -> {
+                if (getActivity() == null){
+                    return;
+                }
+
                 if (result != null) {
                     FireStation nearestFireStation = null;
                     double tmpDistance = 0;
@@ -139,7 +143,7 @@ public class WildfireFragment extends Fragment {
                         }
                     }
                     //Print the nearest fire station information
-                    if (nearestFireStation != null && getActivity() != null) {
+                    if (nearestFireStation != null) {
                         final FireStation tmpNearestFireStation = nearestFireStation;
                         getActivity().runOnUiThread(() -> {
                             if (mFirefighters != null){
@@ -154,6 +158,9 @@ public class WildfireFragment extends Fragment {
 
             // Search for water resources
             overpassWrapper.getOSMDataForRivers(50000, result -> {
+                if (getActivity() == null){
+                    return;
+                }
                 if (result != null) {
                     if (result.elements.size() > 0) {
                         final String waterName = result.elements.get(0).tags.name;
@@ -169,54 +176,52 @@ public class WildfireFragment extends Fragment {
             });
 
             // Set the wildfire coordinates
-            getActivity().runOnUiThread(() -> {
-                if (mPosition != null){
-                    mPosition.setText(GeoHelper.formatCoordinates(wildfireLocation));
-                }
-            });
+            if (mPosition != null){
+                mPosition.setText(GeoHelper.formatCoordinates(wildfireLocation));
+            }
         }
 
         //set address of wildfire
         final Location tmpWildfireLocation = wildfireLocation;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String wildfireAddress = GeoHelper.getAddressNameFromPoint(getActivity(), tmpWildfireLocation);
-                    getActivity().runOnUiThread(() -> {
-                        if (WildfireFragment.this.mReportPlace != null && WildfireFragment.this.mPosition != null) {
-                            mReportPlace.setText(wildfireAddress);
-                            mPosition.setText(GeoHelper.formatCoordinates(tmpWildfireLocation));
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            if (getActivity() == null){
+                return;
+            }
+            try {
+                String wildfireAddress = GeoHelper.getAddressNameFromPoint(getActivity(), tmpWildfireLocation);
+                getActivity().runOnUiThread(() -> {
+                    if (WildfireFragment.this.mReportPlace != null && WildfireFragment.this.mPosition != null) {
+                        mReportPlace.setText(wildfireAddress);
+                        mPosition.setText(GeoHelper.formatCoordinates(tmpWildfireLocation));
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }).start();
     }
 
     private void loadImage() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                URL url = null;
-                try {
-                    url = new URL(WildfireFragment.this.mPicture);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    getActivity().runOnUiThread(() -> {
-                        if (WildfireFragment.this.mReportImage != null) {
-                            WildfireFragment.this.mReportImage.setImageBitmap(bmp);
-                        }
-                    });
+        new Thread(() -> {
+            if (getActivity() == null){
+                return;
+            }
+            URL url = null;
+            try {
+                url = new URL(WildfireFragment.this.mPicture);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            try {
+                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                getActivity().runOnUiThread(() -> {
+                    if (WildfireFragment.this.mReportImage != null) {
+                        WildfireFragment.this.mReportImage.setImageBitmap(bmp);
+                    }
+                });
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }).start();
     }
