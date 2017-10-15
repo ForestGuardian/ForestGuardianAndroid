@@ -81,8 +81,6 @@
         android:textColor="@color/whiteText"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:ellipsize="end"
-        android:maxLines="1"
         android:layout_marginLeft="40dp"
         app:layout_constraintLeft_toLeftOf="@+id/imageView7"
         app:layout_constraintTop_toTopOf="@+id/imageView7"
