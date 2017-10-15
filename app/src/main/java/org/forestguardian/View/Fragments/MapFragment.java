@@ -283,24 +283,6 @@ public class MapFragment extends Fragment implements
         }
     }
 
-    private WaterResource getNearestRiver() {
-        WaterResource  waterResource = null;
-        double distance = 0;
-        for (int index = 0; index < this.mWaterResources.size(); index++) {
-            if (waterResource == null) {
-                waterResource = this.mWaterResources.get(index);
-                distance = GeoHelper.calculateDistanceBetweenTwoPoints(this.mMODIS.getCoordinate(), waterResource.getCoordinate());
-            } else {
-                double tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(this.mMODIS.getCoordinate(), this.mWaterResources.get(index).getCoordinate());
-                if (tmpDistance < distance) {
-                    distance = tmpDistance;
-                    waterResource = this.mWaterResources.get(index);
-                }
-            }
-        }
-        return waterResource;
-    }
-
     public void processWildfireData(MODIS modisData) {
         //Reset attribute's values
         this.resetAttributes();
