@@ -114,12 +114,23 @@ public class OverpassWrapper implements IContants {
     }
 
     public void getOSMDataForRivers(int distance, IOverpassAPI iOverpassAPI) {
-        ArrayList<Double> area = this.getOSMArea(distance);
-        String query = OVERPASS_REQUEST_FORMAT_AND_TIMEOUT + this.getOverpassAPIQueryForWays(area, OSM_RIVERS_WATERWAY);
         new Thread() {
             public void run() {
                 try {
+                    // First iteration
+                    int tmpDistance = 10000;
+                    ArrayList<Double> area = OverpassWrapper.this.getOSMArea(tmpDistance);
+                    String query = OVERPASS_REQUEST_FORMAT_AND_TIMEOUT + OverpassWrapper.this.getOverpassAPIQueryForWays(area, OSM_RIVERS_WATERWAY);
                     OverpassQueryResult result = OverpassServiceProvider.get().interpreter(query).execute().body();
+
+                    while (result.elements.size() == 0 && tmpDistance < distance) {
+                        tmpDistance += 10000;
+                        area = OverpassWrapper.this.getOSMArea(tmpDistance);
+                        query = OVERPASS_REQUEST_FORMAT_AND_TIMEOUT + OverpassWrapper.this.getOverpassAPIQueryForWays(area, OSM_RIVERS_WATERWAY);
+                        result = OverpassServiceProvider.get().interpreter(query).execute().body();
+                    }
+
+
 
                     if (iOverpassAPI != null) {
                         iOverpassAPI.overpassCallback(result);

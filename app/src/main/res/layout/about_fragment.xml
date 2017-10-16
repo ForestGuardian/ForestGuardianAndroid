@@ -12,7 +12,13 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/about_description"
-        android:textColor="@android:color/white"/>
+        android:text="@string/about_description_es"
+        android:textAlignment="center"
+        android:textColor="@android:color/white" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_usaid"/>
 
 </LinearLayout>

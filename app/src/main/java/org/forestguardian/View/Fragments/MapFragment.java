@@ -248,7 +248,7 @@ public class MapFragment extends Fragment implements
 
     private void loadGeneralInfoInteraction() {
         if (mWaterResources.size() > 0) {
-            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? getNearestRiver() : this.mNearestWaterResource;
+            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? this.mWaterResources.get(this.mWaterResources.size() / 2) : this.mNearestWaterResource;
             this.mMapWebView.post(() -> mMapWebView.loadUrl("javascript:drawRoute(" + String.valueOf(this.mNearestWaterResource.getID()) + ")"));
             mMapGeneralInteractionFragment = WildfireResourcesMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mNearestWaterResource);
         } else {
@@ -266,7 +266,7 @@ public class MapFragment extends Fragment implements
         }
 
         if (mWaterResources.size() > 0) {
-            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? getNearestRiver() : this.mNearestWaterResource;
+            this.mNearestWaterResource = (this.mNearestWaterResource == null) ? this.mWaterResources.get(this.mWaterResources.size() / 2) : this.mNearestWaterResource;
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, this.mNearestWaterResource, this.mCurrentLocation);
         } else {
             mMapRouteInteractionFragment = RouteMapInteractionFragment.setFireData(this.mMODIS, this.mNearestFireStation, null, this.mCurrentLocation);
@@ -281,24 +281,6 @@ public class MapFragment extends Fragment implements
             locationText = locationText == null ? "" :  locationText;
             ((DefaultMapInteractionFragment) mMapInteractionFragment).setCurrentLocation(locationText);
         }
-    }
-
-    private WaterResource getNearestRiver() {
-        WaterResource  waterResource = null;
-        double distance = 0;
-        for (int index = 0; index < this.mWaterResources.size(); index++) {
-            if (waterResource == null) {
-                waterResource = this.mWaterResources.get(index);
-                distance = GeoHelper.calculateDistanceBetweenTwoPoints(this.mMODIS.getCoordinate(), waterResource.getCoordinate());
-            } else {
-                double tmpDistance = GeoHelper.calculateDistanceBetweenTwoPoints(this.mMODIS.getCoordinate(), this.mWaterResources.get(index).getCoordinate());
-                if (tmpDistance < distance) {
-                    distance = tmpDistance;
-                    waterResource = this.mWaterResources.get(index);
-                }
-            }
-        }
-        return waterResource;
     }
 
     public void processWildfireData(MODIS modisData) {
@@ -486,8 +468,8 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void riverLocation(Location location) {
-        if (mWaterResources.size() > 0) {
-            mWaterResources.get(0).setCoordinate(location.getLatitude(), location.getLongitude());
+        if (this.mNearestWaterResource != null) {
+            this.mNearestWaterResource.setCoordinate(location.getLatitude(), location.getLongitude());
         }
     }
 

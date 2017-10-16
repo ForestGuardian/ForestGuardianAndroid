@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Guardian Forestal</string>
 
+    <string name="default_firestation_label">No se encontraron bomberos</string>
+    <string name="default_water_resources_label">No se encontraron recursos hídricos</string>
+
     <!-- Open Weater API -->
     <string name="open_weather_api_key">58287bee46d0b29681931fd98adfe0c5</string>
 
@@ -73,4 +76,5 @@
     </string-array>
     <string name="title_activity_notifications">Notificaciones</string>
     <string name="about_description">Forest Guardians helps to reduce the reaction time to attack and dissolve Forest Fires with data visualization, we took raw data and created relationships among them, allowing us to generate a approximate prediction of the fire behavior and factors that can help to terminate them.  Raw data itself doesn´t meand anything, but if you relate the fire location with its proximity to the closes populated area, you can help save lifes, assigning a level of emergency according to this factor and incident cases that need inmediate intervention, according to this level, authorities will be alerted. And the app will give all the information needed to have a possitive intervention.  Forest Guardian uses Costa Rica´s Atlas Data Base in congruency with NASA MODIS Data Base, to link an analyse posible reactions of the forest fire.</string>
+    <string name="about_description_es">Guardian Forestal ayuda a reducir el tiempo de reacción para atacar y disolver incendios forestales con la visualización de datos, tomamos datos brutos y creamos relaciones entre ellos, lo que nos permite generar una predicción aproximada del comportamiento del fuego y factores que pueden ayudar a terminarlos. Los datos brutos no significan nada, pero si relaciona la ubicación del incendio con su proximidad al área más poblada, puede ayudar a salvar vidas, asignando un nivel de emergencia de acuerdo con este factor y los casos de incidentes que requieren intervención inmediata, de acuerdo con este nivel, las autoridades serán alertadas. Y la aplicación le dará toda la información necesaria para tener una intervención positiva. Guardian Forestal utiliza la base de datos Atlas de Costa Rica en congruencia con la base de datos MODIS de la NASA, para vincular un análisis de posibles reacciones del incendio forestal.</string>
 </resources>

@@ -86,7 +86,7 @@
             android:layout_row="3"
             android:background="@null"
             android:gravity="center_vertical"
-            android:text="No se encontraron bomberos"
+            android:text="@string/default_firestation_label"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:fontFamily="sans-serif"/>
@@ -100,7 +100,7 @@
             android:layout_row="4"
             android:background="@null"
             android:gravity="center_vertical"
-            android:text="No se encontraron recursos hídricos"
+            android:text="@string/default_water_resources_label"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:fontFamily="sans-serif"/>
