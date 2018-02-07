@@ -123,6 +123,11 @@ public class OverpassWrapper implements IContants {
                     String query = OVERPASS_REQUEST_FORMAT_AND_TIMEOUT + OverpassWrapper.this.getOverpassAPIQueryForWays(area, OSM_RIVERS_WATERWAY);
                     OverpassQueryResult result = OverpassServiceProvider.get().interpreter(query).execute().body();
 
+                    if (result == null || result.elements == null) {
+                        iOverpassAPI.overpassCallback(null);
+                        return;
+                    }
+
                     while (result.elements.size() == 0 && tmpDistance < distance) {
                         tmpDistance += 10000;
                         area = OverpassWrapper.this.getOSMArea(tmpDistance);

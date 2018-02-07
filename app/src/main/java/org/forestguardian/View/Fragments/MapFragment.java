@@ -1,10 +1,12 @@
 package org.forestguardian.View.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -78,6 +80,7 @@ public class MapFragment extends Fragment implements
     private WaterResource mNearestWaterResource;
     private OpenWeatherWrapper mWeather;
     private MODIS mMODIS;
+    private Context mContext;
 
     @BindView(R.id.map_container) RelativeLayout mMapContainer;
     @BindView(R.id.map_web_view) WebView mMapWebView;
@@ -93,6 +96,7 @@ public class MapFragment extends Fragment implements
         this.mWeather = null;
         this.mMODIS = null;
         this.mIsCurrentLocation = false;
+        this.mContext = null;
     }
 
     @Override
@@ -122,6 +126,12 @@ public class MapFragment extends Fragment implements
         // Clear
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+    }
+
 //    @Override
 //    public void onSaveInstanceState(final Bundle outState) {
 //        super.onSaveInstanceState(outState);
@@ -145,7 +155,7 @@ public class MapFragment extends Fragment implements
         //Set map flag
         this.mInDefaultMap = true;
         //Setup the javascript interface
-        this.mMapInterface = new WebMapInterface(getActivity(), this);
+        this.mMapInterface = new WebMapInterface(mContext, this);
         this.mMapWebView.addJavascriptInterface(this.mMapInterface, "mobile");
         //Capture load errors
         this.mMapWebView.setWebViewClient(new WebViewClient() {
@@ -261,7 +271,7 @@ public class MapFragment extends Fragment implements
     private void loadRouteInteraction() {
         if ( mCurrentLocation == null ){
             Log.w("loadRouteInteraction","No location information yet.");
-            Toast.makeText(getActivity(), R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -300,7 +310,7 @@ public class MapFragment extends Fragment implements
         Location wildfireCoordinates = modisData.getCoordinate();
 
         //Get the weather info
-        OpenWeatherWrapper openWeatherWrapper = new OpenWeatherWrapper(getActivity());
+        OpenWeatherWrapper openWeatherWrapper = new OpenWeatherWrapper(mContext);
         openWeatherWrapper.requestCurrentForecastWeather(wildfireCoordinates, openWeatherWrapper1 -> {
             mWeather = openWeatherWrapper1;
             mMapWebView.post(() -> {
@@ -336,7 +346,7 @@ public class MapFragment extends Fragment implements
                     new Thread(() -> {
                         try {
                             FireStation tmpFirestation = mFireStations.get(mFireStations.size() - 1);
-                            String firestationAddress = GeoHelper.getAddressNameFromPoint(getActivity(), tmpFirestation.getCoordinate());
+                            String firestationAddress = GeoHelper.getAddressNameFromPoint(mContext, tmpFirestation.getCoordinate());
                             tmpFirestation.setAddress(firestationAddress);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -404,7 +414,7 @@ public class MapFragment extends Fragment implements
 
         if ( mCurrentLocation == null ){
             Log.w("centerOnLocation","No location information yet.");
-            Toast.makeText(getActivity(), R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -432,7 +442,7 @@ public class MapFragment extends Fragment implements
 
         if ( mCurrentLocation == null ){
             Log.w("reportLocationReady","No location information yet.");
-            Toast.makeText(getActivity(), R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -449,7 +459,7 @@ public class MapFragment extends Fragment implements
 
         if ( mCurrentLocation == null ){
             Log.w("addReport","No location information yet.");
-            Toast.makeText(getActivity(), R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.msg_waiting_gps, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -460,7 +470,7 @@ public class MapFragment extends Fragment implements
 
     public void openReportCreation(final Double pLatitude, final Double pLongitude){
         Log.d("FragmentsAction","openReportCreation");
-        Intent intent = new Intent(getActivity(), CreateReportActivity.class);
+        Intent intent = new Intent(mContext, CreateReportActivity.class);
         intent.putExtra("latitude",pLatitude);
         intent.putExtra("longitude",pLongitude);
         startActivityForResult(intent,REPORT_CREATION_REQUEST);
@@ -483,7 +493,7 @@ public class MapFragment extends Fragment implements
                 // Report success.
                 String msg = "Reported!";
                 Log.i("Report",msg);
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 
                 // Remove marker.
                 mMapWebView.post(() -> mMapWebView.loadUrl(
@@ -522,7 +532,7 @@ public class MapFragment extends Fragment implements
                 String newRouteURL = "javascript:setRouteFromTwoPoints(" + String.valueOf(fstartPlace.getLatitude()) + ", " + String.valueOf(fstartPlace.getLongitude()) + ", " + String.valueOf(fendPlace.getLatitude()) + ", " + String.valueOf(fendPlace.getLongitude()) + ")";
                 mMapWebView.loadUrl(newRouteURL);
             } else {
-                Toast.makeText(getActivity(), "Error desplegando la ruta", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Error desplegando la ruta", Toast.LENGTH_LONG).show();
             }
         });
         loadDefaultInteraction();

@@ -1,11 +1,14 @@
 package org.forestguardian.View.Fragments;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +48,8 @@ public class WildfireFragment extends Fragment {
     private String mDescription;
     private String mPicture;
 
+    private Context mContext;
+
     @BindView(R.id.wildfire_image) ImageView mReportImage;
     @BindView(R.id.wildfire_title) TextView mTitleView;
     @BindView(R.id.wildfire_description) TextView mDescriptionView;
@@ -72,6 +77,13 @@ public class WildfireFragment extends Fragment {
         return wildfireFragment;
     }
 
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.mContext = null;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +105,12 @@ public class WildfireFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+    }
+
     private void setWildfireData() {
         // Set the title and description
         if (mTitleView != null) {
@@ -112,7 +130,7 @@ public class WildfireFragment extends Fragment {
             OverpassWrapper overpassWrapper = new OverpassWrapper();
             overpassWrapper.setOSMPoint(wildfireLocation);
             overpassWrapper.getOSMDataForFireStations(100000, result -> {
-                if (getActivity() == null){
+                if (this.mContext == null){
                     return;
                 }
 
@@ -145,7 +163,7 @@ public class WildfireFragment extends Fragment {
                     //Print the nearest fire station information
                     if (nearestFireStation != null) {
                         final FireStation tmpNearestFireStation = nearestFireStation;
-                        getActivity().runOnUiThread(() -> {
+                        ((Activity)this.mContext).runOnUiThread(() -> {
                             if (mFirefighters != null){
                                 mFirefighters.setText(tmpNearestFireStation.getName());
                             }
@@ -158,14 +176,14 @@ public class WildfireFragment extends Fragment {
 
             // Search for water resources
             overpassWrapper.getOSMDataForRivers(50000, result -> {
-                if (getActivity() == null){
+                if (this.mContext == null){
                     return;
                 }
                 if (result != null) {
                     if (result.elements.size() > 0) {
                         final String waterName = result.elements.get(0).tags.name;
 
-                        getActivity().runOnUiThread(() -> {
+                        ((Activity)this.mContext).runOnUiThread(() -> {
                             if (mWaterResource != null)
                                 mWaterResource.setText(waterName);
                         });
@@ -184,12 +202,12 @@ public class WildfireFragment extends Fragment {
         //set address of wildfire
         final Location tmpWildfireLocation = wildfireLocation;
         new Thread(() -> {
-            if (getActivity() == null){
+            if (this.mContext == null){
                 return;
             }
             try {
-                String wildfireAddress = GeoHelper.getAddressNameFromPoint(getActivity(), tmpWildfireLocation);
-                getActivity().runOnUiThread(() -> {
+                String wildfireAddress = GeoHelper.getAddressNameFromPoint(this.mContext, tmpWildfireLocation);
+                ((Activity)this.mContext).runOnUiThread(() -> {
                     if (WildfireFragment.this.mReportPlace != null && WildfireFragment.this.mPosition != null) {
                         mReportPlace.setText(wildfireAddress);
                         mPosition.setText(GeoHelper.formatCoordinates(tmpWildfireLocation));
@@ -203,7 +221,7 @@ public class WildfireFragment extends Fragment {
 
     private void loadImage() {
         new Thread(() -> {
-            if (getActivity() == null){
+            if (this.mContext == null){
                 return;
             }
             URL url = null;
@@ -214,7 +232,7 @@ public class WildfireFragment extends Fragment {
             }
             try {
                 Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                getActivity().runOnUiThread(() -> {
+                ((Activity)this.mContext).runOnUiThread(() -> {
                     if (WildfireFragment.this.mReportImage != null) {
                         WildfireFragment.this.mReportImage.setImageBitmap(bmp);
                     }
